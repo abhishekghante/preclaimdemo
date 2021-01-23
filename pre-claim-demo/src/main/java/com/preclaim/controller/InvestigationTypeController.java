@@ -85,7 +85,7 @@ public class InvestigationTypeController {
 		investigationType.setInvestigationType(request.getParameter("investigationType"));
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		String error = investigationTypedao.addInvestigationType(investigationType, user.getUserID());
-		userDao.activity_log("INVESTIGATION TYPE", 0, "ADD", user.getUserID(), request.getRemoteAddr());
+		userDao.activity_log("INVESTIGATION TYPE", 0, "ADD", user.getUsername());
 		return error;
 	}
 	
@@ -96,8 +96,7 @@ public class InvestigationTypeController {
 	 UserDetails user = (UserDetails) session.getAttribute("User_Login");
 	 String error = investigationTypedao.updateInvestigationType(investigationType, investigationId, 
 			 investigationId);
-	 userDao.activity_log("INVESTIGATION TYPE", investigationId, "UPDATE", user.getUserID(), 
-			 request.getRemoteAddr());
+	 userDao.activity_log("INVESTIGATION TYPE", investigationId, "UPDATE", user.getUsername());
 	 return error;
 	}
 	
@@ -106,8 +105,7 @@ public class InvestigationTypeController {
 	 int investigationId = Integer.parseInt(request.getParameter("investigationId"));	
      String error_message = investigationTypedao.deleteInvestigationType(investigationId);	
      UserDetails user = (UserDetails) session.getAttribute("User_Login");
-	 userDao.activity_log("INVESTIGATION TYPE", investigationId, "DELETE", user.getUserID(), 
-			 request.getRemoteAddr());
+	 userDao.activity_log("INVESTIGATION TYPE", investigationId, "DELETE", user.getUsername());
 	 return error_message;
 	}
 	
@@ -119,7 +117,7 @@ public class InvestigationTypeController {
 		String error_message = investigationTypedao.updateInvestigationTypeStatus(investigationId, user.getUserID(), 
 				status);
 		userDao.activity_log("INVESTIGATION TYPE", investigationId, status == 1 ? "ACTIVE" : "DEACTIVE", 
-				user.getUserID(), request.getRemoteAddr());
+				user.getUsername());
 		return error_message;
 	}
 	  

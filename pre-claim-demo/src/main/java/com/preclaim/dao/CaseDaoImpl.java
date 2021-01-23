@@ -51,13 +51,15 @@ public class CaseDaoImpl implements CaseDao {
 	public String addcase(CaseDetails casedetail) {
 		try 
 		{
-			String query = "INSERT INTO case_lists (policyNumber, insuredName, claimantCity, claimantZone,"
-					+ "claimantState, status, subStatus, investigationCategory, sumAssured, createdBy,"
-					+ "createdDate, updatedDate, updatedBy) values(?,?,?,?,?,1,1,?,?,?,now(),now(),0)";    
-			this.template.update(query,casedetail.getPolicyNumber(), casedetail.getInsuredName(), 
-					casedetail.getClaimantCity(), casedetail.getClaimantZone(), 
-					casedetail.getClaimantState(), casedetail.getInvestigationCategory(), 
-					casedetail.getSumAssured(), casedetail.getCreatedBy());				    	
+			String query = "INSERT INTO case_lists (policyNumber, investigationCategory, insuredName, insuredDOD, insuredDOB, sumAssured, intimationType, claimantCity,"
+							+ " claimantZone, claimantState, caseStatus, caseSubStatus, nominee_name, nomineeContactNumber, nominee_address, insured_address, supervisor,"
+							+ "supervisor2managerRemarks,supervisor2investigatorRemarks,regionalManager2supervisorRemarks,investigator, investigator2supervisorRemarks,underwriter,"
+							+ "underwriter2regionalManagerRemarks, talicManager, talicManager2underwriteRemarks, createdBy, createdDate, updatedDate, updatedBy) "
+							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'open', 'PA', ?, ?, ?, ?, '', '', '', '', '', '', '', '', '', '', ?, now(), now(), '')";    
+			this.template.update(query, casedetail.getPolicyNumber(), casedetail.getInvestigationCategory(), casedetail.getInsuredName(), casedetail.getInsuredDOD(),
+					casedetail.getInsuredDOB(), casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getClaimantCity(), casedetail.getClaimantZone(), 
+					casedetail.getClaimantState(), casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), casedetail.getNominee_address(),
+					casedetail.getInsured_address(), casedetail.getCreatedBy());				    	
 		}
 		catch(Exception e)
 		{
@@ -68,14 +70,14 @@ public class CaseDaoImpl implements CaseDao {
 	}
 
 	@Override
-	public List<CaseDetailList> getCaseDetailList(int status) {
+	public List<CaseDetailList> getCaseDetailList(String status) {
 		try
 		{
 			String sql="";
-			 if(status==0) 
+			 if(status.equals("Open")) 
 				 sql ="SELECT * FROM case_lists where status = " + status; 
 			   else 
-				 sql ="SELECT * FROM case_lists where status = 1 or status = 2";
+				 sql ="SELECT * FROM case_lists where status = Close";
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
 						casedetail.setSrNo(rowCount+1);
@@ -85,8 +87,8 @@ public class CaseDaoImpl implements CaseDao {
 						casedetail.setInvestigationCategory(rs.getString("investigationCategory"));
 						casedetail.setClaimantZone(rs.getString("claimantZone"));
 						casedetail.setSumAssured(rs.getInt("sumAssured"));
-						casedetail.setStatus(rs.getInt("status"));
-						casedetail.setSubstatus(rs.getInt("subStatus"));
+						casedetail.setCaseStatus(rs.getString("caseStatus"));
+						casedetail.setCaseSubstatus(rs.getString("caseSubStatus"));
 						return casedetail;
 					});
 			return casedetailList;
@@ -97,7 +99,6 @@ public class CaseDaoImpl implements CaseDao {
 			ex.printStackTrace();
 			return null;
 		}
-
 	}
 	
 	@Transactional

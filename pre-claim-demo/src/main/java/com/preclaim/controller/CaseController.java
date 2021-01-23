@@ -22,6 +22,7 @@ import com.preclaim.config.Config;
 import com.preclaim.dao.CaseDao;
 import com.preclaim.dao.IntimationTypeDao;
 import com.preclaim.dao.InvestigationTypeDao;
+import com.preclaim.dao.UserDAO;
 import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.CaseDetails;
 import com.preclaim.models.ScreenDetails;
@@ -35,6 +36,9 @@ public class CaseController {
 	CaseDao caseDao;
 	
 	@Autowired
+	UserDAO userDao;
+	
+	@Autowired
 	InvestigationTypeDao investigationDao;
 	
 	@Autowired
@@ -42,7 +46,10 @@ public class CaseController {
 	
     @RequestMapping(value = "/import_case", method = RequestMethod.GET)
     public String import_case(HttpSession session) {
-    	session.removeAttribute("ScreenDetails");
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+		session.removeAttribute("ScreenDetails");
     	ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/import_case.jsp");
     	details.setScreen_title("Import Case");
@@ -56,6 +63,9 @@ public class CaseController {
     
     @RequestMapping(value = "/add_message", method = RequestMethod.GET)
     public String add_message(HttpSession session, HttpServletRequest request) {
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
     	session.removeAttribute("ScreenDetails");
     	ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/add_message.jsp");
@@ -73,41 +83,50 @@ public class CaseController {
     
     @RequestMapping(value = "/pending_message", method = RequestMethod.GET)
     public String pending_message(HttpSession session) {
-    	session.removeAttribute("ScreenDetails");
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+		session.removeAttribute("ScreenDetails");
     	ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/pending_message.jsp");
     	details.setScreen_title("Pending Cases Lists");
     	details.setMain_menu("Case Management");
     	details.setSub_menu1("Pending Cases");
     	session.setAttribute("ScreenDetails", details);
-    	List<CaseDetailList> pendingCaseDetailList= caseDao.getCaseDetailList(1);
+    	List<CaseDetailList> pendingCaseDetailList= caseDao.getCaseDetailList("PA");
     	session.setAttribute("pendingCaseDetailList", pendingCaseDetailList);
         return "common/templatecontent";
     }
   
     @RequestMapping(value = "/active_message", method = RequestMethod.GET)
     public String active_message(HttpSession session) {
-    	session.removeAttribute("ScreenDetails");
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+		session.removeAttribute("ScreenDetails");
     	ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/active_message.jsp");
     	details.setScreen_title("<li class = \"active\">Active Cases Lists</li>");
     	details.setMain_menu("Case Management");
     	details.setSub_menu1("Active Cases");
     	session.setAttribute("ScreenDetails", details);
-    	List<CaseDetailList> activeCaseDetailList= caseDao.getCaseDetailList(0);
+    	List<CaseDetailList> activeCaseDetailList= caseDao.getCaseDetailList("Close");
     	session.setAttribute("activeCaseDetailList", activeCaseDetailList);
         return "common/templatecontent";
     }
     
     @RequestMapping(value = "/assigned_message", method = RequestMethod.GET)
     public String assigned_message(HttpSession session) {
-    	session.removeAttribute("ScreenDetails");
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+		session.removeAttribute("ScreenDetails");
     	ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/assigned_message.jsp");
     	details.setScreen_title("<li class = \"active\">Assigned Cases Lists</li>");
     	details.setMain_menu("Case Management");
     	details.setSub_menu1("Assigned Cases");
-    	List<CaseDetailList> assignCaseDetailList= caseDao.getCaseDetailList(1);
+    	List<CaseDetailList> assignCaseDetailList= caseDao.getCaseDetailList("ARM");
     	session.setAttribute("assignCaseDetailList", assignCaseDetailList);
     	session.setAttribute("ScreenDetails", details);
         return "common/templatecontent";
@@ -116,6 +135,9 @@ public class CaseController {
     @RequestMapping(value = "/importData", method = RequestMethod.POST)
 	public String importData(@RequestParam CommonsMultipartFile userfile,HttpSession session, HttpServletRequest request)
 	{
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");    	
 		ScreenDetails details = new ScreenDetails();
 		details.setScreen_name("../message/import_case.jsp");
@@ -153,33 +175,54 @@ public class CaseController {
     @RequestMapping(value = "/addMessage",method = RequestMethod.POST)
    	public @ResponseBody String addMessage(HttpSession session, HttpServletRequest request) 
    	{			
-       	String policyNumber = request.getParameter("policyNumber");
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+    	String policyNumber = request.getParameter("policyNumber");
+       	String typeOfInvestigation = request.getParameter("msgCategory");
        	String insuredName = request.getParameter("insuredName");
+       	String insuredDOD = request.getParameter("insuredDOD");
+       	String insuredDOB = request.getParameter("insuredDOB");
+       	int sumAssured = Integer.parseInt(request.getParameter("sumAssured"));
+       	String msgIntimationType = request.getParameter("msgIntimationType");
        	String claimantCity = request.getParameter("claimantCity");
        	String claimantState = request.getParameter("claimantState");
        	String claimantZone = request.getParameter("claimantZone");
-       	String typeOfInvestigation = request.getParameter("msgCategory");
-       	int sumAssured = Integer.parseInt(request.getParameter("sumAssured"));
+       	String nomineeName = request.getParameter("nomineeName");
+       	String nomineeMob = request.getParameter("nomineeMob");
+       	String nomineeAdd = request.getParameter("nomineeAdd");
+       	String insuredAdd = request.getParameter("insuredAdd");
        
-       	UserDetails user = (UserDetails) session.getAttribute("User_Login");
        	CaseDetails caseDetail=new CaseDetails();
        	caseDetail.setPolicyNumber(policyNumber);
+       	caseDetail.setIntimationType(typeOfInvestigation);
        	caseDetail.setInsuredName(insuredName);
+       	caseDetail.setInsuredDOD(insuredDOD);
+       	caseDetail.setInsuredDOB(insuredDOB);
+       	caseDetail.setSumAssured(sumAssured);
+       	caseDetail.setIntimationType(msgIntimationType);
        	caseDetail.setClaimantCity(claimantCity);
        	caseDetail.setClaimantState(claimantState);
        	caseDetail.setClaimantZone(claimantZone);
-       	caseDetail.setInvestigationCategory(typeOfInvestigation);
-       	caseDetail.setSumAssured(sumAssured);
-       	caseDetail.setCreatedBy(user.getUserID());
+       	caseDetail.setNominee_name(nomineeName);
+       	caseDetail.setNomineeContactNumber(nomineeMob);
+       	caseDetail.setNominee_address(nomineeAdd);
+       	caseDetail.setInsured_address(insuredAdd);
+		caseDetail.setCreatedBy(user.getUsername()); 
        	String message= caseDao.addcase(caseDetail);
+       	userDao.activity_log("CASE HISTORY", 0, caseDetail.getPolicyNumber(), user.getUsername());
    		return message;
    	}
     
     @RequestMapping(value = "/deleteMessage",method = RequestMethod.POST)
-    public @ResponseBody String deleteMessage(HttpServletRequest request,HttpSession session) {
-    int caseId=Integer.parseInt(request.getParameter("msgId"));
-    String message=caseDao.deleteCase(caseId);  	
-    return message;
+    public @ResponseBody String deleteMessage(HttpServletRequest request,HttpSession session) 
+    {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+			int caseId=Integer.parseInt(request.getParameter("msgId"));
+	    String message=caseDao.deleteCase(caseId);  	
+	    return message;
     }
     
 }

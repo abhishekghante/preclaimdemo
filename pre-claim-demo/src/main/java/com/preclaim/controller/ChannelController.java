@@ -16,6 +16,7 @@ import com.preclaim.dao.UserDAO;
 import com.preclaim.models.Channel;
 import com.preclaim.models.ChannelList;
 import com.preclaim.models.ScreenDetails;
+import com.preclaim.models.UserDetails;
 
 @Controller
 @RequestMapping(value = "/channel")
@@ -29,6 +30,9 @@ public class ChannelController {
 
 	@RequestMapping(value = "/add_channel", method = RequestMethod.GET)
 	public String add_channel(HttpSession session) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");
 		ScreenDetails details = new ScreenDetails();
 		details.setScreen_name("../channel/add_channel.jsp");
@@ -43,6 +47,9 @@ public class ChannelController {
 
 	@RequestMapping(value = "/pending_channel", method = RequestMethod.GET)
 	public String pending_channel(HttpSession session, HttpServletRequest request) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");
 		ScreenDetails details = new ScreenDetails();
 		details.setScreen_name("../channel/pending_channel.jsp");
@@ -66,6 +73,9 @@ public class ChannelController {
 	
 	@RequestMapping(value = "/active_channel", method = RequestMethod.GET)
 	public String active_channel(HttpSession session) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");
 		ScreenDetails details = new ScreenDetails();
 		details.setScreen_name("../channel/active_channel.jsp");
@@ -79,44 +89,56 @@ public class ChannelController {
 	}
 	
 	@RequestMapping(value = "/addChannel",method = RequestMethod.POST)
-	public @ResponseBody String addChannel(HttpServletRequest request) 
+	public @ResponseBody String addChannel(HttpSession session, HttpServletRequest request) 
 	{	
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		String ChannelName = request.getParameter("channelName");
 		String ChannelCode=request.getParameter("channelCode");
 		Channel channel=new Channel();
 		channel.setChannelName(ChannelName);;
 		channel.setChannelCode(ChannelCode);
 		String message =channelDao.create_channel(channel);		
-		userDao.activity_log("CHANNEL", 0, "ADD", 0, request.getRemoteAddr());
+		userDao.activity_log("CHANNEL", 0, "ADD", user.getUsername());
 		return message;
 	}
 
 	@RequestMapping(value = "/deleteChannel", method = RequestMethod.POST)
-	public @ResponseBody String deleteChannel(HttpServletRequest request)
+	public @ResponseBody String deleteChannel(HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		int channelId = Integer.parseInt(request.getParameter("channelId"));
 		String message = channelDao.deleteChannel(channelId);
-		userDao.activity_log("CHANNEL", channelId, "DELETE", 0, request.getRemoteAddr());
+		userDao.activity_log("CHANNEL", channelId, "DELETE", user.getUsername());
 		return message;
 	}
 	
 	@RequestMapping(value = "/updateChannel",method = RequestMethod.POST)
-	public @ResponseBody String updateChannel(HttpServletRequest request) 
+	public @ResponseBody String updateChannel(HttpSession session, HttpServletRequest request) 
 	{	
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		String channelCode = request.getParameter("channelCode");		
 		String channelName = request.getParameter("channelName");
 		int channelId = Integer.parseInt(request.getParameter("channelId"));
 		String message = channelDao.updateChannel(channelName, channelCode, channelId);	
-		userDao.activity_log("CHANNEL", channelId, "UPDATE", 0, request.getRemoteAddr());
+		userDao.activity_log("CHANNEL", channelId, "UPDATE", user.getUsername());
 		return message;
 	}
 	@RequestMapping(value = "/updateChannelStatus",method = RequestMethod.POST)
-	public @ResponseBody String updateChannelStatus(HttpServletRequest request) 
+	public @ResponseBody String updateChannelStatus(HttpSession session, HttpServletRequest request) 
 	{	
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		int channelId =Integer.parseInt(request.getParameter("channelId"));		
 		int status =Integer.parseInt(request.getParameter("status"));
 		String message=channelDao.updateChannelStatus(channelId, status);
-	    userDao.activity_log("CHANNEL", channelId, status == 1 ? "ACTIVE" : "DEACTIVE", 0,request.getRemoteAddr());
+	    userDao.activity_log("CHANNEL", channelId, status == 1 ? "ACTIVE" : "DEACTIVE", user.getUsername());
 		return message;
 	}
 	

@@ -22,6 +22,7 @@ import com.preclaim.config.Config;
 import com.preclaim.dao.AppUserDao;
 import com.preclaim.dao.UserDAO;
 import com.preclaim.models.ScreenDetails;
+import com.preclaim.models.UserDetails;
 
 @Controller
 @RequestMapping(value = "/app_user")
@@ -36,6 +37,9 @@ public class AppUserController {
 	@RequestMapping(value = "/app_user")
 	public String app_user(HttpSession session)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");    	
 		ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../app_user/app_user.jsp");
@@ -50,6 +54,9 @@ public class AppUserController {
 	@RequestMapping(value = "/import")
 	public String import_user(HttpSession session)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");    	
 		ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../app_user/import_user.jsp");
@@ -61,30 +68,39 @@ public class AppUserController {
 	}
 	
 	@RequestMapping(value = "/updateAppUserStatus",method = RequestMethod.POST)
-	public @ResponseBody String updateAppUserStatus(HttpServletRequest request)
+	public @ResponseBody String updateAppUserStatus(HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		int appUserId = Integer.parseInt(request.getParameter("appUserId"));
 		int appUserStatus = Integer.parseInt(request.getParameter("status"));
 	    String message = appuserDao.updateAppUserStatus(appUserId, appUserStatus); 
 	    userDao.activity_log("APP USER", appUserId, appUserStatus == 1 ? "ACTIVE" : "DEACTIVE", 
-	    		0,request.getRemoteAddr());
+	    		user.getUsername());
 		return message;
     }
 	
 	@RequestMapping(value = "/deleteAppUser",method = RequestMethod.POST)
-	public @ResponseBody String deleteAppUser(HttpServletRequest request) {
+	public @ResponseBody String deleteAppUser(HttpSession session, HttpServletRequest request) {
 	
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		int appUserId = Integer.parseInt(request.getParameter("appUserId"));
 		String message = appuserDao.deleteAppUser(appUserId);
-		userDao.activity_log("APPUSER", appUserId, "DELETE", 0, request.getRemoteAddr());
+		userDao.activity_log("APPUSER", appUserId, "DELETE", user.getUsername());
 		return message;
 	}
 	
 	@RequestMapping(value = "/deleteAll")
 	public String deleteAll(HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		appuserDao.deleteAllUsers();
-		userDao.activity_log("APPUSER", 0, "DELETEALL", 0, request.getRemoteAddr());
+		userDao.activity_log("APPUSER", 0, "DELETEALL", user.getUsername());
 		session.removeAttribute("ScreenDetails");    	
 		ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../app_user/app_user.jsp");
@@ -100,6 +116,9 @@ public class AppUserController {
 	@RequestMapping(value = "/importData", method = RequestMethod.POST)
 	public String importData(@RequestParam CommonsMultipartFile userfile,HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");    	
 		ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../app_user/import_user.jsp");

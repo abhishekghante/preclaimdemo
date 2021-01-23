@@ -15,6 +15,7 @@ import com.preclaim.dao.UserDAO;
 import com.preclaim.models.Region;
 import com.preclaim.models.RegionList;
 import com.preclaim.models.ScreenDetails;
+import com.preclaim.models.UserDetails;
 
 @Controller
 @RequestMapping(value = "/region")
@@ -27,6 +28,9 @@ public class RegionController{
 	
 	@RequestMapping(value = "/add_region",method = RequestMethod.GET)
 	public String add_region(HttpSession session) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");
 		ScreenDetails details=new ScreenDetails();
 		details.setScreen_name("../region/add_region.jsp");
@@ -41,6 +45,9 @@ public class RegionController{
 	
 	@RequestMapping(value = "/pending_region",method = RequestMethod.GET)
 	public String pending_region(HttpSession session, HttpServletRequest request) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");
 		ScreenDetails details=new ScreenDetails();
 		details.setScreen_name("../region/pending_region.jsp");
@@ -63,6 +70,9 @@ public class RegionController{
 	
 	@RequestMapping(value = "/active_region",method = RequestMethod.GET)
 	public String active_region(HttpSession session) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");
 		ScreenDetails details=new ScreenDetails();
 		details.setScreen_name("../region/active_region.jsp");
@@ -76,44 +86,56 @@ public class RegionController{
 	}
 	
 	@RequestMapping(value = "/deleteRegion",method = RequestMethod.POST)
-	public @ResponseBody String deleteRegion(HttpServletRequest request) {
+	public @ResponseBody String deleteRegion(HttpSession session, HttpServletRequest request) {
 	
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		int RegionId=Integer.parseInt(request.getParameter("RegionId"));
 		System.out.println("RegionId :"+RegionId);
 		String message=regionDao.deleteRegion(RegionId);
-		userDao.activity_log("REGION", RegionId, "DELETE", 0, request.getRemoteAddr());
+		userDao.activity_log("REGION", RegionId, "DELETE", user.getUsername());
 		return message;
 	}
 	
 	@RequestMapping(value = "/addRegion",method = RequestMethod.POST)
-	public @ResponseBody String addRegion(HttpServletRequest request) 
+	public @ResponseBody String addRegion(HttpSession session, HttpServletRequest request) 
 	{	
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		String RegionName = request.getParameter("regionName");
 		Region region = new Region();
 		region.setRegionName(RegionName);
 		String message=regionDao.create_region(region);		
-		userDao.activity_log("REGION", 0, "ADD", 0, request.getRemoteAddr());
+		userDao.activity_log("REGION", 0, "ADD", user.getUsername());
 		return message;
 	}
 	
 	@RequestMapping(value = "/updateRegion",method = RequestMethod.POST)
-	public @ResponseBody String updateRegion(HttpServletRequest request) 
+	public @ResponseBody String updateRegion(HttpSession session, HttpServletRequest request) 
 	{	
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		int RegionId=Integer.parseInt(request.getParameter("regionId"));		
 		String RegionName = request.getParameter("regionName");
 		System.out.println("RegionId :"+ RegionId);
 		String message=regionDao.updateRegion(RegionId,RegionName);	
-		userDao.activity_log("REGION", RegionId, "UPDATE", RegionId, request.getRemoteAddr());
+		userDao.activity_log("REGION", RegionId, "UPDATE", user.getUsername());
 		return message;
 	}
 	
 	@RequestMapping(value = "/updateRegionStatus",method = RequestMethod.POST)
-	public @ResponseBody String updateRegionStatus(HttpServletRequest request)
+	public @ResponseBody String updateRegionStatus(HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		int RegionId=Integer.parseInt(request.getParameter("regionId"));
 		int RegionStatus=Integer.parseInt(request.getParameter("status"));
 	    String message= regionDao.updateRegionStatus(RegionId,RegionStatus); 
-	    userDao.activity_log("REGION", RegionId, RegionStatus == 1 ? "ACTIVE" : "DEACTIVE", RegionStatus,request.getRemoteAddr());
+	    userDao.activity_log("REGION", RegionId, RegionStatus == 1 ? "ACTIVE" : "DEACTIVE", user.getUsername());
 		return message;
     }
 }

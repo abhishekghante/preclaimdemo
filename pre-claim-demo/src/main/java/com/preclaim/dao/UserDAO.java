@@ -22,6 +22,6 @@ public interface UserDAO {
 	String addPermission(List<String> role_permission, int roleID);
 	String accountValidate(String username);
 	String updateProfile(UserDetails user_details);
-	void activity_log(String moduleName,int moduleId,String moduleAction,int userId,String ip_address);
+	void activity_log(String moduleName,int moduleId,String moduleAction,String username);
 	String getUserRole(int roleId);
 }

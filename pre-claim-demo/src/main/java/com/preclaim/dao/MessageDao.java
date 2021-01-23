@@ -2,11 +2,8 @@ package com.preclaim.dao;
 
 import java.util.List;
 
-import com.preclaim.models.CaseDetailList;
-import com.preclaim.models.CaseDetails;
 import com.preclaim.models.Channel;
 import com.preclaim.models.IntimationType;
-import com.preclaim.models.MessageList;
 import com.preclaim.models.Region;
 
 
@@ -15,7 +12,9 @@ public interface MessageDao {
 	List<Region> getActiveRegionlist();
 	List<Channel> getActiveChannellist();
 	List<Channel> getCategoryChannellist();
-	List<CaseDetailList> getCaseDetailList(int status);
-	public String addcase(CaseDetails casedetail);
+	/*
+	 * List<CaseDetailList> getCaseDetailList(int status); public String
+	 * addcase(CaseDetails casedetail);
+	 */
 
 }

@@ -9,7 +9,7 @@ public interface CaseDao {
 	
 	String addBulkUpload(String filename);
 	String addcase(CaseDetails casedetail);
-	List<CaseDetailList> getCaseDetailList(int status);
+	List<CaseDetailList> getCaseDetailList(String status);
 	String deleteCase(int caseId);
 
 }

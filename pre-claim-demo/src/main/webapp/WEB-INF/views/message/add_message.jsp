@@ -325,12 +325,22 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
   $("#add_message_form").on('submit', function(e){
     e.preventDefault();
     var policyNumber   = $( '#add_message_form #policyNumber' ).val();
+    var msgCategory    = $( '#add_message_form #msgCategory' ).val();
     var insuredName    = $( '#add_message_form #insuredName' ).val();
+    var insuredDOD     = $( '#add_message_form #insuredDOD' ).val();
+    var insuredDOB     = $( '#add_message_form #insuredDOB' ).val();
+    var sumAssured     = $( '#add_message_form #sumAssured' ).val();
+    var msgIntimationType  = $( '#add_message_form #msgIntimationType' ).val();    
     var claimantCity   = $( '#add_message_form #claimantCity' ).val();
-    var claimantZone  = $( '#add_message_form #claimantZone' ).val();
+    var claimantZone   = $( '#add_message_form #claimantZone' ).val();
     var claimantState  = $( '#add_message_form #claimantState' ).val();
-    var msgCategory = $( '#add_message_form #msgCategory' ).val();
-    var sumAssured = $( '#add_message_form #sumAssured' ).val();
+    var subStatus      = $( '#add_message_form #subStatus' ).val();
+    var nomineeName    = $( '#add_message_form #nomineeName' ).val();
+    var nomineeMob     = $( '#add_message_form #nomineeMob' ).val();
+    var nomineeAdd     = $( '#add_message_form #nomineeAdd' ).val();
+    var insuredAdd     = $( '#add_message_form #insuredAdd' ).val();
+    
+    
     $('#policyNumber').removeClass('has-error-2');
     
     var errorFlag = 0;
@@ -340,39 +350,82 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     	toastr.error('Policy Number cannot be empty','Error');
     	errorFlag = 1;
     }
+    if(msgCategory == '')
+    {
+        toastr.error('Investigation Category cannot be empty','Error');
+        errorFlag = 1;
+    }
     if(insuredName == '')
     {
-      	toastr.error('Insured Name cannot be empty','Error');
+      	toastr.error('Please enter Insured Name','Error');
       	errorFlag = 1;
+    }
+    if(insuredDOD == '')
+    {
+      	toastr.error('Insured Date of Death cannot be empty','Error');
+      	errorFlag = 1;
+    }
+    if(insuredDOB == '')
+    {
+      	toastr.error('Insured Date of Birth cannot be empty','Error');
+      	errorFlag = 1;
+    }
+    if(sumAssured == '')
+    {
+        toastr.error('Sum Assured cannot be empty','Error');
+        errorFlag = 1;
+    }
+    if(msgIntimationType == '')
+    {
+        toastr.error('Please select Intimation Type','Error');
+        errorFlag = 1;
     }
     if(claimantCity == '')
     {
 	      toastr.error('Claimant City cannot be empty','Error');
 	      errorFlag = 1;
     }
-    if(claimantZone == ''){
+    if(claimantZone == '')
+    {
       toastr.error('Claimaint Zone Cannot be empty','Error');
       errorFlag = 1;
     }
-    if(claimantState == ''){
+    if(claimantState == '')
+    {
       toastr.error('Claimant State cannot be empty','Error');
       errorFlag = 1;
     }
-    if(msgCategory == ''){
-        toastr.error('Investigation Category cannot be empty','Error');
+    if(nomineeName == '')
+    {
+        toastr.error('Please enter Nominee Name','Error');
         errorFlag = 1;
-      }
-    if(sumAssured == ''){
-        toastr.error('Sum Assured cannot be empty','Error');
+    }
+    if(nomineeMob == '')
+    {
+        toastr.error('Please enter Nominee Contact Number','Error');
         errorFlag = 1;
-      }
+    }
+    if(nomineeAdd == '')
+    {
+        toastr.error('Please enter Nominee Address','Error');
+        errorFlag = 1;
+    }
+    if(insuredAdd == '')
+    {
+        toastr.error('Please enter Insured Address','Error');
+        errorFlag = 1;
+    }
+   
+    
     if(errorFlag == 1)
     	return false;
         
     $.ajax({
 	    type: "POST",
 	    url: 'addMessage',
-	    data: {'policyNumber':policyNumber,'insuredName':insuredName,'claimantCity':claimantCity,'claimantZone':claimantZone,'claimantState':claimantState,'msgCategory':msgCategory,'sumAssured':sumAssured},
+	    data: {'policyNumber':policyNumber,'msgCategory':msgCategory,'insuredName':insuredName,'insuredDOD':insuredDOB,'insuredDOB':insuredDOD,
+	    	       'sumAssured':sumAssured,'msgIntimationType':msgIntimationType,'claimantCity':claimantCity,'claimantZone':claimantZone,'claimantState':claimantState,
+	    	       'nomineeName':nomineeName,'nomineeMob':nomineeMob,'nomineeAdd':nomineeAdd,'insuredAdd':insuredAdd},
 	    beforeSend: function() {
 	    	$("#addmessagesubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
 	        $("#addmessagesubmit").prop('disabled', true);

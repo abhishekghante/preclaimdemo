@@ -8,11 +8,8 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.preclaim.models.CaseDetailList;
-import com.preclaim.models.CaseDetails;
 import com.preclaim.models.Channel;
 import com.preclaim.models.IntimationType;
-import com.preclaim.models.MessageList;
 import com.preclaim.models.Region;
 
 public class MessageDaoImpl implements MessageDao {
@@ -115,7 +112,7 @@ public class MessageDaoImpl implements MessageDao {
 
 	}
 
-	@Override
+/*	@Override
 	public List<CaseDetailList> getCaseDetailList(int status) {
 		try
 		{
@@ -134,7 +131,7 @@ public class MessageDaoImpl implements MessageDao {
 						casedetail.setClaimantZone(rs.getString("claimantZone"));
 						casedetail.setSumAssured(rs.getInt("sumAssured"));
 						casedetail.setStatus(rs.getInt("status"));
-						casedetail.setSubstatus(rs.getInt("subStatus"));
+						casedetail.setCaseSubstatus(rs.getInt("subStatus"));
 						return casedetail;
 					});
 			return casedetailList;
@@ -165,7 +162,7 @@ public class MessageDaoImpl implements MessageDao {
 		}
 		return "****";
 	}
-
+*/
 	
 
 	

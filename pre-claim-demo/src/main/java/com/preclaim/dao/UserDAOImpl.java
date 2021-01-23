@@ -312,11 +312,11 @@ public class UserDAOImpl implements UserDAO{
 	}
 
 	@Override
-	public void activity_log(String moduleName, int moduleId, String moduleAction, int userId, String ip_address) {
+	public void activity_log(String moduleName, int moduleId, String moduleAction, String username) {
 		try 
 		{
-		  	String sql="insert into activity_log(moduleName,moduleId,moduleAction,userId,logDate,ip_address) values(?,?,?,?,now(),?)";
-	          this.template.update(sql,moduleName,moduleId,moduleAction,userId,ip_address);	
+		  	String sql="insert into activity_log(moduleName,moduleId,moduleAction,userId,logDate) values(?,?,?,?,now())";
+	          this.template.update(sql,moduleName,moduleId,moduleAction,username);	
 		}
 		catch(Exception e) 
 		{

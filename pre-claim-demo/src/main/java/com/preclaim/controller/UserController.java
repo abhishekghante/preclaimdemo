@@ -62,7 +62,7 @@ public class UserController {
     	if(message.equals("****"))
     	{
     		details.setSuccess_message1("User created successfully");
-    		dao.activity_log("USER",user.getUserID(), "ADD", 0, request.getRemoteAddr());
+    		dao.activity_log("USER",user.getUserID(), "ADD", user.getUsername());
     	}    		
     	else
     		details.setError_message1(message);
@@ -109,65 +109,83 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/addRole", method = RequestMethod.POST)
-	public @ResponseBody String add_role(HttpServletRequest request)
+	public @ResponseBody String add_role(HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		UserRole role = new UserRole();
 		role.setRole(request.getParameter("role"));
 		role.setRole_code(request.getParameter("role_code"));
 		role.setStatus(1);
 		String message = dao.create_role(role);
-		dao.activity_log("ROLE", 0, "ADD", 0, request.getRemoteAddr());
+		dao.activity_log("ROLE", 0, "ADD", user.getUsername());
 		return message;
 	}
 	
 	@RequestMapping(value = "/deleteRole", method = RequestMethod.POST)
-	public @ResponseBody String delete_role(HttpServletRequest request)
+	public @ResponseBody String delete_role(HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		UserRole role = new UserRole();
 		role.setRoleId(Integer.parseInt(request.getParameter("roleId")));
 		role.setStatus(0);
 		System.out.println(role.toString());
 		String message = dao.delete_role(role);
-		dao.activity_log("ROLE",role.getRoleId(), "DELETE", 0, request.getRemoteAddr());
+		dao.activity_log("ROLE",role.getRoleId(), "DELETE", user.getUsername());
 		return message;
 	}
 	
 	@RequestMapping(value = "/updateRole", method = RequestMethod.POST)
-	public @ResponseBody String update_role(HttpServletRequest request)
+	public @ResponseBody String update_role(HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		UserRole role = new UserRole();
 		role.setRoleId(Integer.parseInt(request.getParameter("edit_roleId")));
 		role.setRole_code(request.getParameter("edit_role_code"));
 		role.setRole(request.getParameter("edit_role"));
 		System.out.println(role.toString());
 		String message = dao.updateUserRole(role);
-		dao.activity_log("ROLE",role.getRoleId(), "UPDATE", 0, request.getRemoteAddr());
+		dao.activity_log("ROLE",role.getRoleId(), "UPDATE", user.getUsername());
 		return message;
 	}
 	@RequestMapping(value = "/updateUserStatus", method = RequestMethod.POST)
-	public @ResponseBody String updateUserStatus(HttpServletRequest request)
+	public @ResponseBody String updateUserStatus(HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		int user_id = Integer.parseInt(request.getParameter("user_id"));
 		int user_status = Integer.parseInt(request.getParameter("status"));
 		System.out.println("User ID:" + user_id + " User_Status:" + user_status);
 		String message = dao.updateUserStatus(user_id, user_status);
-		dao.activity_log("USER",user_id, user_status == 1 ? "ACTIVE" : "DEACTIVE", 0, request.getRemoteAddr());
+		dao.activity_log("USER",user_id, user_status == 1 ? "ACTIVE" : "DEACTIVE", user.getUsername());
 		return message;
 	}
 	
 	@RequestMapping(value = "/deleteAdminUser", method = RequestMethod.POST)
-	public @ResponseBody String deleteAdminUser(HttpServletRequest request)
+	public @ResponseBody String deleteAdminUser(HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		int user_id = Integer.parseInt(request.getParameter("user_id"));
 		System.out.println("User ID:" + user_id);
 		String message = dao.deleteAdminUser(user_id);
-		dao.activity_log("USER",user_id, "DELETE", 0, request.getRemoteAddr());
+		dao.activity_log("USER",user_id, "DELETE", user.getUsername());
 		return message;
 	}
 	
 	@RequestMapping(value = "/edit/{UserID}", method = RequestMethod.GET)
 	public String edit(@PathVariable("UserID") int UserID, HttpSession session, Model m)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");    	
 		ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../user/edit_user.jsp");
@@ -185,8 +203,11 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/updateUserDetails", method = RequestMethod.POST)
-	public @ResponseBody String updateUserDetails(HttpServletRequest request)
+	public @ResponseBody String updateUserDetails(HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		UserDetails user_details = new UserDetails();
 		user_details.setUserID(Integer.parseInt(request.getParameter("user_id")));
 		user_details.setFull_name(request.getParameter("full_name"));
@@ -197,13 +218,16 @@ public class UserController {
 		user_details.setUsername(request.getParameter("username"));
 		user_details.setUserimage(request.getParameter("account_img"));		
 		System.out.println(user_details.toString());
-		dao.activity_log("USER",user_details.getUserID(), "UPDATE", 0, request.getRemoteAddr());
+		dao.activity_log("USER",user_details.getUserID(), "UPDATE", user_details.getUsername());
 		return dao.updateUserDetails(user_details);
 	}
 	
 	@RequestMapping(value = "/permission/{roleID}", method = RequestMethod.GET)
 	public String permission(@PathVariable("roleID") int roleID, HttpSession session)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		session.removeAttribute("ScreenDetails");    	
 		ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../role/add_permission_form.jsp");
@@ -218,8 +242,11 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/addPermission", method = RequestMethod.POST)
-	public @ResponseBody String addPermission(HttpServletRequest request)
+	public @ResponseBody String addPermission(HttpSession session, HttpServletRequest request)
 	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		int roleID = Integer.parseInt(request.getParameter("roleId"));
 		Enumeration<String> parameterNames = request.getParameterNames();
 		List<String> role_permission = new ArrayList<String>();
@@ -234,7 +261,7 @@ public class UserController {
 		}
 		role_permission.remove(role_permission.size() - 1);
 		dao.addPermission(role_permission, roleID);
-		dao.activity_log("PERMISSION",roleID, "ADD", 0, request.getRemoteAddr());
+		dao.activity_log("PERMISSION",roleID, "ADD", user.getUsername());
 		return "****";
 	}
 	
