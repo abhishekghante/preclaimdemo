@@ -46,12 +46,12 @@ public class UserDAOImpl implements UserDAO{
 	@Override
 	public String create_user(UserDetails user) {
 		String sql = "INSERT INTO admin_user(full_name, account_type, username, user_email, "
-				+ "contact_number, password, address, permissions, status, user_image, createdon, "
-				+ "web_active, last_login) VALUES(?,?,?,?,'',?,'','',?,?,now(),1,now())";
+				+ "contact_number, password, state, city, zone, status,address,user_image,permissions,createdon, "
+				+ "web_active, last_login) VALUES(?,?,?,?,?,?,?,?,?,?,'',?,'',now(),1,now())";
 		System.out.println(user.getPassword());
 		try {
 			template.update(sql, user.getFull_name(), user.getAccount_type(), user.getUsername(),
-					user.getUser_email(), user.getPassword(), user.getStatus(), "");
+					user.getUser_email(),user.getContactNumber(), user.getPassword(),user.getState(),user.getCity(),user.getZone(),user.getStatus(), "");
 		}
 		catch(Exception e)
 		{

@@ -64,6 +64,20 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
                 </div>
               </div>
               <div class="form-group">
+                <label class="col-md-4 control-label" for="contactNumber">Contact Number <span class="text-danger">*</span></label>
+                <div class="col-md-8">
+                  <input type="number" required placeholder="Contact Number" id="contactNumber" class="form-control" 
+                  	name="contactNumber">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="state">State <span class="text-danger">*</span></label>
+                <div class="col-md-8">
+                  <input type="text" required placeholder="State" id="state" class="form-control" 
+                  	name="state">
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-md-4 control-label">Upload image</label>
                 <div class="col-md-8">
                   <a href="javascript:void(0);">
@@ -97,6 +111,18 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
                     <option value="1">Active</option>
                     <option value="2">Inactive</option>
                   </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="zone">Zone <span class="text-danger">*</span></label>
+                <div class="col-md-8">
+                  <input type="text" required placeholder="Zone" maxlength="15" id="zone" class="form-control" name="zone">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="city">City <span class="text-danger">*</span></label>
+                <div class="col-md-8">
+                  <input type="text" required placeholder="city" maxlength="15" id="city" class="form-control" name="city">
                 </div>
               </div>
             </div>
@@ -141,6 +167,10 @@ function accountValidate() {
     var account_img  = $.trim($('#add_account_form #account_image').val());
     var account_type = $.trim($('#add_account_form #account_type').val());
     var status       = $.trim($('#add_account_form #status').val());
+    var contactNumber = $.trim($('#add_account_form #contactNumber').val());
+    var state        = $.trim($('#add_account_form #state').val());
+    var zone         = $.trim($('#add_account_form #zone').val());
+    var city         = $.trim($('#add_account_form #city').val());
    	
     $('#full_name').removeClass('has-error-2');
     $('#username').removeClass('has-error-2');
@@ -148,7 +178,36 @@ function accountValidate() {
     $('#user_email').removeClass('has-error-2');
     $('#status').removeClass('has-error-2');
     $('#account_type').removeClass('has-error-2');
+    $('#contactNumber').removeClass('has-error-2');
+    $('#state').removeClass('has-error-2');
+    $('#zone').removeClass('has-error-2');
+    $('#city').removeClass('has-error-2');
     let validflag = 1;
+    
+    if( contactNumber == "" ){
+        $('#contactNumber').addClass('has-error-2');
+        $('#contactNumber').focus();
+        validflag = 0;
+        toastr.error("Kindly enter Contact Number","Error");
+    }
+    if( state == "" ){
+        $('#state').addClass('has-error-2');
+        $('#state').focus();
+        validflag = 0;
+        toastr.error("Kindly enter your State Name","Error");
+    }
+    if( zone == "" ){
+        $('#zone').addClass('has-error-2');
+        $('#zone').focus();
+        validflag = 0;
+        toastr.error("Kindly enter your Zone Area","Error");
+    }
+    if( city == "" ){
+        $('#city').addClass('has-error-2');
+        $('#city').focus();
+        validflag = 0;
+        toastr.error("Kindly enter your City Name","Error");
+    }
     if( status == "" ){
         $('#status').addClass('has-error-2');
         $('#status').focus();
