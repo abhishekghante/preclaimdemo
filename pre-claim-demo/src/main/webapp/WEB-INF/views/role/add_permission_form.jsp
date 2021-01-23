@@ -57,6 +57,25 @@ ArrayList<String> user_permission=(ArrayList<String>)session.getAttribute("user_
 			                    </tr>
 			                    <tr>
 			                    	<td>
+			                    		<input type="checkbox" <%if(role_permission.contains("regionalManager")) {%>checked <%} %> name="regionalManager[]" id="regionalManager" class="allPLCheck1" value="regionalManager"> <label for="intimationType">Regional Manager</label>
+			                    	</td>
+			                    	<td>
+			                    		<input type="checkbox" <%if(role_permission.contains("regionalManager/view")) {%>checked <%} %> name="regionalManager[]" id="regionalManager_view" class="indPLCheck1" value="regionalManager/view"> <label for="regionalManager_view">View</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("regionalManager/assign")) {%>checked <%} %> name="regionalManager[]" id="regionalManager_assign" class="indPLCheck1" value="regionalManager/assign"> <label for="regionalManager_assign">Assign</label>
+			                    	</td>
+			                    </tr>
+			                    <tr>
+			                    	<td>
+			                    		<input type="checkbox" <%if(role_permission.contains("agencySupervisor")) {%>checked <%} %> name="agencySupervisor[]" id="agencySupervisor" class="allPLCheck1" value="agencySupervisor"> <label for="agencySupervisor">Agency Supervisor</label>
+			                    	</td>
+			                    	<td>
+			                    		<input type="checkbox" <%if(role_permission.contains("agencySupervisor/view")) {%>checked <%} %> name="agencySupervisor[]" id="agencySupervisor_add" class="indPLCheck1" value="agencySupervisor/view"> <label for="agencySupervisor_view">view</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("agencySupervisor/assign")) {%>checked <%} %> name="agencySupervisor[]" id="agencySupervisor_delete" class="indPLCheck1" value="agencySupervisor/assign"> <label for="agencySupervisor_assign">Assign</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("agencySupervisor/reassign")) {%>checked <%} %> name="agencySupervisor[]" id="agencySupervisor_status" class="indPLCheck1" value="agencySupervisor/reassign"> <label for="intimationType_reassign">Reassign</label>
+			                    	</td>
+			                    </tr>
+			                    <tr>
+			                    	<td>
 			                    		<input type="checkbox" <%if(role_permission.contains("intimationType")) {%>checked <%} %> name="intimationType[]" id="intimationType" class="allPLCheck1" value="intimationType"> <label for="intimationType">Intimation Type</label>
 			                    	</td>
 			                    	<td>

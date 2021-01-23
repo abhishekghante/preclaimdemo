@@ -54,11 +54,6 @@ if(channelList == null)
                 <div class="col-md-8">
                   <select name="msgGroup" id="msgGroup" class="form-control" tabindex="-1" >
                     <option value = "-1" selected disabled>Select</option>
-                    <%
-                    for(IntimationType group : groupList) {
-                    %>
-                    	<option value = "<%= group.getGroup_id()%>"><%=group.getGroupName()%></option>
-                   	<%} %>
                   </select>
                 </div>
               </div>

@@ -92,7 +92,52 @@ ArrayList<String> user_permission = (ArrayList<String>)session.getAttribute("use
               </ul>
             </li>
             <%} %>
-
+			<%if(!user_permission.contains("regionalManager")){ %>
+            <li class="nav-item <%if(details.getMain_menu().equals("Users")){%>active open<%}%>">
+              <a href="${pageContext.request.contextPath}/users" class="nav-link nav-toggle">
+                  <i class="icon-user"></i>
+                  <span class="title">Regional Manager</span>
+                  <span class="arrow "></span>
+              </a>
+              <ul class="sub-menu">
+                    
+                <li class="nav-item <%if(details.getSub_menu1().equals("User Lists")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/user/user_list" class="nav-link nav-toggle">
+                    <i class="icon-clock"></i> Pending Cases
+                  </a>
+                </li>
+                
+                <li class="nav-item <%if(details.getSub_menu1().equals("User Role")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/user/role" class="nav-link nav-toggle">
+                    <i class="icon-check"></i> Assigned Cases
+                  </a>
+                </li>
+              </ul>
+            </li>
+             <%} %>
+            <%if(!user_permission.contains("agencySupervisor")){ %>
+            <li class="nav-item <%if(details.getMain_menu().equals("agencySupervisor")){%>active open<%}%>">
+              <a href="${pageContext.request.contextPath}/users" class="nav-link nav-toggle">
+                  <i class="icon-user"></i>
+                  <span class="title">Agency Supervisor</span>
+                  <span class="arrow "></span>
+              </a>
+              <ul class="sub-menu">
+                    
+                <li class="nav-item <%if(details.getSub_menu1().equals("User Lists")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/user/user_list" class="nav-link nav-toggle">
+                    <i class="icon-clock"></i> Pending Cases
+                  </a>
+                </li>
+                
+                <li class="nav-item <%if(details.getSub_menu1().equals("User Role")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/user/role" class="nav-link nav-toggle">
+                    <i class="icon-check"></i> Assigned Cases
+                  </a>
+                </li>
+              </ul>
+            </li>
+             <%} %>
             <li class="heading">
                 <h3 class="uppercase">Settings</h3>
             </li>

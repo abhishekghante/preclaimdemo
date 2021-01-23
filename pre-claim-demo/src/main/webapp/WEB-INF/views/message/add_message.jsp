@@ -42,15 +42,7 @@ session.removeAttribute("intimation_list");
       <form novalidate id="add_message_form" role="form" method="post" class="form-horizontal" enctype="multipart/form-data">
         <div class="box-body">
           <div class="row">
-            <div class="col-sm-10 col-md-10 col-xs-12">
-           	  <div class="form-group">
-                <label class="col-md-4 control-label" for="caseID">Case ID 
-                	<span class="text-danger">*</span>
-               	</label>
-                <div class="col-md-8">
-                  <input type="text" placeholder="Case ID" name="caseID" id="caseID" class="form-control">
-                </div>
-              </div>
+            <div class="col-sm-10 col-md-10 col-xs-12"> 
 			  <div class="form-group">
                 <label class="col-md-4 control-label" for="msgTitleEn">Policy Number 
                 	<span class="text-danger">*</span>
@@ -60,60 +52,6 @@ session.removeAttribute("intimation_list");
                   	class="form-control">
                 </div>
               </div>
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="insuredName">Insured Name 
-                	<span class="text-danger">*</span>
-               	</label>
-                <div class="col-md-8">
-                  <input type="text" placeholder="Insured Name" name="insuredName" id="insuredName" 
-                  	class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="claimantCity">Claimant City 
-                	<span class="text-danger">*</span>
-               	</label>
-                <div class="col-md-8">
-                  <input type="text" placeholder="Claimant City" name="claimantCity" id="claimantCity" 
-                  	class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="claimaintZone">Claimant Zone 
-                	<span class="text-danger">*</span>
-               	</label>
-                <div class="col-md-8">
-                  <input type="text" placeholder="Claimant Zone" name="claimantZone" id="claimantZone" 
-                  	class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="claimantState">Claimant State 
-                	<span class="text-danger">*</span>
-               	</label>
-                <div class="col-md-8">
-                  <input type="text" placeholder="Claimant State" name="claimantState" 
-                  	id="claimantState" class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="msgTitleEn">Status 
-                	<span class="text-danger">*</span>
-               	</label>
-                <div class="col-md-8">
-                  <input type="text" placeholder="Status" name="status" id="status" class="form-control"
-                  	value = "Open"  disabled readonly>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="subStatus">Sub-Status 
-                	<span class="text-danger">*</span>
-               	</label>
-                <div class="col-md-8">
-                  <input type="text" placeholder="Sub Status" name="subStatus" id="subStatus" 
-                  	class="form-control" value = "Pending for Assignment" disabled readonly>
-                </div>
-              </div>           
               <div class="form-group selectDiv">
                 <label class="col-md-4 control-label" for="msgCategory">Select Investigation Category 
                 	<span class="text-danger">*</span></label>
@@ -126,7 +64,34 @@ session.removeAttribute("intimation_list");
                     <%}} %>
                   </select>
                 </div>
-              </div>            
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="insuredName">Insured Name 
+                	<span class="text-danger">*</span>
+               	</label>
+                <div class="col-md-8">
+                  <input type="text" placeholder="Insured Name" name="insuredName" id="insuredName" 
+                  	class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="insuredDOD"> Date of Death
+                	<span class="text-danger">*</span>
+               	</label>
+                <div class="col-md-8">
+                  <input type="date" placeholder="Date of Death" name="insuredDOD" id="insuredDOD" 
+                  	class="form-control">
+                </div>  
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="insuredDOB"> Insured Date of Birth 
+                	<span class="text-danger">*</span>
+               	</label>
+                <div class="col-md-8">
+                  <input type="date" placeholder="Date of Death" name="insuredDOB" id="insuredDOB" 
+                  	class="form-control">
+                </div>  
+              </div>
               <div class="form-group">
                 <label class="col-md-4 control-label" for="sumAssured">Sum Assured 
                 	<span class="text-danger">*</span>
@@ -148,7 +113,84 @@ session.removeAttribute("intimation_list");
                     <%}} %>
                   </select>
                 </div>
-              </div> 
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="claimantCity">Claimant City 
+                	<span class="text-danger">*</span>
+               	</label>
+                <div class="col-md-8">
+                  <input type="text" placeholder="Claimant City" name="claimantCity" id="claimantCity" 
+                  	class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="claimantState">Claimant State 
+                	<span class="text-danger">*</span>
+               	</label>
+                <div class="col-md-8">
+                  <input type="text" placeholder="Claimant State" name="claimantState" 
+                  	id="claimantState" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="claimaintZone">Claimant Zone 
+                	<span class="text-danger">*</span>
+               	</label>
+                <div class="col-md-8">
+                  <input type="text" placeholder="Claimant Zone" name="claimantZone" id="claimantZone" 
+                  	class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="msgTitleEn">Status</label>
+                <div class="col-md-8">
+                  <input type="text" placeholder="Status" name="status" id="status" class="form-control"
+                  	value = "Open"  disabled readonly>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="subStatus">Sub-Status</label>
+                <div class="col-md-8">
+                  <input type="text" placeholder="Sub Status" name="subStatus" id="subStatus" 
+                  	class="form-control" value = "Pending for Assignment" disabled readonly>
+                </div>
+              </div>           
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="nomineeName">Nominee Name
+                	<span class="text-danger">*</span>
+                </label>
+                <div class="col-md-8">
+                  <input type="text" placeholder="Nominee Name" name="nomineeName" id="nomineeName" 
+                  	class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="nomineeMob">Nominee Contact Number</label>
+                <div class="col-md-8">
+                  <input type="number" placeholder="Nominee Contact Number" name="nomineeMob" id="nomineeMob" 
+                  	class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="nomineeAdd">Nominee Address</label>
+                <div class="col-md-8">
+                  <textarea name="nomineeAdd" id="nomineeAdd" class="form-control" rows="6"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="insuredAdd">Insured Address</label>
+                <div class="col-md-8">
+                  <textarea name="insuredAdd" id="insuredAdd" class="form-control" rows="6"></textarea>
+                </div>
+              </div>
+              <!-- 
+              <div class="form-group">
+       		  	<label class="col-md-4 control-label">Upload PDF</label>
+           		<div class="col-md-8">
+                	<input type="file" name="casePDF" id="casePDF" accept="application/pdf" />
+              	</div>
+              </div>
+               -->       
               <div id="uploadImageDiv">
                 <div class="form-group">
                   <label class="col-md-4 control-label">Upload Image(En)</label>
@@ -228,6 +270,7 @@ session.removeAttribute("intimation_list");
                         <input type="hidden" name="d_link_msgImgEn_5" id="d_link_msgImgEn_5" />
                       </a>
                     </div>
+                    
               </div>
               </div>
               </div>
@@ -240,7 +283,8 @@ session.removeAttribute("intimation_list");
                     <button class="btn btn-danger" onClick="return clearForm();" type="button">Clear</button>
                   </div>
                 </div>
-              </div>           
+              </div>
+                         
             </div>
           </div>
         </div>
