@@ -203,8 +203,40 @@ ArrayList<String> user_permission = (ArrayList<String>)session.getAttribute("use
                 <%} %>
               </ul>
             </li>
-             <%} %>
-             <%if(user_permission.contains("channels")){ %>
+            <%} %>
+            <%if(user_permission.contains("location")){ %>
+            <li class="nav-item <%if(details.getMain_menu().equals("Location")){%>active open<%}%>">
+              <a href="javascript:;" class="nav-link nav-toggle">
+                  <i class="icon-pointer" style = "color:white"></i>
+                  <span class="title">Location</span>
+                  <span class="arrow "></span>
+              </a>
+              <ul class="sub-menu">
+                <%if(user_permission.contains("location/add")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Add Location")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/location/add" class="nav-link nav-toggle">
+                    <i class="icon-plus"></i> Add Location
+                  </a>
+                </li>
+                 <%} %>
+                 <%if(user_permission.contains("location/index")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Pending Location")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/location/pending" class="nav-link nav-toggle">
+                    <i class="icon-clock"></i> Pending Location
+                  </a>
+                </li>
+                <%} %>
+				<%if(user_permission.contains("location/index")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Active Location")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/location/active" class="nav-link nav-toggle">
+                    <i class="icon-check"></i> Active Location
+                  </a>
+                </li>
+                <%} %>
+              </ul>
+            </li>
+            <%} %>
+            <%if(user_permission.contains("channels")){ %>
             <li class="nav-item <%if(details.getMain_menu().equals("Channels")){%>active open<%}%>">
               <a href="javascript:;" class="nav-link nav-toggle">
                   <i class="icon-support"></i>

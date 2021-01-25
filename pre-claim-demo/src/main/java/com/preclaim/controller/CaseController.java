@@ -106,9 +106,9 @@ public class CaseController {
 		session.removeAttribute("ScreenDetails");
     	ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/active_message.jsp");
-    	details.setScreen_title("<li class = \"active\">Active Cases Lists</li>");
+    	details.setScreen_title("Active Cases Lists");
     	details.setMain_menu("Case Management");
-    	details.setSub_menu1("Active Cases");
+    	details.setSub_menu1("RCU Active Cases");
     	session.setAttribute("ScreenDetails", details);
     	List<CaseDetailList> activeCaseDetailList= caseDao.getCaseDetailList("Close");
     	session.setAttribute("activeCaseDetailList", activeCaseDetailList);

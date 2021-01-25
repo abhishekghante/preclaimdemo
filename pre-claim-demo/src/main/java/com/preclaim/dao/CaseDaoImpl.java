@@ -77,7 +77,7 @@ public class CaseDaoImpl implements CaseDao {
 			 if(status.equals("Open")) 
 				 sql ="SELECT * FROM case_lists where status = " + status; 
 			   else 
-				 sql ="SELECT * FROM case_lists where status = Close";
+				 sql ="SELECT * FROM case_lists";
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
 						casedetail.setSrNo(rowCount+1);

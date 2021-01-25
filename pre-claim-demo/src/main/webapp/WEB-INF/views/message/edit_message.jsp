@@ -1,14 +1,3 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-$assetUrl       = $this->config->item( 'base_url' );
-if($messgeInfo->isEnImageSame1 == 1){ $checked1 = 'checked'; }else{ $checked1 = ''; }
-if($messgeInfo->isEnImageSame2 == 1){ $checked2 = 'checked'; }else{ $checked2 = ''; }
-if($messgeInfo->isEnImageSame3 == 1){ $checked3 = 'checked'; }else{ $checked3 = ''; }
-if($messgeInfo->isEnImageSame4 == 1){ $checked4 = 'checked'; }else{ $checked4 = ''; }
-if($messgeInfo->isEnImageSame5 == 1){ $checked5 = 'checked'; }else{ $checked5 = ''; }
-if($messgeInfo->isEnFileSame == 1){ $checked6 = 'checked'; }else{ $checked6 = ''; }
-if($messgeInfo->enableNotification == 1){ $checked7 = 'checked'; }else{ $checked7 = ''; }
-?>
 <style type="text/css">
 .placeImg { display:none !important;}
 </style>
@@ -46,13 +35,7 @@ if($messgeInfo->enableNotification == 1){ $checked7 = 'checked'; }else{ $checked
                 <label class="col-md-4 control-label" for="msgGroup">Select Group <span class="text-danger">*</span></label>
                 <div class="col-md-8">
                   <select name="msgGroup" id="msgGroup" class="form-control" tabindex="-1" >
-                    <?php 
-                    if($groupLists){
-                      foreach ($groupLists as $groupInfo) {
-                        ?><option value="<?php echo $groupInfo->groupId; ?>" <?php if($groupInfo->groupId == $messgeInfo->msgGroup){ echo 'selected'; } ?>><?php echo $groupInfo->groupName; ?></option><?php
-                      }
-                    }
-                    ?>
+                    
                   </select>
                 </div>
               </div>
@@ -143,8 +126,6 @@ if($messgeInfo->enableNotification == 1){ $checked7 = 'checked'; }else{ $checked
                 <label class="col-md-4 control-label" for="upload_type">Content Upload Type</label>
                 <div class="col-md-8">
                   <select name="upload_type" id="upload_type" class="form-control" tabindex="-1" >
-                    <option value="1" <?php if($messgeInfo->upload_type == 1){ echo 'selected'; } ?>>Image</option>
-                    <option value="2" <?php if($messgeInfo->upload_type == 2){ echo 'selected'; } ?>>Video</option>
                   </select>
                 </div>
               </div>
@@ -160,97 +141,24 @@ if($messgeInfo->enableNotification == 1){ $checked7 = 'checked'; }else{ $checked
                 $upload_typeCss2 = '';
               }
               ?>
-              <div class="form-group" id="videoURLDiv" <?= $upload_typeCss1; ?> >
+              <div class="form-group" id="videoURLDiv" >
                 <label class="col-md-4 control-label" for="videoURL">Video URL</label>
                 <div class="col-md-8">
                   <input type="text" required="" placeholder="Video URL Link(Youtube)"  name="videoURL" id="videoURL" maxlength="150" value="<?= $messgeInfo->videoURL; ?>" class="form-control">
                 </div>
               </div>
-              <?php
-              if($messgeInfo->msgImgEn_1){
-                $imgMsgEn_1 = $messgeInfo->msgImgEn_1;
-                $imgMsgEn_1S='style="display: block;"';
-              }else{
-                $imgMsgEn_1 = $assetUrl.'uploads/default_img.png';
-                $imgMsgEn_1S='';
-              }
-              if($messgeInfo->msgImgEn_2){
-                $imgMsgEn_2 = $messgeInfo->msgImgEn_2;
-                $imgMsgEn_2S='style="display: block;"';
-              }else{
-                $imgMsgEn_2 = $assetUrl.'uploads/default_img.png';
-                $imgMsgEn_2S='';
-              }
-              if($messgeInfo->msgImgEn_3){
-                $imgMsgEn_3 = $messgeInfo->msgImgEn_3;
-                $imgMsgEn_3S='style="display: block;"';
-              }else{
-                $imgMsgEn_3 = $assetUrl.'uploads/default_img.png';
-                $imgMsgEn_3S='';
-              }
-              if($messgeInfo->msgImgEn_4){
-                $imgMsgEn_4 = $messgeInfo->msgImgEn_4;
-                $imgMsgEn_4S='style="display: block;"';
-              }else{
-                $imgMsgEn_4 = $assetUrl.'uploads/default_img.png';
-                $imgMsgEn_4S='';
-              }
-              if($messgeInfo->msgImgEn_5){
-                $imgMsgEn_5 = $messgeInfo->msgImgEn_5;
-                $imgMsgEn_5S='style="display: block;"';
-              }else{
-                $imgMsgEn_5 = $assetUrl.'uploads/default_img.png';
-                $imgMsgEn_5S='';
-              }
-              ?>
-              <?php
-              if($messgeInfo->msgImgThai_1){
-                $imgMsgThai_1 = $messgeInfo->msgImgThai_1;
-                $imgMsgThai_1S='style="display: block;"';
-              }else{
-                $imgMsgThai_1 = $assetUrl.'uploads/default_img.png';
-                $imgMsgThai_1S='';
-              }
-              if($messgeInfo->msgImgThai_2){
-                $imgMsgThai_2 = $messgeInfo->msgImgThai_2;
-                $imgMsgThai_2S='style="display: block;"';
-              }else{
-                $imgMsgThai_2 = $assetUrl.'uploads/default_img.png';
-                $imgMsgThai_2S='';
-              }
-              if($messgeInfo->msgImgThai_3){
-                $imgMsgThai_3 = $messgeInfo->msgImgThai_3;
-                $imgMsgThai_3S='style="display: block;"';
-              }else{
-                $imgMsgThai_3 = $assetUrl.'uploads/default_img.png';
-                $imgMsgThai_3S='';
-              }
-              if($messgeInfo->msgImgThai_4){
-                $imgMsgThai_4 = $messgeInfo->msgImgThai_4;
-                $imgMsgThai_4S='style="display: block;"';
-              }else{
-                $imgMsgThai_4 = $assetUrl.'uploads/default_img.png';
-                $imgMsgThai_4S='';
-              }
-              if($messgeInfo->msgImgThai_5){
-                $imgMsgThai_5 = $messgeInfo->msgImgThai_5;
-                $imgMsgThai_5S='style="display: block;"';
-              }else{
-                $imgMsgThai_5 = $assetUrl.'uploads/default_img.png';
-                $imgMsgThai_5S='';
-              }
-              ?>
-              <div id="uploadImageDiv" <?= $upload_typeCss2; ?>>
+              
+              <div id="uploadImageDiv" >
                 <div class="form-group">
                   <label class="col-md-4 control-label">Upload Image</label>
                   <div class="col-md-8 col-nopadding-l">
                     <div class="col-md-3">
                       <a href="javascript:void(0);">
                         <div class="uploadFileDiv">
-                          <span class="delete_btn" data-imgID="imgMsgEnLbl_1" data-delID="delImgMsgEn_1" data-ID="imgMsgEn_1" data-linkID="link_msgImgEn_1" id="enLblDelBtn_1" data-toggle="tooltip" data-toggle="tooltip" title="Remove" <?= $imgMsgEn_1S; ?>>
+                          <span class="delete_btn" data-imgID="imgMsgEnLbl_1" data-delID="delImgMsgEn_1" data-ID="imgMsgEn_1" data-linkID="link_msgImgEn_1" id="enLblDelBtn_1" data-toggle="tooltip" data-toggle="tooltip" title="Remove" >
                             <i class="fa fa-remove"></i>
                           </span>
-                          <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgEn_1; ?>" id="link_msgImgEn_1" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink" <?= $imgMsgEn_1S; ?>>
+                          <span class="add_link_btn" data-val="" id="link_msgImgEn_1" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink" >
                             <i class="fa fa-link"></i>
                           </span>
                           <img src="<?php echo $imgMsgEn_1; ?>" class="imgMsgEnLbl" id="imgMsgEnLbl_1" style="height:120px;width: 100%;" data-src="#" data-toggle="tooltip" data-toggle="tooltip" title="Click to upload" />
@@ -264,10 +172,10 @@ if($messgeInfo->enableNotification == 1){ $checked7 = 'checked'; }else{ $checked
                     <div class="col-md-3">
                       <a href="javascript:void(0);">
                         <div class="uploadFileDiv">
-                          <span data-imgID="imgMsgEnLbl_2" data-delID="delImgMsgEn_2" data-ID="imgMsgEn_2" id="enLblDelBtn_2" class="delete_btn" data-linkID="link_msgImgEn_2" data-toggle="tooltip" data-toggle="tooltip" title="Remove" <?= $imgMsgEn_2S; ?>>
+                          <span data-imgID="imgMsgEnLbl_2" data-delID="delImgMsgEn_2" data-ID="imgMsgEn_2" id="enLblDelBtn_2" class="delete_btn" data-linkID="link_msgImgEn_2" data-toggle="tooltip" data-toggle="tooltip" title="Remove">
                             <i class="fa fa-remove"></i>
                           </span>
-                          <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgEn_2; ?>" id="link_msgImgEn_2" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink" <?= $imgMsgEn_2S; ?>>
+                          <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgEn_2; ?>" id="link_msgImgEn_2" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink">
                             <i class="fa fa-link"></i>
                           </span>
                           <img src="<?php echo $imgMsgEn_2; ?>" class="imgMsgEnLbl" id="imgMsgEnLbl_2" style="height:120px;width: 100%;" data-src="#" data-toggle="tooltip" data-toggle="tooltip" title="Click to upload" />
@@ -280,7 +188,7 @@ if($messgeInfo->enableNotification == 1){ $checked7 = 'checked'; }else{ $checked
                     <div class="col-md-3">
                       <a href="javascript:void(0);">
                         <div class="uploadFileDiv">
-                          <span data-imgID="imgMsgEnLbl_3" data-delID="delImgMsgEn_3" data-ID="imgMsgEn_3" id="enLblDelBtn_3" class="delete_btn" data-linkID="link_msgImgEn_3" data-toggle="tooltip" data-toggle="tooltip" title="Remove" <?= $imgMsgEn_3S; ?>>
+                          <span data-imgID="imgMsgEnLbl_3" data-delID="delImgMsgEn_3" data-ID="imgMsgEn_3" id="enLblDelBtn_3" class="delete_btn" data-linkID="link_msgImgEn_3" data-toggle="tooltip" data-toggle="tooltip" title="Remove">
                             <i class="fa fa-remove"></i>
                           </span>
                           <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgEn_3; ?>" id="link_msgImgEn_3" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink" <?= $imgMsgEn_3S; ?>>
@@ -391,10 +299,10 @@ if($messgeInfo->enableNotification == 1){ $checked7 = 'checked'; }else{ $checked
                     <div class="col-md-3">
                       <a href="javascript:void(0);">
                         <div class="uploadFileDiv">
-                          <span data-imgID="imgMsgThaiLbl_2" data-delID="delImgMsgThai_2" data-ID="imgMsgThai_2" id="thaiLblDelBtn_2" class="delete_btn" data-linkID="link_msgImgThai_2" data-toggle="tooltip" data-toggle="tooltip" title="Remove" <?= $imgMsgThai_2S; ?>>
+                          <span data-imgID="imgMsgThaiLbl_2" data-delID="delImgMsgThai_2" data-ID="imgMsgThai_2" id="thaiLblDelBtn_2" class="delete_btn" data-linkID="link_msgImgThai_2" data-toggle="tooltip" data-toggle="tooltip" title="Remove">
                             <i class="fa fa-remove"></i>
                           </span>
-                          <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgThai_2; ?>" id="link_msgImgThai_2" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink" <?= $imgMsgThai_2S; ?>>
+                          <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgThai_2; ?>" id="link_msgImgThai_2" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink">
                             <i class="fa fa-link"></i>
                           </span>
                           <img src="<?php echo $imgMsgThai_2; ?>" class="imgMsgThaiLbl" id="imgMsgThaiLbl_2" style="height:120px;width: 100%;" data-src="#" data-toggle="tooltip" data-toggle="tooltip" title="Click to upload" />
@@ -407,10 +315,10 @@ if($messgeInfo->enableNotification == 1){ $checked7 = 'checked'; }else{ $checked
                     <div class="col-md-3">
                       <a href="javascript:void(0);">
                         <div class="uploadFileDiv">
-                          <span data-imgID="imgMsgThaiLbl_3" data-delID="delImgMsgThai_3" data-ID="imgMsgThai_3" id="thaiLblDelBtn_3" class="delete_btn" data-linkID="link_msgImgThai_3" data-toggle="tooltip" data-toggle="tooltip" title="Remove" <?= $imgMsgThai_3S; ?>>
+                          <span data-imgID="imgMsgThaiLbl_3" data-delID="delImgMsgThai_3" data-ID="imgMsgThai_3" id="thaiLblDelBtn_3" class="delete_btn" data-linkID="link_msgImgThai_3" data-toggle="tooltip" data-toggle="tooltip" title="Remove">
                             <i class="fa fa-remove"></i>
                           </span>
-                          <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgThai_3; ?>" id="link_msgImgThai_3" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink" <?= $imgMsgThai_3S; ?>>
+                          <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgThai_3; ?>" id="link_msgImgThai_3" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink">
                             <i class="fa fa-link"></i>
                           </span>
                           <img src="<?php echo $imgMsgThai_3; ?>" class="imgMsgThaiLbl" id="imgMsgThaiLbl_3" style="height:120px;width: 100%;" data-src="#" data-toggle="tooltip" data-toggle="tooltip" title="Click to upload" />
@@ -423,10 +331,10 @@ if($messgeInfo->enableNotification == 1){ $checked7 = 'checked'; }else{ $checked
                     <div class="col-md-3">
                       <a href="javascript:void(0);">
                         <div class="uploadFileDiv">
-                          <span data-imgID="imgMsgThaiLbl_4" data-delID="delImgMsgThai_4" data-ID="imgMsgThai_4" id="thaiLblDelBtn_4" class="delete_btn" data-linkID="link_msgImgThai_4" data-toggle="tooltip" data-toggle="tooltip" title="Remove" <?= $imgMsgThai_4S; ?>>
+                          <span data-imgID="imgMsgThaiLbl_4" data-delID="delImgMsgThai_4" data-ID="imgMsgThai_4" id="thaiLblDelBtn_4" class="delete_btn" data-linkID="link_msgImgThai_4" data-toggle="tooltip" data-toggle="tooltip" title="Remove">
                             <i class="fa fa-remove"></i>
                           </span>
-                          <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgThai_4; ?>" id="link_msgImgThai_4" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink" <?= $imgMsgThai_4S; ?>>
+                          <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgThai_4; ?>" id="link_msgImgThai_4" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink">
                             <i class="fa fa-link"></i>
                           </span>
                           <img src="<?php echo $imgMsgThai_4; ?>" class="imgMsgThaiLbl" id="imgMsgThaiLbl_4" style="height:120px;width: 100%;" data-src="#" data-toggle="tooltip" data-toggle="tooltip" title="Click to upload" />
@@ -439,10 +347,10 @@ if($messgeInfo->enableNotification == 1){ $checked7 = 'checked'; }else{ $checked
                     <div class="col-md-3">
                       <a href="javascript:void(0);">
                         <div class="uploadFileDiv">
-                          <span data-imgID="imgMsgThaiLbl_5" data-delID="delImgMsgThai_5" data-ID="imgMsgThai_5" id="thaiLblDelBtn_5" class="delete_btn" data-linkID="link_msgImgThai_5" data-toggle="tooltip" data-toggle="tooltip" title="Remove" <?= $imgMsgThai_5S; ?>>
+                          <span data-imgID="imgMsgThaiLbl_5" data-delID="delImgMsgThai_5" data-ID="imgMsgThai_5" id="thaiLblDelBtn_5" class="delete_btn" data-linkID="link_msgImgThai_5" data-toggle="tooltip" data-toggle="tooltip" title="Remove">
                             <i class="fa fa-remove"></i>
                           </span>
-                          <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgThai_5; ?>" id="link_msgImgThai_5" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink" <?= $imgMsgThai_5S; ?>>
+                          <span class="add_link_btn" data-val="<?= $messgeInfo->link_msgImgThai_5; ?>" id="link_msgImgThai_5" data-toggle="tooltip" data-toggle="tooltip" title="Update hyperlink">
                             <i class="fa fa-link"></i>
                           </span>
                           <img src="<?php echo $imgMsgThai_5; ?>" class="imgMsgThaiLbl" id="imgMsgThaiLbl_5" style="height:120px;width: 100%;" data-src="#" data-toggle="tooltip" data-toggle="tooltip" title="Click to upload" />
@@ -455,49 +363,31 @@ if($messgeInfo->enableNotification == 1){ $checked7 = 'checked'; }else{ $checked
                   </div>
                 </div>
               </div>
-              <?php
-              if($messgeInfo->msgFileEn){
-                $msgFileEnEx  = explode('/', $messgeInfo->msgFileEn);
-                $fileNameEn   = end($msgFileEnEx);
-                $fileLabelEn  = '<a target="_blank" style="color: #fff;" href="'.$messgeInfo->msgFileEn.'">'. $fileNameEn . '...</a>';
-              }else{
-                $fileLabelEn  = '';
-              }
-              ?>
               <div class="form-group">
                 <label class="col-md-4 control-label">Upload PDF(En)</label>
                 <div class="col-md-8">
                   <input type="file" name="msgEnFile" id="msgEnFile" accept="application/pdf" />
-                  <p><?php if($fileLabelEn){ ?><span class="label label-info" id="msgEnLabel"><?= $fileLabelEn; ?></span> <?php } ?></p>
+                  <p><span class="label label-info" id="msgEnLabel"></span></p>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-md-offset-4 col-md-8 control-label text-left2" for="isEnFileSame">
-                  <input type="checkbox" <?= $checked6; ?> name="isEnFileSame" id="isEnFileSame" value="1">
+                  <input type="checkbox" name="isEnFileSame" id="isEnFileSame" value="1">
                   Same as English File
                 </label>
                 <div class="col-md-offset-4 col-md-8"><div class="control-label text-left2">OR</div></div>
               </div>
-              <?php
-              if($messgeInfo->msgFileThai){
-                $msgFileThaiEx  = explode('/', $messgeInfo->msgFileThai);
-                $fileNameThai   = end($msgFileThaiEx);
-                $fileLabelThai  = '<a target="_blank" style="color: #fff;" href="'.$messgeInfo->msgFileThai.'">'. $fileNameThai .'</a>';
-              }else{
-                $fileLabelThai  = '';
-              }
-              ?>
               <div class="form-group">
                 <label class="col-md-4 control-label">Upload PDF(Hindi)</label>
                 <div class="col-md-8">
                   <input type="file" name="msgThaiFile" id="msgThaiFile" accept="application/pdf" />
-                  <p><?php if($fileLabelThai){ ?><span class="label label-info" id="msgThaiLabel"><?= $fileLabelThai; ?></span> <?php } ?></p>
+                  <p><span class="label label-info" id="msgThaiLabel"></span></p>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-md-4 control-label">Enable Notification</label>
                 <label class="col-md-8 control-label text-left2" for="enableNotification">
-                  <input type="checkbox" <?= $checked7; ?> name="enableNotification" id="enableNotification" value="1">
+                  <input type="checkbox" name="enableNotification" id="enableNotification" value="1">
                 </label>
               </div>
               <div class="box-footer">

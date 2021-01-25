@@ -9,13 +9,7 @@
 List<String>user_permission=(List<String>)session.getAttribute("user_permission");
 boolean allow_statusChg = user_permission.contains("messages/status");
 boolean allow_delete = user_permission.contains("messages/delete");
-List<Region> regionList = (List<Region>) session.getAttribute("region_list");
-List<Channel> channelList = (List<Channel>) session.getAttribute("channel_list");
 List<CaseDetailList> assignCaseDetailList=(List<CaseDetailList>)session.getAttribute("assignCaseDetailList");
-if(regionList == null)
-	regionList = new ArrayList<Region>();
-if(channelList == null)
-	channelList = new ArrayList<Channel>();
 %>
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
@@ -52,27 +46,25 @@ if(channelList == null)
                           <th class="head1 no-sort">Case ID</th>
                           <th class="head1 no-sort">Policy No</th>
                           <th class="head1 no-sort">Name of Insured</th>
-                          <th class="head1 no-sort">Type of Investigation</th>
                           <th class="head1 no-sort">Zone</th>
                           <th class="head1 no-sort">Sum Assured</th>
-                          <th class="head1 no-sort">Type of Intimation</th>
                           <th class="head1 no-sort">View history</th>
                           <th class="head1 no-sort">Status</th>
+                          <th class="head1 no-sort">Assigned To</th>
                           <th class="head1 no-sort">Action</th>
                         </tr>
                       </thead>
                       <tfoot>
                         <tr class="tbl_head_bg">
                           <th class="head2 no-sort"></th>
+                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
+                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
+                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
+                          <th class="head2 no-sort"></th>
+                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
+                          <th class="head1 no-sort"><input type="text" class="form-control"></th>
                           <th class="head1 no-sort"></th>
                         </tr>
                       </tfoot>
@@ -96,13 +88,9 @@ if(channelList == null)
                                 	<a href="'.base_url().'messages/edit/'.$message->msgId.'" data-toggle="tooltip" title="Edit" 
                                         class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i>
                                		</a>
-                                
-                              
                                	    <a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateMessageStatus('.$message->msgId.',1,1);" 
                                 		class="btn btn-success btn-xs"><i class="glyphicon glyphicon-ok-circle"></i>
-                                	</a>
-                                
-                                
+                                	</a>                        
                                 	<a href="javascript:;" data-toggle="tooltip" title="Delete" onClick="return deleteMessage('<%=list_case.getCaseId() %>',<%=allow_statusChg%>);" 
                                 		class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i>
                                 	</a>
@@ -138,27 +126,20 @@ var table = $('#active_message_list').DataTable();
 var i = 0;
 $(document).ready(function() {
   $('#active_message_list tfoot th').each( function () {
-    if( i == 1 || i == 2 || i == 12 )
-    {
-      $(this).html( '<input type="text" class="form-control" placeholder="" />' );
-    }
-    else if(i == 5)
-    {
-      var cat_selectbox = '<select name="category" id="category" class="form-control">'
-                              +'<option value="">All</option>';      
-        cat_selectbox += '</select>';
-        $(this).html( cat_selectbox );
-    }
-    else if(i == 6)
-    {
-    	var channelBox = '<select name="channel" id="channel" class="form-control">'                              
-    						+'<option value="">All</option>';
-		<%for(Channel channel : channelList) {%>                      		
-			channelBox += '<option value = "<%= channel.getChannelCode()%>"><%= channel.getChannelName()%></option>';
-		<%} %>
-        channelBox += '</select>';
-        $(this).html( channelBox );
-    }
+//     else if(i == 5)
+//     {
+//       var cat_selectbox = '<select name="category" id="category" class="form-control">'
+//                               +'<option value="">All</option>';      
+//         cat_selectbox += '</select>';
+//         $(this).html( cat_selectbox );
+//     }
+//     else if(i == 6)
+//     {
+//     	var channelBox = '<select name="channel" id="channel" class="form-control">'                              
+//     						+'<option value="">All</option>';
+// 		channelBox += '</select>';
+//         $(this).html( channelBox );
+//     }
     i++;
   });
 

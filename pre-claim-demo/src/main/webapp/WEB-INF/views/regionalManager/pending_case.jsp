@@ -11,9 +11,6 @@ boolean allow_statusChg = user_permission.contains("messages/status");
 boolean allow_delete = user_permission.contains("messages/delete");
 List<CaseDetailList> pendingCaseDetailList = (List<CaseDetailList>)session.getAttribute("pendingCaseDetailList");
 session.removeAttribute("pendingCaseDetailList");
-List<Region> regionList = (List<Region>) session.getAttribute("region_list");
-List<IntimationType> groupList = (List<IntimationType>) session.getAttribute("group_list");
-List<Channel> channelList = (List<Channel>) session.getAttribute("channel_list");
 %>
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
@@ -36,6 +33,85 @@ List<Channel> channelList = (List<Channel>) session.getAttribute("channel_list")
         </div>
       </div>
     </div>
+    <div class="portlet light bordered">
+			<div class="portlet-body">
+				<div id="message_account"></div>
+				<form novalidate id="add_region_form" role="form" method="post"
+					class="form-horizontal">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="supervisorZone">Supervisor Zone
+									<span class="text-danger">*</span>
+								</label>
+								<div class="col-md-8">
+								<select name = "supervisorZone" id="supervisorZone" class = "form-control">
+								</select>
+<!-- 									<input type="text" required id="supervisorZone" name="supervisorZone"  -->
+<!-- 										class="form-control" placeholder="Supervisor Zone" -->
+<!-- 										value =""> -->
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="supervisorState">Supervisor State 
+								<span class="text-danger">*</span>
+								</label>
+								<div class="col-md-8">
+								<select name = "supervisorState" id="supervisorState" class = "form-control">
+								</select>
+<!-- 									<input type="text" required id="supervisorState" name="supervisorState"  -->
+<!-- 										class="form-control" placeholder="Supervisor State" -->
+<!-- 										value =""> -->
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="supervisorCity">Supervisor City
+									<span class="text-danger">*</span>
+								</label>
+								<div class="col-md-8">
+								<select name = "supervisorCity" id="supervisorCity" class = "form-control">
+								</select>
+<!-- 									<input type="text" required id="supervisorCity" name="supervisorCity"  -->
+<!-- 										class="form-control" placeholder="Supervisor City" -->
+<!-- 										value =""> -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">						
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="supervisorName">Supervisor Name 
+								<span class="text-danger">*</span>
+								</label>
+								<div class="col-md-8">
+								<select name = "supervisorName" id="supervisorName" class = "form-control">
+								</select>
+<!-- 									<input type="text" required id="supervisorName" name="supervisorName"  -->
+<!-- 										class="form-control" placeholder="Supervisor Name" -->
+<!-- 										value =""> -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-offset-4 col-md-8">
+							<input type="hidden" id="regionId" name="regionId"
+								value = "">
+							<button class="btn btn-info" id="assignSupervisor" type="button">Assign
+							</button>
+							<a href="${pageContext.request.contextPath}/message/pending"
+								class="btn btn-danger">Back</a>
+							 
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
 
     <div class="box box-primary">
       <div class="box-body">
@@ -50,10 +126,8 @@ List<Channel> channelList = (List<Channel>) session.getAttribute("channel_list")
                           <th class="head1 no-sort">Case ID</th>
                           <th class="head1 no-sort">Policy No</th>
                           <th class="head1 no-sort">Name of Insured</th>
-                          <th class="head1 no-sort">Type of Investigation</th>
                           <th class="head1 no-sort">Zone</th>
                           <th class="head1 no-sort">Sum Assured</th>
-                          <th class="head1 no-sort">Type of Intimation</th>
                           <th class="head1 no-sort">View history</th>
                           <th class="head1 no-sort">Status</th>
                           <th class="head1 no-sort">Action</th>
@@ -62,13 +136,11 @@ List<Channel> channelList = (List<Channel>) session.getAttribute("channel_list")
                       <tfoot>
                         <tr class="tbl_head_bg">
                           <th class="head2 no-sort"></th>
+                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
+                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
+                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
                           <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
+                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
@@ -124,27 +196,27 @@ $(document).ready(function() {
   //DataTable  
   var table = $('#pending_message_list').DataTable();
 
-   $('#pending_message_list tfoot th').each( function () {
-    if( i == 1 || i == 2 || i == 3 || i == 4){
-      $(this).html( '<input type="text" class="form-control" placeholder="" />' );
-    }
-    else if(i == 5)
-    {
-      var cat_selectbox = '<select name="category" id="category" class="form-control">'
-                              +'<option value="">All</option>';
+//    $('#pending_message_list tfoot th').each( function () {
+//     if( i == 1 || i == 2 || i == 3 || i == 5 || i == 7){
+//       $(this).html( '<input type="text" class="form-control" placeholder="">' );
+//     }
+//     else if(i == 5)
+//     {
+//       var cat_selectbox = '<select name="category" id="category" class="form-control">'
+//                               +'<option value="">All</option>';
 		
-        cat_selectbox += '</select>';
-        $(this).html( cat_selectbox );
-    }
-    else if(i == 6)
-    {
-      var channelBox = '<select name="channel" id="channel" class="form-control">'
-                              +'<option value="">All</option>';
-      channelBox += '</select>';     
-      $(this).html( channelBox );
-    }
-    i++;
-  });
+//         cat_selectbox += '</select>';
+//         $(this).html( cat_selectbox );
+//     }
+//     else if(i == 6)
+//     {
+//       var channelBox = '<select name="channel" id="channel" class="form-control">'
+//                               +'<option value="">All</option>';
+//       channelBox += '</select>';     
+//       $(this).html( channelBox );
+//     }
+//     i++;
+//   });
 
   // Apply the search
   table.columns().every( function () {

@@ -247,6 +247,82 @@ function updateRegionStatus( regionId, status, checkAuthority ) {
         });
     });
 }
+//DELETE Location
+function deleteLocation(locationId , checkAuthority) {
+	if(!checkAuthority)
+	{
+		toastr.error("Access Denied", "Error");
+		return false;
+	}
+    $( '#small_modal' ).modal();
+    $( '#sm_modal_title' ).html( 'Are you Sure?' );
+    $( '#sm_modal_body' ).html( 'Do you really want to delete this record?' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+locationId+'" class="btn green">Yes</button>' );
+    $( '#continuemodal'+locationId ).click( function() {
+        $.ajax({
+            type : 'POST',
+            url  : 'deleteLocation',
+            data : { 'locationId' : locationId },
+            beforeSend: function() { 
+                $("#continuemodal"+locationId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal"+locationId).prop('disabled', true);
+            },
+            success : function( msg ) 
+            {
+                $("#continuemodal"+locationId).html('Yes');
+                $("#continuemodal"+locationId).prop('disabled', false);
+                $('#small_modal').modal('hide');
+                if(msg="****")
+	            {
+	               toastr.success("Location deleted successfully",'Success');
+	               location.reload();              
+	            }
+	            else
+	                toastr.error(msg,'Error');
+            }
+        });
+    });
+}
+function updateLocationStatus(locationId, status, checkAuthority ) {
+	if(!checkAuthority)
+	{
+		toastr.error("Access Denied", "Error");
+		return false;
+	}
+    if(status == 1){
+        $( '#sm_modal_body' ).html( 'Do you really want to activate?' );
+    }else{
+        $( '#sm_modal_body' ).html( 'Do you really want to deactivate?' );
+    }
+    $( '#small_modal' ).modal();
+    $( '#sm_modal_title' ).html( 'Are you Sure?' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+locationId+'" class="btn green">Yes</button>' );
+    $( '#continuemodal'+locationId ).click( function() {
+        $.ajax({
+            type : 'POST',
+            url  : 'updateLocationStatus',
+            data : { 'locationId' : locationId, 'status' : status },
+            beforeSend: function() { 
+                $("#continuemodal"+regionId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal"+regionId).prop('disabled', true);
+            },
+            success : function( msg ) {
+            if (msg="****")
+            {
+            toastr.success("Location status updated successfully",'success');
+                $("#continuemodal"+locationId).html('Yes');
+                $("#continuemodal"+locationId).prop('disabled', false);
+                $('#small_modal').modal('hide');
+                location.reload();
+            }
+            else
+            toastr.error(msg,Error)
+            }
+            
+            
+        });
+    });
+}
 //DELETE CATEGORY
 function deleteInvestigationType(investigationId, checkAuthority) {
 	if(!checkAuthority)
