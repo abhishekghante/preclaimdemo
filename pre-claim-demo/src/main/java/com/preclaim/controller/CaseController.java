@@ -26,7 +26,6 @@ import com.preclaim.dao.LocationDao;
 import com.preclaim.dao.UserDAO;
 import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.CaseDetails;
-import com.preclaim.models.Location;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.UserDetails;
 

@@ -1,8 +1,10 @@
-<%@page import="com.preclaim.models.UserRole" %>
 <%@page import = "java.util.List" %>
-<%@page import="java.util.List"%>
+<%@page import="com.preclaim.models.UserRole" %>
+<%@page import="com.preclaim.models.Location" %>
 <%
 List<String> user_permission=(List<String>)session.getAttribute("user_permission");
+List<Location> location_list = (List<Location>) session.getAttribute("location_list");
+session.removeAttribute("location_list");
 %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <link href = "${pageContext.request.contextPath}/resources/custom_css/custom.css">
@@ -74,7 +76,7 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
                 <label class="col-md-4 control-label" for="state">State <span class="text-danger">*</span></label>
                 <div class="col-md-8">
                   <input type="text" required placeholder="State" id="state" class="form-control" 
-                  	name="state">
+                  	name="state" readonly disabled>
                 </div>
               </div>
               <div class="form-group">
@@ -114,15 +116,23 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-md-4 control-label" for="zone">Zone <span class="text-danger">*</span></label>
+                <label class="col-md-4 control-label" for="city">City <span class="text-danger">*</span></label>
                 <div class="col-md-8">
-                  <input type="text" required placeholder="Zone" maxlength="15" id="zone" class="form-control" name="zone">
+                  <select id="city" class="form-control" name="city">
+                   	 <option value="-1" selected disabled>Select</option>
+                  	 <%if(location_list!=null){ 
+                  	  for(Location location : location_list){%>  
+                  	  <option value=<%=location.getCity()%> data-state = <%=location.getState() %>
+                  	  	data-zone = <%=location.getZone() %>><%=location.getCity()%></option>
+                  	 <%}} %>
+                  </select>
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-md-4 control-label" for="city">City <span class="text-danger">*</span></label>
+                <label class="col-md-4 control-label" for="zone">Zone <span class="text-danger">*</span></label>
                 <div class="col-md-8">
-                  <input type="text" required placeholder="city" maxlength="15" id="city" class="form-control" name="city">
+                  <input type="text" required placeholder="Zone" maxlength="15" id="zone" class="form-control" name="zone"
+                  	readonly disabled>
                 </div>
               </div>
             </div>
@@ -151,7 +161,10 @@ $(document).ready(function(){
 		console.log($("#account_image").val());
 		uploadFiles($("#username").val());
 	  });
-	
+	$("#city").change(function(){
+		$("#state").val($("#city option:selected").data("state"));
+		$("#zone").val($("#city option:selected").data("zone"));		
+	});
 });
 </script>
 <script>

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.preclaim.dao.LocationDao;
 import com.preclaim.dao.UserDAO;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.UserDetails;
@@ -28,6 +29,9 @@ public class UserController {
 
 	@Autowired
 	UserDAO dao;
+	
+	@Autowired
+	LocationDao locationDao;
 	
 	@RequestMapping(value = "/add_user", method = RequestMethod.GET)
 	public String add_user(HttpSession session,Model m)
@@ -43,6 +47,7 @@ public class UserController {
     	session.setAttribute("ScreenDetails", details);    	
     	List<UserRole> role = dao.role_lists();
     	m.addAttribute("role_list", role);
+    	session.setAttribute("location_list", locationDao.getActiveLocationList());
     	
 		return "common/templatecontent";
 	}

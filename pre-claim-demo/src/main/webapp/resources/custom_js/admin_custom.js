@@ -182,7 +182,7 @@ function deleteRegion( regionId , checkAuthority) {
     $( '#sm_modal_title' ).html( 'Are you Sure?' );
     $( '#sm_modal_body' ).html( 'Do you really want to delete this record?' );
     $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+regionId+'" class="btn green">Yes</button>' );
-    $( '#continuemodal'+regionId ).click( function() {
+    $( '#continuemodal' + regionId ).click( function() {
         $.ajax({
             type : 'POST',
             url  : 'deleteRegion',
@@ -221,29 +221,104 @@ function updateRegionStatus( regionId, status, checkAuthority ) {
     $( '#small_modal' ).modal();
     $( '#sm_modal_title' ).html( 'Are you Sure?' );
     $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+regionId+'" class="btn green">Yes</button>' );
-    $( '#continuemodal'+regionId ).click( function() {
+    $( '#continuemodal' + regionId ).click( function() {
         $.ajax({
             type : 'POST',
             url  : 'updateRegionStatus',
             data : { 'regionId' : regionId, 'status' : status },
             beforeSend: function() { 
-                $("#continuemodal"+regionId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
-                $("#continuemodal"+regionId).prop('disabled', true);
+                $("#continuemodal" + regionId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal" + regionId).prop('disabled', true);
             },
-            success : function( msg ) {
-            if (msg="****")
+            success : function( msg ) 
             {
-            toastr.success("Region status updated successfully",'success');
-                $("#continuemodal"+regionId).html('Yes');
+            	$("#continuemodal"+regionId).html('Yes');
                 $("#continuemodal"+regionId).prop('disabled', false);
                 $('#small_modal').modal('hide');
-                location.reload();
+                
+	            if (msg="****")
+	            {
+	            	toastr.success("Region status updated successfully",'success');
+	                location.reload();
+	            }
+	            else
+	            	toastr.error(msg,Error)
+            }                      
+        });
+    });
+}
+//DELETE Location
+function deleteLocation( locationId , checkAuthority) {
+	if(!checkAuthority)
+	{
+		toastr.error("Access Denied", "Error");
+		return false;
+	}
+    $( '#small_modal' ).modal();
+    $( '#sm_modal_title' ).html( 'Are you Sure?' );
+    $( '#sm_modal_body' ).html( 'Do you really want to delete this record?' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal' + locationId + '" class="btn green">Yes</button>' );
+    $( '#continuemodal'+ locationId ).click( function() {
+        $.ajax({
+            type : 'POST',
+            url  : 'deleteLocation',
+            data : { 'locationId' : locationId },
+            beforeSend: function() { 
+                $("#continuemodal" + locationId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal" + locationId).prop('disabled', true);
+            },
+            success : function( msg ) 
+            {
+                $("#continuemodal" + locationId).html('Yes');
+                $("#continuemodal" + locationId).prop('disabled', false);
+                $('#small_modal').modal('hide');
+                if(msg="****")
+	            {
+	               toastr.success("Location deleted successfully",'Success');
+	               location.reload();              
+	            }
+	            else
+	                toastr.error(msg,'Error');
             }
-            else
-            toastr.error(msg,Error)
-            }
-            
-            
+        });
+    });
+}
+function updateLocationStatus(locationId, status, checkAuthority ) {
+	if(!checkAuthority)
+	{
+		toastr.error("Access Denied", "Error");
+		return false;
+	}
+    if(status == 1){
+        $( '#sm_modal_body' ).html( 'Do you really want to activate?' );
+    }else{
+        $( '#sm_modal_body' ).html( 'Do you really want to deactivate?' );
+    }
+    $( '#small_modal' ).modal();
+    $( '#sm_modal_title' ).html( 'Are you Sure?' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal' + locationId + '" class="btn green">Yes</button>' );
+    $( '#continuemodal' + locationId ).click( function() {
+        $.ajax({
+            type : 'POST',
+            url  : 'updateLocationStatus',
+            data : { 'locationId' : locationId, 'status' : status },
+            beforeSend: function() { 
+                $("#continuemodal" + locationId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal" + locationId).prop('disabled', true);
+            },
+            success : function( msg ) 
+            {
+	            $("#continuemodal" + locationId).html('Yes');
+	            $("#continuemodal" + locationId).prop('disabled', false);
+	            $('#small_modal').modal('hide');	                
+	            if (msg="****")
+	            {
+	            	toastr.success("Location status updated successfully",'success');
+	                location.reload();
+	            }
+	            else
+	            	toastr.error(msg,Error)
+            }         
         });
     });
 }
@@ -264,12 +339,13 @@ function deleteInvestigationType(investigationId, checkAuthority) {
             url  : 'deleteInvestigation',
             data : { 'investigationId' : investigationId },
             beforeSend: function() { 
-                $("#continuemodal"+investigationId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
-                $("#continuemodal"+investigationId).prop('disabled', true);
+                $("#continuemodal" + investigationId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal" + investigationId).prop('disabled', true);
             },
-            success : function( msg ) {
-                $("#continuemodal"+investigationId).html('Yes');
-                $("#continuemodal"+investigationId).prop('disabled', false);
+            success : function( msg ) 
+            {
+                $("#continuemodal" + investigationId).html('Yes');
+                $("#continuemodal" + investigationId).prop('disabled', false);
                 $('#small_modal').modal('hide');
                 if(msg == "****")
                 {
@@ -307,8 +383,8 @@ function updateInvestigationTypeStatus(investigationId, status, checkAuthority )
             },
             success : function( msg ) 
             {
-        		$("#continuemodal"+investigationId).html('Yes');
-                $("#continuemodal"+investigationId).prop('disabled', false);
+        		$("#continuemodal" + investigationId).html('Yes');
+                $("#continuemodal" + investigationId).prop('disabled', false);
                 $('#small_modal').modal('hide');	                
                 if(msg=="****")
                 {
@@ -333,18 +409,19 @@ function deleteBanner( bannerId, checkAuthority ) {
     $( '#sm_modal_title' ).html( 'Are you Sure?' );
     $( '#sm_modal_body' ).html( 'Do you really want to delete this record?' );
     $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+bannerId+'" class="btn green">Yes</button>' );
-    $( '#continuemodal'+bannerId ).click( function() {
+    $( '#continuemodal' + bannerId ).click( function() {
         $.ajax({
             type : 'POST',
             url  : 'deleteBanner',
             data : { 'bannerId' : bannerId },
             beforeSend: function() {
-                $("#continuemodal"+bannerId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
-                $("#continuemodal"+bannerId).prop('disabled', true);
+                $("#continuemodal" + bannerId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal" + bannerId).prop('disabled', true);
             },
-            success : function( msg ) {
-                $("#continuemodal"+bannerId).html('Yes');
-                $("#continuemodal"+bannerId).prop('disabled', false);
+            success : function( msg ) 
+            {
+                $("#continuemodal" + bannerId).html('Yes');
+                $("#continuemodal" + bannerId).prop('disabled', false);
                 $('#small_modal').modal('hide');
                 location.reload();
             }
@@ -372,12 +449,13 @@ function updateBannerStatus( bannerId, status, checkAuthority  ) {
             url  : 'updateBannerStatus',
             data : { 'bannerId' : bannerId, 'status' : status },
             beforeSend: function() { 
-                $("#continuemodal"+bannerId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
-                $("#continuemodal"+bannerId).prop('disabled', true);
+                $("#continuemodal" + bannerId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal" + bannerId).prop('disabled', true);
             },
-            success : function( msg ) {
-                $("#continuemodal"+bannerId).html('Yes');
-                $("#continuemodal"+bannerId).prop('disabled', false);
+            success : function( msg ) 
+            {
+                $("#continuemodal" + bannerId).html('Yes');
+                $("#continuemodal" + bannerId).prop('disabled', false);
                 $('#small_modal').modal('hide');
                 location.reload();
             }
@@ -401,12 +479,13 @@ function deleteAdminUser( user_id, checkAuthority  ) {
             url  : 'deleteAdminUser',
             data : { 'user_id' : user_id },
             beforeSend: function() {
-                $("#continuemodal"+user_id).html('<img src="../resources/img/input-spinner.gif"> Loading...');
-                $("#continuemodal"+user_id).prop('disabled', true);
+                $("#continuemodal" + user_id).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal" + user_id).prop('disabled', true);
             },
-            success : function( msg ) {
-                $("#continuemodal"+user_id).html('Yes');
-                $("#continuemodal"+user_id).prop('disabled', false);
+            success : function( msg ) 
+            {
+                $("#continuemodal" + user_id).html('Yes');
+                $("#continuemodal" + user_id).prop('disabled', false);
                 $('#small_modal').modal('hide');
                 if(msg == "****")
                 {
@@ -437,12 +516,13 @@ function deleteRole( roleId, checkAuthority  ) {
             url  : 'deleteRole',
             data : { 'roleId' : roleId },
             beforeSend: function() {
-                $("#continuemodal"+roleId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
-                $("#continuemodal"+roleId).prop('disabled', true);
+                $("#continuemodal" + roleId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal" + roleId).prop('disabled', true);
             },
-            success : function( msg ) {
-                $("#continuemodal"+roleId).html('Yes');
-                $("#continuemodal"+roleId).prop('disabled', false);
+            success : function( msg ) 
+            {
+                $("#continuemodal" + roleId).html('Yes');
+                $("#continuemodal" + roleId).prop('disabled', false);
                 $('#small_modal').modal('hide');
                 if(msg == "****")
                 {
@@ -480,7 +560,8 @@ function updateUserStatus( user_id, status, checkAuthority ) {
                 $("#continuemodal"+user_id).html('<img src="../resources/img/input-spinner.gif"> Loading...');
                 $("#continuemodal"+user_id).prop('disabled', true);
             },
-            success : function( msg ) {
+            success : function( msg ) 
+            {
                 $("#continuemodal"+user_id).html('Yes');
                 $("#continuemodal"+user_id).prop('disabled', false);
                 $('#small_modal').modal('hide');

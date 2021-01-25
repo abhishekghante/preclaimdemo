@@ -123,9 +123,10 @@ session.removeAttribute("location_list");
                 <div class="col-md-8">
                   	<select name="claimantCity" id="claimantCity" class="form-control" tabindex="-1">
                   	 <option value="-1" selected disabled>Select</option>
-                  	<%if(location_list!=null){ 
-                  	  for(Location city : location_list){%>  
-                  	  <option value="<%=city.getLocationId()%>"><%=city.getCity()%></option>
+                  	 <%if(location_list!=null){ 
+                  	  for(Location location : location_list){%>  
+                  	  <option value=<%=location.getCity()%> data-state = <%=location.getState() %>
+                  	  	data-zone = <%=location.getZone() %>><%=location.getCity()%></option>
                   	 <%}} %>
                   	</select>
                 </div>
@@ -135,13 +136,7 @@ session.removeAttribute("location_list");
                 	<span class="text-danger">*</span>
                	</label>
                 <div class="col-md-8">
-                  	<select name="claimantState" id="claimantState" class="form-control" tabindex="-1">
-                  	 <option value="-1" selected disabled>Select</option>
-                  	<%if(location_list!=null){ 
-                  	  for(Location state : location_list){%>  
-                  	  <option value="<%=state.getLocationId()%>"><%=state.getState()%></option>
-                  	 <%}} %>
-                  	</select>
+                  	<input type = "text" name="claimantState" id="claimantState" class="form-control" readonly disabled>
                 </div>
               </div>
               <div class="form-group selectDiv">
@@ -149,13 +144,7 @@ session.removeAttribute("location_list");
                 	<span class="text-danger">*</span>
                	</label>
                 <div class="col-md-8">
-                  	<select name="claimantZone" id="claimantZone" class="form-control" tabindex="-1">
-                  	 <option value="-1" selected disabled>Select</option>
-                  	<%if(location_list!=null){ 
-                  	  for(Location zone : location_list){%>  
-                  	  <option value="<%=zone.getLocationId()%>"><%=zone.getZone()%></option>
-                  	 <%}} %>
-                  	</select>
+                  	<input type = "text" name="claimantZone" id="claimantZone" class="form-control" readonly disabled>
                 </div>
               </div>
               <div class="form-group">
@@ -310,6 +299,17 @@ session.removeAttribute("location_list");
   </div>
 </div>
 <script type="text/javascript">
+
+$("document").ready(function(){
+	
+	$("#claimantCity").change(function(){
+		$("#claimantState").val($("#claimantCity option:selected").data("state"));
+		$("#claimantZone").val($("#claimantCity option:selected").data("zone"));
+	});
+	
+});
+
+
 function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
   if (input.files && input.files[0]) {
     var upfile = input.files[0];
@@ -348,7 +348,7 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     var insuredDOB     = $( '#add_message_form #insuredDOB' ).val();
     var sumAssured     = $( '#add_message_form #sumAssured' ).val();
     var msgIntimationType  = $( '#add_message_form #msgIntimationType' ).val();    
-    var claimantCity   = $( '#add_message_form #claimantCity' ).val();
+    var claimantCity   = $( '#add_message_form #claimantCity option:selected' ).val();
     var claimantZone   = $( '#add_message_form #claimantZone' ).val();
     var claimantState  = $( '#add_message_form #claimantState' ).val();
     var subStatus      = $( '#add_message_form #subStatus' ).val();

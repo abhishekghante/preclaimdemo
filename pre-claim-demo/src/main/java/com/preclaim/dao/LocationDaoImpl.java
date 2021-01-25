@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.preclaim.models.InvestigationType;
 import com.preclaim.models.Location;
 
 public class LocationDaoImpl implements LocationDao {
@@ -62,6 +61,7 @@ public class LocationDaoImpl implements LocationDao {
 			locationList.setCity(rs.getString("city"));
 			locationList.setState(rs.getString("state"));
 			locationList.setZone(rs.getString("zone"));
+			locationList.setStatus(rs.getInt("status"));
 			return locationList;
 		});
 	}
@@ -86,7 +86,7 @@ public class LocationDaoImpl implements LocationDao {
 		try 
 		{
 			String sql = "UPDATE location_lists SET city = ? , state = ?, zone =  ?, updatedDate = now(), "
-					+ "updatedBy = ? WHERE regionId = ?";
+					+ "updatedBy = ? WHERE locationId = ?";
 			template.update(sql, location.getCity(), location.getState(), location.getZone(),
 					location.getUpdatedBy(), location.getLocationId());
 		} 
@@ -119,7 +119,16 @@ public class LocationDaoImpl implements LocationDao {
 		try
 		{
 			String sql = "SELECT * FROM location_lists where locationId = " + locationId;
-			return template.queryForObject(sql, Location.class); 					
+			return template.query(sql,   
+					(ResultSet rs, int rowNum) -> 
+					{
+						Location location = new Location();
+						location.setLocationId(rs.getInt("locationId"));
+						location.setCity(rs.getString("city"));
+						location.setState(rs.getString("state"));
+						location.setZone(rs.getString("zone"));
+						return location;
+					}).get(0);
 		}
 		catch(Exception e)
 		{
@@ -130,7 +139,7 @@ public class LocationDaoImpl implements LocationDao {
 	
 	@Override
 	public List<Location> getActiveLocationList() {
-		String query = "SELECT * FROM location_lists WHERE status = 0";
+		String query = "SELECT * FROM location_lists WHERE status = 1";
 		return template.query(query, (ResultSet rs, int rowNum) -> {
 			Location location = new Location();
 			location.setLocationId(rs.getInt("locationId"));

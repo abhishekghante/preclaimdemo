@@ -2,6 +2,7 @@ package com.preclaim.dao;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,7 +25,6 @@ import org.springframework.util.StringUtils;
 import com.preclaim.config.Config;
 import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.CaseDetails;
-import com.preclaim.models.UserDetails;
 
 public class CaseDaoImpl implements CaseDao {
 
@@ -192,6 +192,12 @@ public class CaseDaoImpl implements CaseDao {
 			Iterator<Row> itr = sheet.iterator();    //iterating over excel file  		
 			itr.hasNext();
 			itr.next();
+//			String error_message = sanityCheck(itr.next());
+//			if(!error_message.equals("****"))
+//			{
+//				wb.close();
+//				return error_message;
+//			}
 			while (itr.hasNext())                 
 			{  
 				//Skipping Header String
@@ -203,26 +209,6 @@ public class CaseDaoImpl implements CaseDao {
 				{
 					cell = cellIterator.next();  					
 					caseDetails.setPolicyNumber(readCellStringValue(cell));
-				}	
-				if(cellIterator.hasNext())
-				{
-					cell = cellIterator.next();  					
-					caseDetails.setInsuredName(readCellStringValue(cell));
-				}	
-				if(cellIterator.hasNext())
-				{
-					cell = cellIterator.next();  					
-					caseDetails.setClaimantCity(readCellStringValue(cell));
-				}
-				if(cellIterator.hasNext())
-				{
-					cell = cellIterator.next();  					
-					caseDetails.setClaimantZone(readCellStringValue(cell));;
-				}				
-				if(cellIterator.hasNext())
-				{
-					cell = cellIterator.next();  					
-					caseDetails.setClaimantState(readCellStringValue(cell));
 				}
 				if(cellIterator.hasNext())
 				{
@@ -231,15 +217,63 @@ public class CaseDaoImpl implements CaseDao {
 				}
 				if(cellIterator.hasNext())
 				{
+					cell = cellIterator.next();  					
+					caseDetails.setInsuredName(readCellStringValue(cell));
+				}
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();  					
+					caseDetails.setInsuredDOD(readCellStringValue(cell));
+				}
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();  					
+					caseDetails.setInsuredDOB(readCellStringValue(cell));
+				}
+				if(cellIterator.hasNext())
+				{
 					cell = cellIterator.next();
 					caseDetails.setSumAssured(readCellIntValue(cell));
 				}
-				
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();
+					caseDetails.setIntimationType(readCellStringValue(cell));
+				}
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();  					
+					caseDetails.setClaimantCity(readCellStringValue(cell));
+				}
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();  					
+					caseDetails.setNominee_name(readCellStringValue(cell));;
+				}				
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();  					
+					caseDetails.setNomineeContactNumber(readCellStringValue(cell));
+				}
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();  					
+					caseDetails.setNominee_address(readCellStringValue(cell));
+				}
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();  					
+					caseDetails.setInsured_address(readCellStringValue(cell));
+				}
 				caseList.add(caseDetails);
 			}
 			wb.close();
-			String sql = "INSERT INTO case_lists(policyNumber, insuredName, claimantCity, claimantZone, claimantState,"
-					+ "status, substatus, investigationCategory, sumAssured, createdBy, createdDate, updatedDate, updatedBy) "
+			String sql = "INSERT INTO case_lists(policyNumber, investigationCategory, insuredName, insuredDOD, insuredDOB, "
+					+ "sumAssured, intimationType, claimantCity, claimantZone, claimantState, caseStatus, caseSubStatus, "
+					+ "nominee_name, nomineeContactNumber, nominee_address, insured_address, "
+					+ "supervisor, supervisor2managerRemarks, supervisor2investigatorRemarks, regionalManager2supervisorRemarks, "
+					+ "investigator, investigator2supervisorRemarks, underwriter, underwriter2regionalManagerRemarks, "
+					+ "talicManager, talicManager2underwriteRemarks, createdBy, createdDate, updatedDate, updatedBy) "
 					+ "VALUES(?, ?, ?, ?, ?, 1, 1, ?, ?, ?, now(), '0000-00-00 00:00:00', 0)";
 			
 			template.batchUpdate(sql,caseList,5,
@@ -247,13 +281,21 @@ public class CaseDaoImpl implements CaseDao {
 	                    public void setValues(PreparedStatement ps, CaseDetails caseDetails) throws SQLException          
 	                    {
 	                    	ps.setString(1, caseDetails.getPolicyNumber());
-	                    	ps.setString(2, caseDetails.getInsuredName());
-	                    	ps.setString(3, caseDetails.getClaimantCity());
-	                    	ps.setString(4, caseDetails.getClaimantZone());
-	                    	ps.setString(5, caseDetails.getClaimantState());
-	                    	ps.setString(6, caseDetails.getInvestigationCategory());
-	                    	ps.setInt(7, (int)caseDetails.getSumAssured());
-	                    	ps.setInt(8, 0);	                    		 	
+	                    	ps.setString(2, caseDetails.getInvestigationCategory());
+	                    	ps.setString(3, caseDetails.getInsuredName());
+	                    	ps.setString(4, caseDetails.getInsuredDOD());
+	                    	ps.setString(5, caseDetails.getInsuredDOB());
+	                    	ps.setInt(6, (int)caseDetails.getSumAssured());
+	                    	ps.setString(7, caseDetails.getIntimationType());
+	                    	ps.setString(8,caseDetails.getClaimantCity());
+	                    	ps.setString(9, caseDetails.getClaimantState());
+	                    	ps.setString(10, caseDetails.getClaimantZone());
+	                    	ps.setString(11, "Open");
+	                    	ps.setString(12,"PA");
+	                    	ps.setString(13, caseDetails.getNominee_name());
+	                    	ps.setString(14, caseDetails.getNomineeContactNumber());
+	                    	ps.setString(15,  caseDetails.getNominee_address());
+	                    	ps.setString(16, caseDetails.getInsured_address());
 	                    }
 	                });
 			return "****";
@@ -278,6 +320,19 @@ public class CaseDaoImpl implements CaseDao {
 		}
 	}
 	
+	public String readCellDateValue(Cell cell)
+	{
+		try
+		{
+			Date date = (Date) cell.getDateCellValue();
+			return date.toString();
+		}
+		catch(Exception ex)
+		{
+			return "";
+		}
+	}
+	
 	public int readCellIntValue(Cell cell)
 	{
 		switch (cell.getCellType())               
@@ -289,6 +344,18 @@ public class CaseDaoImpl implements CaseDao {
 			default:
 				return 0;
 		}
+	}
+	
+	public String sanityCheck(Row row)
+	{
+		Iterator<Cell> cellIterator = row.cellIterator();   //iterating over each column 
+		Cell cell;
+		if(cellIterator.hasNext())
+		{
+			cell = cellIterator.next();
+			//if(readCellStringValue(cell).equals(""))
+		}
+		return "****";
 	}
 
 	@Override

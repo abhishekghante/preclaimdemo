@@ -71,7 +71,7 @@ boolean allow_delete = user_permission.contains("locations/delete");
 									     <td><%=list_location.getCity() %></td>
 									 	 <td><%=list_location.getState() %></td>
 									 	 <td><%=list_location.getZone() %></td>
-									     <td><%if(list_location.getStatus()==1){ %>
+									     <td><%if(list_location.getStatus() == 1){ %>
 									     <span class="label label-sm label-success">Active</span>
 									     <%}else{ %>
 									     	<span class="label label-sm label-danger">Inactive</span>
@@ -100,8 +100,8 @@ boolean allow_delete = user_permission.contains("locations/delete");
 									</tr>
 
 									<%
+									i++;
 									}
-										i++;
 									}
 									%>
 
@@ -122,7 +122,7 @@ boolean allow_delete = user_permission.contains("locations/delete");
 <script type="text/javascript">
 $(document).ready(function() {
 	var i = 0;
-	$('#active_locationn_list tfoot th').each(function() {
+	$('#active_location_list tfoot th').each(function() {
 						
 		if (i == 1 || i == 2 || i == 3 ) {
 			$(this).html('<input type="text" class="form-control">');

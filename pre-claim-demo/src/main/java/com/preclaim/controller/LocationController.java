@@ -85,7 +85,7 @@ public class LocationController{
 			return "common/login";
 		int locationId = Integer.parseInt(request.getParameter("locationId"));
 		String message = locationDao.deleteLocation(locationId);
-    /*	userDao.activity_log("LOCATION", locationId, "DELETE", user.getUsername()); */
+     	userDao.activity_log("LOCATION", locationId, "DELETE", user.getUsername()); 
 		return message;
 	}
 	
@@ -101,7 +101,7 @@ public class LocationController{
 		location.setZone(request.getParameter("zone"));
 		location.setCreatedBy(user.getUsername());
 		String message = locationDao.addLocation(location);		
-  /*	userDao.activity_log("LOCATION", 0, "ADD", user.getUsername()); */
+		userDao.activity_log("LOCATION", 0, "ADD", user.getUsername()); 
 		return message;
 	}
 	
@@ -118,7 +118,7 @@ public class LocationController{
 		location.setZone(request.getParameter("zone"));
 		location.setUpdatedBy(user.getUsername());
 		String message = locationDao.updateLocation(location);	
-		 /* userDao.activity_log("LOCATION", locationId, "UPDATE", user.getUsername()); */
+		userDao.activity_log("LOCATION", locationId, "UPDATE", user.getUsername());
 		return message;
 	}
 	
@@ -131,8 +131,8 @@ public class LocationController{
 		int locationId=Integer.parseInt(request.getParameter("locationId"));
 		int locationStatus=Integer.parseInt(request.getParameter("status"));
 	    String message= locationDao.updateLocationStatus(locationId, locationStatus, user.getUsername()); 
-	  /*  userDao.activity_log("LOCATION", locationId, locationStatus == 1 ? "ACTIVE" : "DEACTIVE", 
-	    		user.getUsername());*/
+	    userDao.activity_log("LOCATION", locationId, locationStatus == 1 ? "ACTIVE" : "DEACTIVE", 
+	    		user.getUsername());
 		return message;
     }
 }
