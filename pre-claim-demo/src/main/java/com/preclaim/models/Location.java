@@ -81,5 +81,6 @@ public class Location {
 		return "Location [locationId=" + locationId + ", city=" + city + ", state=" + state + ", zone=" + zone
 				+ ", createdBy=" + createdBy + ", updatedBy=" + updatedBy + ", status=" + status + "]";
 	}
+
 			
 }

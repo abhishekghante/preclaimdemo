@@ -217,14 +217,15 @@ $(document).ready(function() {
 				
 });
 
-function addLocation() {
+
+<%-- function addLocation() {
 	<%if(!user_permission.contains("location/add")){%>
 		toastr.error("Access Denied","Error");
 		return false;
 	<%}%>
-	var city = $( '#city').val();;
-	var state = $( '#state').val();;
-	var zone = $( '#zone').val();;
+	var city = $( '#edit_location_form #city').val();;
+	var state = $( '#edit_location_form #state').val();;
+	var zone = $( '#edit_location_form #zone').val();;
 	
 	//Validation routine
 	var errorFlag = 0;
@@ -238,14 +239,14 @@ function addLocation() {
 		$("#zone").focus();
 		errorFlag = 1;
 	}
-	if(state = "")
+	if(state == "")
 	{
 		toastr.error("State cannot be blank", "Error");
 		$("#state").addClass("has-error-2");
 		$("#state").focus();
 		errorFlag = 1;
 	}
-	if(city = "")
+	if(city == "")
 	{
 		toastr.error("City cannot be blank", "Error");
 		$("#city").addClass("has-error-2");
@@ -253,32 +254,83 @@ function addLocation() {
 		errorFlag = 1;
 	}
 	
-    var formdata = {"city":city, "state":state, "zone":zone};
-    console.log(formdata);
-    $.ajax({		
-		type : "POST",
-		url : '${pageContext.request.contextPath}/location/addLocation',
-		data : formdata,
-		beforeSend : function() {
-			$("#addlocationsubmit")
-					.html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
-			$("#addlocationsubmit").prop('disabled', true);
-		},
-		success : function(data) {
-			$("#addlocationsubmit").html('Add Region');
-			$("#addlocationsubmit").prop('disabled', false);
-			if (data == "****") 
-			{
-				toastr.success('Location Added successfully.','Success');
-				location.reload();
-			} 
-			else
-				toastr.error(data, 'Error');				
+    $.ajax({
+        type: "POST",
+        url:'addLocation',
+        data: {"city" : city, "state" : state, "zone" : zone},
+        beforeSend: function() { 
+            $("#addLocationsubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+            $("#addLocationsubmit").prop('disabled', true);
+        },
+        success: function( data ) {   
+      	  if(data == "****")
+      	  {
+      		  $("#addLocationsubmit").html('Add Location');
+	          $("#addLocationsubmit").prop('disabled', false);
+	          toastr.success( 'Location Added successfully.','Success' );
+  	          $( '#edit_location_form #city' ).val('');
+	          $( '#edit_location_form #state' ).val('');
+	          $( '#edit_location_form #zone' ).val('');
+	          location.reload();
+      	  }
+      	  else{
+      	  toastr.error( data,'Error');
+      	 $("#addLocationsubmit").html('Add Location');
+         $("#addLocationsubmit").prop('disabled', false);
+      	  }
+      	}
+      });
+}
+ --%>
+function addLocation() {
+	<%if(!user_permission.contains("location/add")){%>
+		toastr.error("Access Denied","Error");
+		return false;
+	<%}%>	
+  	var city  = $( '#edit_location_form #city' ).val();
+	var state = $( '#edit_location_form #state' ).val();
+	var zone = $( '#edit_location_form #zone' ).val();
+	if(city == ''){
+	  toastr.error('City cannot be blank','Error');
+	  return false;
+	}
+	if(state == ''){
+	  toastr.error('State cannot be blank','Error');
+	  return false;
+	}
+	if(zone == ''){
+		  toastr.error('Zone cannot be blank','Error');
+		  return false;
 		}
-	});
+	    var formdata = {"city" : city, "state" : state, "zone" : zone};
+	    $.ajax({
+	      type: "POST",
+	      url: 'addLocation',
+	      data: formdata,
+	      beforeSend: function() { 
+	          $("#addlocationsubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+	          $("#addlocationsubmit").prop('disabled', true);
+	      },
+	      success: function( data ) {
+	        if(data == "****"){
+	          $("#addlocationsubmit").html('Add Location');
+	          $("#addlocationsubmit").prop('disabled', false);
+	          toastr.success( 'Location Added successfully.','Success' );
+	          $( '#edit_location_form #city' ).val('');
+	          $( '#edit_location_form #state' ).val('');
+	          $( '#edit_location_form #zone' ).val('');
+	          location.reload();
+	        }else{
+	          toastr.error( data,'Error' );
+	          $("#addlocationsubmit").html('Add Location');
+	          $("#addlocationsubmit").prop('disabled', false);
+	        }
+	      }
+	    });
+	  
 }
 
-function updateLoation) {
+function updateLoation() {
 	<%if(!user_permission.contains("location/add")){%>
 		toastr.error("Access Denied","Error");
 		return false;
@@ -300,14 +352,14 @@ function updateLoation) {
 		$("#zone").focus();
 		errorFlag = 1;
 	}
-	if(state = "")
+	if(state == "")
 	{
 		toastr.error("State cannot be blank", "Error");
 		$("#state").addClass("has-error-2");
 		$("#state").focus();
 		errorFlag = 1;
 	}
-	if(city = "")
+	if(city == "")
 	{
 		toastr.error("City cannot be blank", "Error");
 		$("#city").addClass("has-error-2");
@@ -319,11 +371,10 @@ function updateLoation) {
     console.log(formdata);
     $.ajax({
 		type : "POST",
-		url : '${pageContext.request.contextPath}/location/updateLocation',
+		url : 'updateLocation',
 		data : formdata,
 		beforeSend : function() {
-			$("#editlocationsubmit")
-					.html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+			$("#editlocationsubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
 			$("#editlocationsubmit").prop('disabled', true);
 		},
 		success : function(data) {

@@ -67,7 +67,7 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
   </div>
 </div>
 <script type="text/javascript">
-function addLocation() {
+<%-- function addLocation() {
 	<%if(!user_permission.contains("location/add")){%>
 		toastr.error("Access Denied","Error");
 		return false;
@@ -88,14 +88,14 @@ function addLocation() {
 		$("#zone").focus();
 		errorFlag = 1;
 	}
-	if(state = "")
+	if(state == "")
 	{
 		toastr.error("State cannot be blank", "Error");
 		$("#state").addClass("has-error-2");
 		$("#state").focus();
 		errorFlag = 1;
 	}
-	if(city = "")
+	if(city == "")
 	{
 		toastr.error("City cannot be blank", "Error");
 		$("#city").addClass("has-error-2");
@@ -103,12 +103,10 @@ function addLocation() {
 		errorFlag = 1;
 	}
 	
-    var formdata = {"city":city, "state":state, "zone":zone};
-    console.log(formdata);
     $.ajax({
       type: "POST",
       url:'addLocation',
-      data: formdata,
+      data: {"city":city, "state":state, "zone":zone},
       beforeSend: function() { 
           $("#addLocationsubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
           $("#addLocationsubmit").prop('disabled', true);
@@ -120,11 +118,58 @@ function addLocation() {
     	  if(data == "****")
     	  {
 	          toastr.success( 'Location Added successfully.','Success');
-	          $("#add_location_form").reset();
+	          location.reload();
     	  }
     	  else
     	  toastr.error( data,'Error');
       }
     });  
+} --%>
+function addLocation() {
+	<%if(!user_permission.contains("location/add")){%>
+		toastr.error("Access Denied","Error");
+		return false;
+	<%}%>	
+  	var city  = $( '#add_location_form #city' ).val();
+	var state = $( '#add_location_form #state' ).val();
+	var zone = $( '#add_location_form #zone' ).val();
+	if(city == ''){
+	  toastr.error('City cannot be blank','Error');
+	  return false;
+	}
+	if(state == ''){
+	  toastr.error('State cannot be blank','Error');
+	  return false;
+	}
+	if(zone == ''){
+		  toastr.error('Zone cannot be blank','Error');
+		  return false;
+		}
+	    var formdata = {"city" : city, "state" : state, "zone" : zone};
+	    $.ajax({
+	      type: "POST",
+	      url: 'addLocation',
+	      data: formdata,
+	      beforeSend: function() { 
+	          $("#addlocationsubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+	          $("#addlocationsubmit").prop('disabled', true);
+	      },
+	      success: function( data ) {
+	        if(data == "****"){
+	          $("#addlocationsubmit").html('Add Location');
+	          $("#addlocationsubmit").prop('disabled', false);
+	          toastr.success( 'Location Added successfully.','Success' );
+	          $( '#add_location_form #city' ).val('');
+	          $( '#add_location_form #state' ).val('');
+	          $( '#add_location_form #zone' ).val('');
+	          location.reload();
+	        }else{
+	          toastr.error( data,'Error' );
+	          $("#addlocationsubmit").html('Add Location');
+	          $("#addlocationsubmit").prop('disabled', false);
+	        }
+	      }
+	    });
+	  
 }
 </script>

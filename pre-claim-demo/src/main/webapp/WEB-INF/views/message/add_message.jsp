@@ -1,6 +1,6 @@
 <%@page import = "java.util.List" %>
 <%@page import = "java.util.ArrayList" %>
-
+<%@page import = "com.preclaim.models.Location"%>
 <%@page import = "com.preclaim.models.InvestigationType"%>
 <%@page import = "com.preclaim.models.IntimationType"%>
 <%
@@ -9,6 +9,8 @@ List<InvestigationType> investigationList = (List<InvestigationType>) session.ge
 session.removeAttribute("investigation_list");
 List<IntimationType> intimationTypeList = (List<IntimationType>) session.getAttribute("intimation_list");
 session.removeAttribute("intimation_list");
+List<Location> location_list = (List<Location>) session.getAttribute("location_list");
+session.removeAttribute("location_list");
 %>
 <style type="text/css">
 .placeImg { display:none !important;}
@@ -114,31 +116,46 @@ session.removeAttribute("intimation_list");
                   </select>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group selectDiv">
                 <label class="col-md-4 control-label" for="claimantCity">Claimant City 
                 	<span class="text-danger">*</span>
                	</label>
                 <div class="col-md-8">
-                  <input type="text" placeholder="Claimant City" name="claimantCity" id="claimantCity" 
-                  	class="form-control">
+                  	<select name="claimantCity" id="claimantCity" class="form-control" tabindex="-1">
+                  	 <option value="-1" selected disabled>Select</option>
+                  	<%if(location_list!=null){ 
+                  	  for(Location city : location_list){%>  
+                  	  <option value="<%=city.getLocationId()%>"><%=city.getCity()%></option>
+                  	 <%}} %>
+                  	</select>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group selectDiv">
                 <label class="col-md-4 control-label" for="claimantState">Claimant State 
                 	<span class="text-danger">*</span>
                	</label>
                 <div class="col-md-8">
-                  <input type="text" placeholder="Claimant State" name="claimantState" 
-                  	id="claimantState" class="form-control">
+                  	<select name="claimantState" id="claimantState" class="form-control" tabindex="-1">
+                  	 <option value="-1" selected disabled>Select</option>
+                  	<%if(location_list!=null){ 
+                  	  for(Location state : location_list){%>  
+                  	  <option value="<%=state.getLocationId()%>"><%=state.getState()%></option>
+                  	 <%}} %>
+                  	</select>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group selectDiv">
                 <label class="col-md-4 control-label" for="claimaintZone">Claimant Zone 
                 	<span class="text-danger">*</span>
                	</label>
                 <div class="col-md-8">
-                  <input type="text" placeholder="Claimant Zone" name="claimantZone" id="claimantZone" 
-                  	class="form-control">
+                  	<select name="claimantZone" id="claimantZone" class="form-control" tabindex="-1">
+                  	 <option value="-1" selected disabled>Select</option>
+                  	<%if(location_list!=null){ 
+                  	  for(Location zone : location_list){%>  
+                  	  <option value="<%=zone.getLocationId()%>"><%=zone.getZone()%></option>
+                  	 <%}} %>
+                  	</select>
                 </div>
               </div>
               <div class="form-group">

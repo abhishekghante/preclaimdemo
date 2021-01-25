@@ -22,9 +22,11 @@ import com.preclaim.config.Config;
 import com.preclaim.dao.CaseDao;
 import com.preclaim.dao.IntimationTypeDao;
 import com.preclaim.dao.InvestigationTypeDao;
+import com.preclaim.dao.LocationDao;
 import com.preclaim.dao.UserDAO;
 import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.CaseDetails;
+import com.preclaim.models.Location;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.UserDetails;
 
@@ -43,6 +45,9 @@ public class CaseController {
 	
 	@Autowired
 	IntimationTypeDao intimationTypeDao;
+	
+	@Autowired
+	LocationDao locationDao;
 	
     @RequestMapping(value = "/import_case", method = RequestMethod.GET)
     public String import_case(HttpSession session) {
@@ -77,6 +82,7 @@ public class CaseController {
     	session.setAttribute("ScreenDetails", details);    	
     	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
     	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
+    	session.setAttribute("location_list", locationDao.getActiveLocationList());
     	
     	return "common/templatecontent";
     }
@@ -178,36 +184,21 @@ public class CaseController {
     	UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if(user == null)
 			return "common/login";
-    	String policyNumber = request.getParameter("policyNumber");
-       	String typeOfInvestigation = request.getParameter("msgCategory");
-       	String insuredName = request.getParameter("insuredName");
-       	String insuredDOD = request.getParameter("insuredDOD");
-       	String insuredDOB = request.getParameter("insuredDOB");
-       	int sumAssured = Integer.parseInt(request.getParameter("sumAssured"));
-       	String msgIntimationType = request.getParameter("msgIntimationType");
-       	String claimantCity = request.getParameter("claimantCity");
-       	String claimantState = request.getParameter("claimantState");
-       	String claimantZone = request.getParameter("claimantZone");
-       	String nomineeName = request.getParameter("nomineeName");
-       	String nomineeMob = request.getParameter("nomineeMob");
-       	String nomineeAdd = request.getParameter("nomineeAdd");
-       	String insuredAdd = request.getParameter("insuredAdd");
-       
        	CaseDetails caseDetail=new CaseDetails();
-       	caseDetail.setPolicyNumber(policyNumber);
-       	caseDetail.setIntimationType(typeOfInvestigation);
-       	caseDetail.setInsuredName(insuredName);
-       	caseDetail.setInsuredDOD(insuredDOD);
-       	caseDetail.setInsuredDOB(insuredDOB);
-       	caseDetail.setSumAssured(sumAssured);
-       	caseDetail.setIntimationType(msgIntimationType);
-       	caseDetail.setClaimantCity(claimantCity);
-       	caseDetail.setClaimantState(claimantState);
-       	caseDetail.setClaimantZone(claimantZone);
-       	caseDetail.setNominee_name(nomineeName);
-       	caseDetail.setNomineeContactNumber(nomineeMob);
-       	caseDetail.setNominee_address(nomineeAdd);
-       	caseDetail.setInsured_address(insuredAdd);
+       	caseDetail.setPolicyNumber(request.getParameter("policyNumber"));
+       	caseDetail.setInvestigationCategory(request.getParameter("msgCategory"));
+       	caseDetail.setInsuredName( request.getParameter("insuredName"));
+       	caseDetail.setInsuredDOD(request.getParameter("insuredDOD"));
+       	caseDetail.setInsuredDOB(request.getParameter("insuredDOB"));
+       	caseDetail.setSumAssured(Integer.parseInt(request.getParameter("sumAssured")));
+       	caseDetail.setIntimationType( request.getParameter("msgIntimationType"));
+       	caseDetail.setClaimantCity(request.getParameter("claimantCity"));
+       	caseDetail.setClaimantState(request.getParameter("claimantState"));
+       	caseDetail.setClaimantZone(request.getParameter("claimantZone"));
+       	caseDetail.setNominee_name(request.getParameter("nomineeName"));
+       	caseDetail.setNomineeContactNumber(request.getParameter("nomineeMob"));
+       	caseDetail.setNominee_address(request.getParameter("nomineeAdd"));
+       	caseDetail.setInsured_address(request.getParameter("insuredAdd"));
 		caseDetail.setCreatedBy(user.getUsername()); 
        	String message= caseDao.addcase(caseDetail);
        	userDao.activity_log("CASE HISTORY", 0, caseDetail.getPolicyNumber(), user.getUsername());
@@ -223,6 +214,54 @@ public class CaseController {
 			int caseId=Integer.parseInt(request.getParameter("msgId"));
 	    String message=caseDao.deleteCase(caseId);  	
 	    return message;
+    }
+    
+    @RequestMapping(value = "/edit",method = RequestMethod.GET)
+   	public String edit(HttpSession session, HttpServletRequest request) 
+   	{			
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+		session.removeAttribute("ScreenDetails");
+    	
+		ScreenDetails details=new ScreenDetails();
+    	details.setScreen_name("../message/edit_message.jsp");
+    	details.setScreen_title("Edit Case");
+    	details.setMain_menu("Case Management");
+    	details.setSub_menu1("Create Case");
+    	details.setSub_menu2("Manage Cases");
+    	details.setSub_menu2_path("../message/pending_message.jsp");
+    	session.setAttribute("ScreenDetails", details);    	
+    	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
+    	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
+    	session.setAttribute("case_detail",caseDao.getCaseDetail(Integer.parseInt(request.getParameter("caseId"))));
+		
+		return "common/templatecontent";
+   	}
+    
+    @RequestMapping(value = "/updateMessageDetails",method = RequestMethod.POST)
+    public String updateMessageDetails(HttpSession session, HttpServletRequest request) {
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+       	CaseDetails caseDetail=new CaseDetails();
+       	caseDetail.setPolicyNumber(request.getParameter("policyNumber"));
+       	caseDetail.setInvestigationCategory(request.getParameter("msgCategory"));
+       	caseDetail.setInsuredName( request.getParameter("insuredName"));
+       	caseDetail.setInsuredDOD(request.getParameter("insuredDOD"));
+       	caseDetail.setInsuredDOB(request.getParameter("insuredDOB"));
+       	caseDetail.setSumAssured(Integer.parseInt(request.getParameter("sumAssured")));
+       	caseDetail.setIntimationType( request.getParameter("msgIntimationType"));
+       	caseDetail.setClaimantCity(request.getParameter("claimantCity"));
+       	caseDetail.setClaimantState(request.getParameter("claimantState"));
+       	caseDetail.setClaimantZone(request.getParameter("claimantZone"));
+       	caseDetail.setNominee_name(request.getParameter("nomineeName"));
+       	caseDetail.setNomineeContactNumber(request.getParameter("nomineeMob"));
+       	caseDetail.setNominee_address(request.getParameter("nomineeAdd"));
+       	caseDetail.setInsured_address(request.getParameter("insuredAdd"));
+		caseDetail.setCreatedBy(user.getUsername()); 
+       	String message= caseDao.updateCaseDetails(caseDetail);
+   		return message;
     }
     
 }

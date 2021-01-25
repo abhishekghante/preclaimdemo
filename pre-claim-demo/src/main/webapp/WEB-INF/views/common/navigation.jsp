@@ -92,7 +92,7 @@ ArrayList<String> user_permission = (ArrayList<String>)session.getAttribute("use
               </ul>
             </li>
             <%} %>
-			<%if(!user_permission.contains("regionalManager")){ %>
+			<%if(user_permission.contains("regionalManager")){ %>
             <li class="nav-item <%if(details.getMain_menu().equals("Regional Manager")){%>active open<%}%>">
               <a href="#" class="nav-link nav-toggle">
                   <i class="icon-user"></i>
@@ -115,7 +115,7 @@ ArrayList<String> user_permission = (ArrayList<String>)session.getAttribute("use
               </ul>
             </li>
              <%} %>
-            <%if(!user_permission.contains("agencySupervisor")){ %>
+            <%if(user_permission.contains("agencySupervisor")){ %>
             <li class="nav-item <%if(details.getMain_menu().equals("Agency Supervisor")){%>active open<%}%>">
               <a href="#" class="nav-link nav-toggle">
                   <i class="icon-user"></i>

@@ -12,4 +12,5 @@ public interface LocationDao {
 	String updateLocation(Location location);
     String updateLocationStatus(int locationId, int status, String username);
     Location getLocationById(int locationId);
+    public List<Location> getActiveLocationList();
 }

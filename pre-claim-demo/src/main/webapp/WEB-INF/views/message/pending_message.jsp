@@ -14,6 +14,12 @@ session.removeAttribute("pendingCaseDetailList");
 List<Region> regionList = (List<Region>) session.getAttribute("region_list");
 List<IntimationType> groupList = (List<IntimationType>) session.getAttribute("group_list");
 List<Channel> channelList = (List<Channel>) session.getAttribute("channel_list");
+if(regionList == null)
+	regionList = new ArrayList<Region>();
+if(groupList == null)
+	groupList = new ArrayList<IntimationType>();
+if(channelList == null)
+	channelList = new ArrayList<Channel>();
 %>
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
@@ -36,7 +42,7 @@ List<Channel> channelList = (List<Channel>) session.getAttribute("channel_list")
         </div>
       </div>
     </div>
-    
+
     <div class="box box-primary">
       <div class="box-body">
           <div class="row">
@@ -46,7 +52,6 @@ List<Channel> channelList = (List<Channel>) session.getAttribute("channel_list")
                     <table id="pending_message_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                       <thead>
                         <tr class="tbl_head_bg">
-                          <th class="head1 no-sort"><input type = "checkbox" name = "selectAllCase"></th>
                           <th class="head1 no-sort">Case ID</th>
                           <th class="head1 no-sort">Policy No</th>
                           <th class="head1 no-sort">Name of Insured</th>
@@ -71,7 +76,6 @@ List<Channel> channelList = (List<Channel>) session.getAttribute("channel_list")
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
                         </tr>
                       </tfoot>
                       <tbody>
@@ -79,33 +83,40 @@ List<Channel> channelList = (List<Channel>) session.getAttribute("channel_list")
                         	for(CaseDetailList list_case :pendingCaseDetailList){%>                       
                           
                           <tr>
-                          		<td><input type = "checkbox" name = "selectCase"></td>
                   				<td><%=list_case.getSrNo()%></td>
                   				<td><%=list_case.getPolicyNumber()%></td>
                   				<td><%=list_case.getInsuredName()%></td>
                   				<td><%=list_case.getInvestigationCategory()%></td>
                   				<td><%=list_case.getClaimantZone()%></td>
                                 <td><%=list_case.getSumAssured()%></td>
-                                <td></td>
+                                <td><%=list_case.getIntimationType()%></td>
                                 <td></td>
                                 <td><span class="label label-sm label-warning">Pending</span></td>
                                 <td>
-                             <a href="'.base_url().'messages/edit/'.$message->msgId.'" data-toggle="tooltip" title="Edit" 
+                             <a href="${pageContext.request.contextPath}/message/edit?caseId=<%=list_case.getCaseId()%>" data-toggle="tooltip" title="Edit" 
                          		 class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i>
                          	 </a>
            
-                             <a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateMessageStatus('<%=list_case.getCaseId() %>',1,<%=allow_statusChg%>);" 
+                             <a href="javascript:;" data-toggle="tooltip" title="Assign case" onClick="return updateMessageStatus('<%=list_case.getCaseId()%>','ARM',<%=allow_statusChg%>);" 
                          		 class="btn btn-success btn-xs"><i class="glyphicon glyphicon-ok-circle"></i>
                        		 </a>
-                       		 
+                       		  
                              <a href="javascript:;" data-toggle="tooltip" title="Delete" onClick="return deleteMessage('<%=list_case.getCaseId() %>',<%=allow_statusChg%>);" 
                              	class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i>
                            	 </a>
                          
                          </td>
-                          </tr>                                     
-                       <%}
-                       	}%>                      
+                                
+                          
+                          </tr>                      
+                       
+                       <% 		
+                       	}
+                        } 
+                        %>
+                      
+                      
+                      
                       </tbody>
                     </table>
                   </div>
@@ -140,6 +151,9 @@ $(document).ready(function() {
     {
       var channelBox = '<select name="channel" id="channel" class="form-control">'
                               +'<option value="">All</option>';
+      <%for(Channel channel : channelList) {%>                      		
+      	channelBox += '<option value = "<%= channel.getChannelCode()%>"><%= channel.getChannelName()%></option>';
+      <%} %>
       channelBox += '</select>';     
       $(this).html( channelBox );
     }

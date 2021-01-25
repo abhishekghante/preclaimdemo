@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 import com.preclaim.config.Config;
 import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.CaseDetails;
+import com.preclaim.models.UserDetails;
 
 public class CaseDaoImpl implements CaseDao {
 
@@ -48,7 +49,8 @@ public class CaseDaoImpl implements CaseDao {
 	}
 	
 	@Override
-	public String addcase(CaseDetails casedetail) {
+	public String addcase(CaseDetails casedetail) 
+	{
 		try 
 		{
 			String query = "INSERT INTO case_lists (policyNumber, investigationCategory, insuredName, insuredDOD, insuredDOB, sumAssured, intimationType, claimantCity,"
@@ -69,15 +71,17 @@ public class CaseDaoImpl implements CaseDao {
 		return "****";
 	}
 
+	
+	
 	@Override
-	public List<CaseDetailList> getCaseDetailList(String status) {
+	public List<CaseDetailList> getCaseDetailList(String caseSubStatus) {
 		try
 		{
 			String sql="";
-			 if(status.equals("Open")) 
-				 sql ="SELECT * FROM case_lists where status = " + status; 
+			 if(caseSubStatus.equals("PA")) 
+				 sql ="SELECT * FROM case_lists where caseSubStatus ='" + caseSubStatus+"'"; 
 			   else 
-				 sql ="SELECT * FROM case_lists";
+				 sql ="SELECT * FROM case_lists WHERE caseSubStatus='ARM'";
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
 						casedetail.setSrNo(rowCount+1);
@@ -89,6 +93,7 @@ public class CaseDaoImpl implements CaseDao {
 						casedetail.setSumAssured(rs.getInt("sumAssured"));
 						casedetail.setCaseStatus(rs.getString("caseStatus"));
 						casedetail.setCaseSubstatus(rs.getString("caseSubStatus"));
+						casedetail.setIntimationType(rs.getString("intimationType"));	
 						return casedetail;
 					});
 			return casedetailList;
@@ -101,6 +106,80 @@ public class CaseDaoImpl implements CaseDao {
 		}
 	}
 	
+	
+	@Override
+	public CaseDetails getCaseDetail(int caseID) {
+		try
+		{
+			String sql = "SELECT * FROM case_lists where caseID = ?";
+			     List<CaseDetails> caseDetail= this.template.query(sql, new Object[] {caseID}, 
+					(ResultSet rs, int rowCount) -> 
+					{
+						CaseDetails detail = new CaseDetails();
+						detail.setCaseId(rs.getInt("caseID"));
+						detail.setPolicyNumber(rs.getString("policyNumber"));
+						detail.setInvestigationCategory(rs.getString("investigationCategory"));
+						detail.setInsuredName(rs.getString("insuredName"));
+						detail.setInsuredDOD(rs.getString("insuredDOD"));
+						detail.setInsuredDOB(rs.getString("insuredDOB"));
+						detail.setSumAssured(rs.getInt("sumAssured"));
+						detail.setIntimationType(rs.getString("intimationType"));
+						detail.setClaimantCity(rs.getString("claimantCity"));
+						detail.setClaimantState(rs.getString("claimantState"));
+						detail.setClaimantZone(rs.getString("claimantZone"));
+						detail.setNominee_name(rs.getString("nominee_name"));
+						detail.setNomineeContactNumber(rs.getString("nomineeContactNumber"));
+						detail.setNominee_address(rs.getString("nominee_address"));
+						detail.setInsured_address(rs.getString("insured_address"));
+						return detail;
+					}
+					);
+			     return caseDetail.get(0);
+		          
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	@Override
+	public String updateCaseSubStatus(int caseid, String caseSubStatus) {
+	try {
+		
+	      String sql="update case_lists set caseSubStatus =? where caseId=? ";
+		  this.template.update(sql,caseSubStatus,caseid);
+		  
+	   }
+	catch(Exception e) 
+	{
+		return "Error updating region status. Kindly contact system administrator";	
+    }
+	return "****";	  
+	}
+	
+	@Override
+	public String updateCaseDetails(CaseDetails casedetail) {
+		try
+		{
+			String sql = "UPDATE case_lists SET policyNumber = ?, investigationCategory = ?, insuredName = ?, insuredDOD = ?, insuredDOB = ?, sumAssured = ?, intimationType = ?, claimantCity = ?,"
+					+ "claimantZone = ?, claimantState = ?,nominee_name = ?, nomineeContactNumber = ?, nominee_address = ?, "
+					+ "insured_address = ?";
+			template.update(sql, casedetail.getPolicyNumber(), casedetail.getInvestigationCategory(), casedetail.getInsuredName(), casedetail.getInsuredDOD(),
+					casedetail.getInsuredDOB(), casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getClaimantCity(), casedetail.getClaimantZone(), 
+					casedetail.getClaimantState(), casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), casedetail.getNominee_address(),
+					casedetail.getInsured_address());
+					
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return "Failed updating Case ID. Kindly contact system administrator";
+		}
+		return "****";
+	}
 	@Transactional
 	public String readCasexlsx(String filename) {
 		try {
@@ -229,5 +308,5 @@ public class CaseDaoImpl implements CaseDao {
 	
 		return "****";
 	}
-
+	
 }

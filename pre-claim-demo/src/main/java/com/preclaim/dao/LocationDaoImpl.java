@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.preclaim.models.InvestigationType;
 import com.preclaim.models.Location;
 
 public class LocationDaoImpl implements LocationDao {
@@ -125,5 +126,18 @@ public class LocationDaoImpl implements LocationDao {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	@Override
+	public List<Location> getActiveLocationList() {
+		String query = "SELECT * FROM location_lists WHERE status = 0";
+		return template.query(query, (ResultSet rs, int rowNum) -> {
+			Location location = new Location();
+			location.setLocationId(rs.getInt("locationId"));
+			location.setCity(rs.getString("city"));
+			location.setState(rs.getString("state"));
+			location.setZone(rs.getString("zone"));
+			return location;
+		});
 	}
 }

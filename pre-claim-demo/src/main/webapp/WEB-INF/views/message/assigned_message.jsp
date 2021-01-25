@@ -48,7 +48,6 @@ if(channelList == null)
                     <table id="active_message_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                       <thead>
                         <tr class="tbl_head_bg">
-                          <th class="head1 no-sort"><input type = "checkbox" name = "selectAllCase"></th>
                           <th class="head1 no-sort">Case ID</th>
                           <th class="head1 no-sort">Policy No</th>
                           <th class="head1 no-sort">Name of Insured</th>
@@ -72,7 +71,6 @@ if(channelList == null)
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
                           <th class="head1 no-sort"></th>
                         </tr>
                       </tfoot>
@@ -82,14 +80,13 @@ if(channelList == null)
                       	  %>
                       	  
                       	  <tr>
- 								<td><input type = "checkbox" name = "selectCase"></td>
-                  				<td><%=list_case.getSrNo()%></td>
+ 								<td><%=list_case.getSrNo()%></td>
                   				<td><%=list_case.getPolicyNumber()%></td>
                   				<td><%=list_case.getInsuredName()%></td>
                   				<td><%=list_case.getInvestigationCategory()%></td>
                   				<td><%=list_case.getClaimantZone()%></td>
                                 <td><%=list_case.getSumAssured()%></td>
-                                <td></td>
+                                 <td><%=list_case.getIntimationType()%></td>
                                 <td></td>
                                 <td><span class="label label-sm label-success">Assign</span></td>                        
                                 <td>
@@ -98,7 +95,7 @@ if(channelList == null)
                                		</a>
                                 
                               
-                               	    <a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateMessageStatus('.$message->msgId.',1,1);" 
+                               	    <a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateMessageStatus('<%=list_case.getCaseId() %>','PA',<%=allow_statusChg%>);" 
                                 		class="btn btn-success btn-xs"><i class="glyphicon glyphicon-ok-circle"></i>
                                 	</a>
                                 
