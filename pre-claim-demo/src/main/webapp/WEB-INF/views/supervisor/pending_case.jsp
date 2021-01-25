@@ -36,39 +36,6 @@ List<Channel> channelList = (List<Channel>) session.getAttribute("channel_list")
         </div>
       </div>
     </div>
-    
-    <div class="portlet light bordered">
-			<div class="portlet-body">
-				<div id="message_account"></div>
-				<form novalidate id="add_region_form" role="form" method="post"
-					class="form-horizontal">
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label class="col-md-4 control-label" for="regionName">Region
-									Name <span class="text-danger">*</span>
-								</label>
-								<div class="col-md-8">
-									<input type="text" required id="regionName" name="regionName" 
-										class="form-control" placeholder="Region Name"
-										value ="">
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="col-md-offset-4 col-md-8">
-									<input type="hidden" id="regionId" name="regionId"
-										value = "">
-									<button class="btn btn-info" id="editregionsubmit"
-										onClick="return updateRegion();" type="button">Update</button>
-									<a href="${pageContext.request.contextPath}/region/pending_region"
-										class="btn btn-danger">Back</a> 
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
 
     <div class="box box-primary">
       <div class="box-body">

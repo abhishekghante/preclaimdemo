@@ -91,7 +91,7 @@ public class CaseController {
     	details.setScreen_name("../message/pending_message.jsp");
     	details.setScreen_title("Pending Cases Lists");
     	details.setMain_menu("Case Management");
-    	details.setSub_menu1("Pending Cases");
+    	details.setSub_menu1("RCU Pending Cases");
     	session.setAttribute("ScreenDetails", details);
     	List<CaseDetailList> pendingCaseDetailList= caseDao.getCaseDetailList("PA");
     	session.setAttribute("pendingCaseDetailList", pendingCaseDetailList);
@@ -125,7 +125,7 @@ public class CaseController {
     	details.setScreen_name("../message/assigned_message.jsp");
     	details.setScreen_title("<li class = \"active\">Assigned Cases Lists</li>");
     	details.setMain_menu("Case Management");
-    	details.setSub_menu1("Assigned Cases");
+    	details.setSub_menu1("RCU Assigned Cases");
     	List<CaseDetailList> assignCaseDetailList= caseDao.getCaseDetailList("ARM");
     	session.setAttribute("assignCaseDetailList", assignCaseDetailList);
     	session.setAttribute("ScreenDetails", details);
