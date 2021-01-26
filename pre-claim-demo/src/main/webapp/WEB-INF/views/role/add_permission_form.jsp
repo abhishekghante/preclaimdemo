@@ -3,7 +3,7 @@
 ArrayList<String> role_permission = new ArrayList<String>();
 role_permission = (ArrayList<String>) session.getAttribute("permission");
 session.removeAttribute("permission"); 
-int roleId = Integer.parseInt((String)session.getAttribute("role_id"));
+String roleCode = (String)session.getAttribute("role_code");
 session.removeAttribute("role_id");
 String roleName=(String)session.getAttribute("user role");
 session.removeAttribute("user role");
@@ -201,7 +201,7 @@ ArrayList<String> user_permission=(ArrayList<String>)session.getAttribute("user_
                         </table>
                       </div>
                       <div style="padding-top: 10px;">
-                      	<input type="hidden" name="roleId" id="roleId" value="<%= roleId%>">
+                      	<input type="hidden" name="roleId" id="roleId" value="<%= roleCode%>">
                       	<button type="button" id="addPermissionBtn" onClick="return addPermission();" class="btn btn-success btn-sm">Submit</button>
 		    			<a class="btn btn-danger btn-sm" href="${pageContext.request.contextPath}/user/role">Back</a>
 		    		  </div>	

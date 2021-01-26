@@ -227,8 +227,8 @@ public class UserController {
 		return dao.updateUserDetails(user_details);
 	}
 	
-	@RequestMapping(value = "/permission/{roleID}", method = RequestMethod.GET)
-	public String permission(@PathVariable("roleID") int roleID, HttpSession session)
+	@RequestMapping(value = "/permission/{roleCode}", method = RequestMethod.GET)
+	public String permission(@PathVariable("roleCode") String roleCode, HttpSession session)
 	{
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if(user == null)
@@ -238,10 +238,10 @@ public class UserController {
     	details.setScreen_name("../role/add_permission_form.jsp");
     	details.setScreen_title("Manage Permission");
     	session.setAttribute("ScreenDetails", details);
-    	List<String> role_permission = dao.retrievePermission(roleID);
-    	session.setAttribute("role_id", String.valueOf(roleID));
+    	List<String> role_permission = dao.retrievePermission(roleCode);
+    	session.setAttribute("role_code", String.valueOf(roleCode));
     	session.setAttribute("permission", role_permission);
-        session.setAttribute("user role",dao.getUserRole(roleID)); 
+        session.setAttribute("user role",dao.getUserRole(roleCode)); 
     	
     	return "common/templatecontent";
 	}

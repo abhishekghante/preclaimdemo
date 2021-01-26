@@ -73,7 +73,7 @@ public class LoginController {
     			return "User ID disabled. Kindly contact system administrator";
     		session.setAttribute("User_Login", user);
     		List<String> user_permission = 
-    				userDao.retrievePermission(Integer.parseInt(user.getAccount_type()));
+    				userDao.retrievePermission(user.getAccount_type());
     		session.setAttribute("user_permission", user_permission);
     		return "****";
     	}

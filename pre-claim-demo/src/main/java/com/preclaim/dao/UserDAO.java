@@ -18,10 +18,10 @@ public interface UserDAO {
 	String updateUserStatus(int user_id, int user_status);
 	UserDetails getUserDetails(int user_id);
 	String updateUserDetails(UserDetails user_details);
-	List<String>	retrievePermission(int roleID);
+	List<String> retrievePermission(String role_code);
 	String addPermission(List<String> role_permission, int roleID);
 	String accountValidate(String username);
 	String updateProfile(UserDetails user_details);
 	void activity_log(String moduleName,int moduleId,String moduleAction,String username);
-	String getUserRole(int roleId);
+	String getUserRole(String roleCode);
 }

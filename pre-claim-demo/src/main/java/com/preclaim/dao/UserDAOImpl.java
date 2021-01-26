@@ -45,7 +45,7 @@ public class UserDAOImpl implements UserDAO{
 
 	@Override
 	public String create_user(UserDetails user) {
-		String sql = "INSERT INTO admin_user(full_name, account_type, username, user_email, "
+		String sql = "INSERT INTO admin_user(full_name, role_name, username, user_email, "
 				+ "contact_number, password, state, city, zone, status,address,user_image,permissions,createdon, "
 				+ "web_active, last_login) VALUES(?,?,?,?,?,?,?,?,?,?,'',?,'',now(),1,now())";
 		System.out.println(user.getPassword());
@@ -167,7 +167,7 @@ public class UserDAOImpl implements UserDAO{
 						details.setUser_email(rs.getString("user_email"));
 						details.setUserimage(rs.getString("user_image"));
 						details.setUserImageb64(Config.upload_directory + rs.getString("user_image"));
-						details.setAccount_type(rs.getString("account_type"));
+						details.setAccount_type(rs.getString("role_name"));
 						details.setUsername(rs.getString("username"));
 						details.setUserID(rs.getInt("user_id"));
 						return details;
@@ -187,7 +187,7 @@ public class UserDAOImpl implements UserDAO{
 	public String updateUserDetails(UserDetails user_details) {
 		try
 		{
-			String sql = "UPDATE admin_user SET full_name = ?, account_type = ?, username = ?,"
+			String sql = "UPDATE admin_user SET full_name = ?, role_name = ?, username = ?,"
 					+ "user_email = ?, password = ?, status = ?, user_image = ? where "
 					+ "user_id = ?";
 			template.update(sql, user_details.getFull_name(), user_details.getAccount_type(),
@@ -220,11 +220,11 @@ public class UserDAOImpl implements UserDAO{
 	}
 
 	@Override
-	public List<String> retrievePermission(int roleID) {
+	public List<String> retrievePermission(String role_code) {
 		try
 		{
-			String sql = "SELECT * from permission where role_id = ?";
-			return template.query(sql, new Object[] {roleID}, 
+			String sql = "SELECT * from permission where role_code = ?";
+			return template.query(sql, new Object[] {role_code}, 
 					(ResultSet rs, int rowCount) ->
 					{						
 						return rs.getString("module");
@@ -326,8 +326,8 @@ public class UserDAOImpl implements UserDAO{
 	}
 
 	@Override
-	public String getUserRole(int roleId) {
-		String sql="select role from user_role where roleId="+roleId;
+	public String getUserRole(String roleCode) {
+        String sql="select role from user_role where role_code='"+roleCode+"'";
 	    return this.template.queryForObject(sql,String.class);
 	
 	}

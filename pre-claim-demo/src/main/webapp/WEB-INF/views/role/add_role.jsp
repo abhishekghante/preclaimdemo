@@ -84,7 +84,7 @@ boolean allow_delete = user_permission.contains("role/delete");
 		               					<i class="fa fa-trash"></i>
 		           					</a>
 		           					<a class="btn btn-success btn-xs" 
-		           						href="${pageContext.request.contextPath}/user/permission/${role_list.roleId}">
+		           						href="${pageContext.request.contextPath}/user/permission/${role_list.role_code}">
 		           						Permission
 		           						<i class="fa fa-plus"></i>
 		          					</a>                             

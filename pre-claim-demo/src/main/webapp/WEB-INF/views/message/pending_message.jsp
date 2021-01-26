@@ -49,10 +49,11 @@ if(channelList == null)
             <div class="col-md-12 table-container">
                 <div class="box-body no-padding">
                   <div class="table-responsive">
-                    <table id="pending_message_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
+                    <table id="pending_case_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                       <thead>
                         <tr class="tbl_head_bg">
                           <th class="head1 no-sort">Case ID</th>
+                          <th class="head1 no-sort"><input type="checkbox" id="chk-all" name="chk-all"/></th>
                           <th class="head1 no-sort">Policy No</th>
                           <th class="head1 no-sort">Name of Insured</th>
                           <th class="head1 no-sort">Type of Investigation</th>
@@ -76,6 +77,7 @@ if(channelList == null)
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
+                          <th class="head2 no-sort"></th>
                         </tr>
                       </tfoot>
                       <tbody>
@@ -84,6 +86,7 @@ if(channelList == null)
                           
                           <tr>
                   				<td><%=list_case.getSrNo()%></td>
+                  			   <td><input type="checkbox" name = "selectCase"></td>
                   				<td><%=list_case.getPolicyNumber()%></td>
                   				<td><%=list_case.getInsuredName()%></td>
                   				<td><%=list_case.getInvestigationCategory()%></td>
@@ -119,7 +122,10 @@ if(channelList == null)
                       
                       </tbody>
                     </table>
-                  </div>
+                     <div class="text-center">
+   						 <a class="btn btn-danger" id="assignCase" >Assigned Case</a>
+				   </div>
+                  </div>                 
                 </div>
               <div class="clearfix"></div>
             </div>
@@ -133,10 +139,10 @@ if(channelList == null)
 $(document).ready(function() {
   var i = 0;
   //DataTable  
-  var table = $('#pending_message_list').DataTable();
+  var table = $('#pending_case_list').DataTable();
 
-   $('#pending_message_list tfoot th').each( function () {
-    if( i == 1 || i == 2 || i == 3 || i == 4){
+   $('#pending_case_list tfoot th').each( function () {
+    if( i == 4 || i == 5){
       $(this).html( '<input type="text" class="form-control" placeholder="" />' );
     }
     else if(i == 5)
@@ -178,5 +184,52 @@ $(document).ready(function() {
       }
     });
   });
+});
+
+</script>
+<script>
+$('#chk-all').click(function(event) {
+    if(this.checked) {
+        // Iterate each checkbox
+        $(':checkbox').each(function() {
+            this.checked = true;                        
+        });
+    } else {
+        $(':checkbox').each(function() {
+            this.checked = false;                       
+        });
+    }
+});
+</script>
+<script>
+$("#assignCase").click(function(){
+	var caseList = [];
+	$("#pending_case_list input[type=checkbox]:checked").each(function(){
+		var row = $(this).closest("tr")[0];
+        caseList.push(row.cells[2].innerHTML);
+	});
+	console.log(JSON.stringify({"caseList":caseList}));
+	 $.ajax({
+	      type: "POST",
+	      url:'readCheckbox',
+	      data: {"caseList":caseList},
+	      beforeSend: function() { 
+	          $("#addregionsubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+	          $("#addregionsubmit").prop('disabled', true);
+	      },
+	      success: function( data ) {
+	        if(data == "****"){
+	          $("#assignCase").html('Add Assign');
+	          $("#assignCase").prop('disabled', false);
+	          toastr.success( 'Case Assigned successfully.','Success' );
+	          $( '#add_region_form #regionName' ).val(''); 
+	        }else{
+	          toastr.error( data,'Error' );
+	          $("#assignCase").html('Add Assign');
+	          $("#assignCase").prop('disabled', false);
+	        }
+	      }
+	    });
+
 });
 </script>
