@@ -45,7 +45,7 @@ session.removeAttribute("pendingCaseDetailList");
 									<span class="text-danger">*</span>
 								</label>
 								<div class="col-md-8">
-								<select name = "supervisorZone" id="supervisorZone" class = "form-control">
+								<select name = "assigneeZone" id="assigneeZone" class = "form-control">
 								</select>
 <!-- 									<input type="text" required id="supervisorZone" name="supervisorZone"  -->
 <!-- 										class="form-control" placeholder="Supervisor Zone" -->
@@ -59,8 +59,9 @@ session.removeAttribute("pendingCaseDetailList");
 								<span class="text-danger">*</span>
 								</label>
 								<div class="col-md-8">
-								<select name = "supervisorState" id="supervisorState" class = "form-control">
+								<select name = "assigneeState" id="assigneeState" class = "form-control">
 								</select>
+
 <!-- 									<input type="text" required id="supervisorState" name="supervisorState"  -->
 <!-- 										class="form-control" placeholder="Supervisor State" -->
 <!-- 										value =""> -->
@@ -73,7 +74,7 @@ session.removeAttribute("pendingCaseDetailList");
 									<span class="text-danger">*</span>
 								</label>
 								<div class="col-md-8">
-								<select name = "supervisorCity" id="supervisorCity" class = "form-control">
+								<select name = "assigneeCity" id="assigneeCity" class = "form-control">
 								</select>
 <!-- 									<input type="text" required id="supervisorCity" name="supervisorCity"  -->
 <!-- 										class="form-control" placeholder="Supervisor City" -->
@@ -89,7 +90,7 @@ session.removeAttribute("pendingCaseDetailList");
 								<span class="text-danger">*</span>
 								</label>
 								<div class="col-md-8">
-								<select name = "supervisorName" id="supervisorName" class = "form-control">
+								<select name = "assigneeName" id="assigneeName" class = "form-control">
 								</select>
 <!-- 									<input type="text" required id="supervisorName" name="supervisorName"  -->
 <!-- 										class="form-control" placeholder="Supervisor Name" -->
@@ -105,8 +106,7 @@ session.removeAttribute("pendingCaseDetailList");
 							<button class="btn btn-info" id="assignSupervisor" type="button">Assign
 							</button>
 							<a href="${pageContext.request.contextPath}/message/pending"
-								class="btn btn-danger">Back</a>
-							 
+								class="btn btn-danger">Back</a>							 
 						</div>
 					</div>
 				</form>
@@ -148,33 +148,36 @@ session.removeAttribute("pendingCaseDetailList");
                       </tfoot>
                       <tbody>
                         <%if(pendingCaseDetailList!=null){
-                        	for(CaseDetailList list_case :pendingCaseDetailList){%>                       
-                          
+                        	for(CaseDetailList list_case :pendingCaseDetailList){                       
+                          		if(!list_case.getCaseSubstatus().equalsIgnoreCase("ARM"))
+                          			continue;
+                          		%>
                           <tr>
                           		<td><input type = "checkbox" name = "selectCase"></td>
                   				<td><%=list_case.getSrNo()%></td>
                   				<td><%=list_case.getPolicyNumber()%></td>
                   				<td><%=list_case.getInsuredName()%></td>
-                  				<td><%=list_case.getInvestigationCategory()%></td>
                   				<td><%=list_case.getClaimantZone()%></td>
-                                <td><%=list_case.getSumAssured()%></td>
-                                <td></td>
-                                <td></td>
+                  				<td><%=list_case.getSumAssured()%></td>
+                                <td><a href = "#">Case Details</a></td>
                                 <td><span class="label label-sm label-warning">Pending</span></td>
                                 <td>
-                             <a href="'.base_url().'messages/edit/'.$message->msgId.'" data-toggle="tooltip" title="Edit" 
-                         		 class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i>
-                         	 </a>
-           
-                             <a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateMessageStatus('<%=list_case.getCaseId() %>',1,<%=allow_statusChg%>);" 
-                         		 class="btn btn-success btn-xs"><i class="glyphicon glyphicon-ok-circle"></i>
-                       		 </a>
-                       		 
-                             <a href="javascript:;" data-toggle="tooltip" title="Delete" onClick="return deleteMessage('<%=list_case.getCaseId() %>',<%=allow_statusChg%>);" 
-                             	class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i>
-                           	 </a>
-                         
-                         </td>
+		                             <a href="${pageContext.request.contextPath}/message/edit?caseId=<%=list_case.getCaseId()%>" 
+		                             	data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
+		                         		 <i class="glyphicon glyphicon-edit"></i>
+		                         	 </a>
+		           
+		                             <a href="#" data-toggle="tooltip" title="Active" onClick="return updateCaseStatus('<%=list_case.getCaseId() %>','AAS',<%=allow_statusChg%>);" 
+		                         		 class="btn btn-success btn-xs">
+		                         		 <i class="glyphicon glyphicon-ok-circle"></i>
+		                       		 </a>
+		                       		 
+		                             <a href="#" data-toggle="tooltip" title="Delete" onClick="return deleteMessage('<%=list_case.getCaseId() %>',<%=allow_statusChg%>);" 
+		                             	class="btn btn-danger btn-xs">
+		                             	<i class="glyphicon glyphicon-remove"></i>
+		                           	 </a>
+		                         
+                         		</td>
                           </tr>                                     
                        <%}
                        	}%>                      
@@ -197,17 +200,7 @@ $(document).ready(function() {
   var table = $('#pending_message_list').DataTable();
 
 //    $('#pending_message_list tfoot th').each( function () {
-//     if( i == 1 || i == 2 || i == 3 || i == 5 || i == 7){
-//       $(this).html( '<input type="text" class="form-control" placeholder="">' );
-//     }
-//     else if(i == 5)
-//     {
-//       var cat_selectbox = '<select name="category" id="category" class="form-control">'
-//                               +'<option value="">All</option>';
-		
-//         cat_selectbox += '</select>';
-//         $(this).html( cat_selectbox );
-//     }
+// 	   i = 0;
 //     else if(i == 6)
 //     {
 //       var channelBox = '<select name="channel" id="channel" class="form-control">'
@@ -235,6 +228,79 @@ $(document).ready(function() {
           .draw();
       }
     });
+  });
+  
+//Dropdown Validation
+ $("#assigneeZone").change(function(){
+	 var role_name = "AGNSUP";
+	 var formdata = {"role_name":role_name};
+	 $.ajax({
+		method:"POST",
+		data:formdata,
+		url:"${pageContext.request.contextPath}/message/getActiveZone",
+		success: function(data)
+		{
+			console.log(options);
+			var options = "<option value = " + data + " > " + data + " </option>";
+			$(this).append(options);
+		}
+	 });
+ 
+ });
+ 
+ $("#assigneeState").change(function(){
+	 var role_name = "AGNSUP";
+	 var zone = $("#asssignZone:option-selected").val();
+	 var formdata = {"role_name":role_name, "zone":zone};
+	 $.ajax({
+		method:"POST",
+		data:formdata,
+		url:"${pageContext.request.contextPath}/message/getActiveState",
+		success: function(data)
+		{
+			console.log(options);
+			var options = "<option value = " + data + " > " + data + " </option>";
+			$(this).append(options);	
+		}
+	 });
+	 
+  });
+ 
+ $("#assigneeCity").change(function(){
+	 var role_name = "AGNSUP";
+	 var zone = $("#assigneeZone:option-selected").val();
+	 var state = $("#assigneeState:option-selected").val();
+	 var formdata = {"role_name":"AS", "zone":zone, "state":state};
+	 $.ajax({
+		method:"POST",
+		data:formdata,
+		url:"${pageContext.request.contextPath}/message/getActiveCity",
+		success: function(data)
+		{
+			console.log(options);
+			var options = "<option value = " + data + " > " + data + " </option>";
+			$(this).append(options);
+		}
+	 });
+	 
+  });
+ 
+ $("#assigneeName").change(function(){
+	 var role_name = "AGNSUP";
+	 var zone = $("#assigneeZone:option-selected").val();
+	 var state = $("#assigneeState:option-selected").val();
+	 var city = $("#assigneeCity:option-selected").val();
+	 var formdata = {"role_name":role_name, "zone":zone , "state":state, "city":city};
+	 $.ajax({
+		method:"POST",
+		data:formdata,
+		url:"${pageContext.request.contextPath}/message/getActiveUser",
+		success: function(data)
+		{
+			console.log(data);
+		}
+	 });
+	 
   });
 });
 </script>

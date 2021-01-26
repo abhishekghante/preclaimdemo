@@ -25,6 +25,7 @@ import org.springframework.util.StringUtils;
 import com.preclaim.config.Config;
 import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.CaseDetails;
+import com.preclaim.models.UserDetails;
 
 public class CaseDaoImpl implements CaseDao {
 
@@ -44,7 +45,7 @@ public class CaseDaoImpl implements CaseDao {
 		String extension = StringUtils.getFilenameExtension(filename).toLowerCase();
 		String error ="";
 		if(extension.equals("xlsx"))
-			error = readCasexlsx(filename);
+			error = readCaseXlsx(filename);
 		return error;
 	}
 	
@@ -180,8 +181,77 @@ public class CaseDaoImpl implements CaseDao {
 		}
 		return "****";
 	}
+	
+	@Override
+	public List<String> getActiveZone(String role_name)
+	{
+		try
+		{
+			String sql = "SELECT DISTINCT zone FROM admin_user where status = 1 and role_name = ?";
+			return template.query(sql, new Object[] {role_name}, 
+					(ResultSet rs, int rowCount) -> {return rs.getString("zone");});
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+	}
+	
+	@Override
+	public List<String> getActiveState(String role_name, String zone)
+	{
+		try
+		{
+			String sql = "SELECT DISTINCT state FROM admin_user where status = 1 and role_name = ?,"
+					+ "zone = ?";
+			return template.query(sql, new Object[] {role_name, zone}, 
+					(ResultSet rs, int rowCount) -> {return rs.getString("zone");});
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+	}
+	
+	@Override
+	public List<String> getActiveCity(String role_name, String zone, String state)
+	{
+		try
+		{
+			String sql = "SELECT DISTINCT city FROM admin_user where status = 1 and role_name = ?, "
+					+ "zone = ?, state = ?";
+			return template.query(sql, new Object[] {role_name, zone, state}, 
+					(ResultSet rs, int rowCount) -> {return rs.getString("zone");});
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+	}
+	
+	@Override
+	public List<UserDetails> getActiveUser(String role_name, String zone, String state, String city)
+	{
+		try
+		{
+			String sql = "SELECT * FROM admin_user where status = 1 and role_name = ?, zone = ?, "
+					+ "state = ?, city = ?";
+			return template.query(sql, new Object[] {role_name, zone, state, city}, 
+					(ResultSet rs, int rowCount) -> 
+						{
+							UserDetails user = new UserDetails();
+							user.setUsername(rs.getString("username"));
+							user.setFull_name(rs.getString("full_name"));
+							return user;
+						});
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+	}
 	@Transactional
-	public String readCasexlsx(String filename) {
+	public String readCaseXlsx(String filename) {
 		try {
 			File file = new File(Config.upload_directory + filename);
 			//File not found error won't occur

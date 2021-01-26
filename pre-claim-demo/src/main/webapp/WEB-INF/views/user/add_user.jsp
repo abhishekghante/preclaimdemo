@@ -60,7 +60,7 @@ session.removeAttribute("location_list");
                   	required>
                     <option value="-1" selected disabled>Select</option>
                 	<c:forEach var="role_list" items="${role_list}">
-                		<option value = "${role_list.roleId}">${role_list.role}</option>
+                		<option value = "${role_list.role_code}">${role_list.role}</option>
                 	</c:forEach>
                   </select>
                 </div>

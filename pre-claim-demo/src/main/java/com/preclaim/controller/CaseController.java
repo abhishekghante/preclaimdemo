@@ -263,4 +263,29 @@ public class CaseController {
    		return message;
     }
     
+    @RequestMapping(value = "/getActiveZone",method = RequestMethod.POST)
+    public @ResponseBody List<String> getActiveZone(HttpServletRequest request,HttpSession session) 
+    {
+		return caseDao.getActiveZone(request.getParameter("role_name"));
+    }
+    
+    @RequestMapping(value = "/getActiveState",method = RequestMethod.POST)
+    public @ResponseBody List<String> getActiveState(HttpServletRequest request,HttpSession session) 
+    {
+		return caseDao.getActiveState(request.getParameter("role_name"), request.getParameter("zone"));
+    }
+    
+    @RequestMapping(value = "/getActiveCity",method = RequestMethod.POST)
+    public @ResponseBody List<String> getActiveCity(HttpServletRequest request,HttpSession session) 
+    {
+		return caseDao.getActiveCity(request.getParameter("role_name"), request.getParameter("zone"),
+				request.getParameter("state"));
+    }
+    
+    @RequestMapping(value = "/getActiveUser",method = RequestMethod.POST)
+    public @ResponseBody List<UserDetails> getActiveUser(HttpServletRequest request,HttpSession session) 
+    {
+		return caseDao.getActiveUser(request.getParameter("role_name"), request.getParameter("zone"),
+				request.getParameter("state"), request.getParameter("city"));
+    }
 }

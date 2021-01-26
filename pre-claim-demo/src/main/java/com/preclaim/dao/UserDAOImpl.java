@@ -96,7 +96,7 @@ public class UserDAOImpl implements UserDAO{
 	public List<UserList> user_list() {
 		try
 		{
-			String sql = "select * from admin_user a, user_role b where a.account_type = b.roleId";			
+			String sql = "select * from admin_user a, user_role b where a.role_name = b.role_code";			
 			List<UserList> user_list = this.template.query(sql, 
 					(ResultSet rs, int count) -> {
 						UserList user = new UserList();

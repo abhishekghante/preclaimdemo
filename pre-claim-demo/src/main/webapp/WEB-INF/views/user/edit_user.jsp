@@ -65,7 +65,7 @@ session.removeAttribute("role_list");
                     <%if(role_list != null){
                     	for(UserRole roles: role_list){
                     	%>
-                    	<option value = "<%= roles.getRoleId() %>"
+                    	<option value = "<%= roles.getRole_code()%>"
                     	<% if(user_details.getAccount_type().equals(String.valueOf(roles.getRoleId()))){%>
                     		selected
                     	<%} %>
