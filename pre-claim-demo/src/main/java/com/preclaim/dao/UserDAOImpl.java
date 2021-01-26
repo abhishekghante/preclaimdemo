@@ -45,13 +45,16 @@ public class UserDAOImpl implements UserDAO{
 
 	@Override
 	public String create_user(UserDetails user) {
-		String sql = "INSERT INTO admin_user(full_name, role_name, username, user_email, "
-				+ "contact_number, password, state, city, zone, status,address,user_image,permissions,createdon, "
-				+ "web_active, last_login) VALUES(?,?,?,?,?,?,?,?,?,?,'',?,'',now(),1,now())";
+		String sql = "INSERT INTO admin_user(full_name, role_name, username, user_email, mobile_number, "
+				+ "password, state, city, zone, permissions, status, user_image, createdon, login_type, "
+				+ "web_active, last_login)"
+				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, '', ?, ?, now(), 1, 1, now())";
 		System.out.println(user.getPassword());
-		try {
+		try 
+		{
 			template.update(sql, user.getFull_name(), user.getAccount_type(), user.getUsername(),
-					user.getUser_email(),user.getContactNumber(), user.getPassword(),user.getState(),user.getCity(),user.getZone(),user.getStatus(), "");
+					user.getUser_email(),user.getContactNumber(), user.getPassword(), user.getState(),
+					user.getCity(), user.getZone(), user.getStatus(), user.getUserimage());
 		}
 		catch(Exception e)
 		{
@@ -239,13 +242,13 @@ public class UserDAOImpl implements UserDAO{
 	}
 
 	@Override
-	public String addPermission(List<String> role_permission, int roleID) {		
+	public String addPermission(List<String> role_permission, String role_code) {		
 		try
 		{
-			String sql = "DELETE FROM permission where role_id = ?";
-			template.update(sql,roleID);
-			sql = "INSERT INTO permission(module, role_id, status, created_on, updated_on)"
-					+ "VALUES(?,?,1,now(),now())";
+			String sql = "DELETE FROM permission where role_code = ?";
+			template.update(sql,role_code);
+			sql = "INSERT INTO permission(module, role_code, status, created_on, updated_on)"
+					+ "VALUES(?, ? ,1 ,now() ,now())";
 			int batch_size = 3;
 			for (int i = 0; i < role_permission.size(); i += batch_size) {
 
@@ -256,7 +259,7 @@ public class UserDAOImpl implements UserDAO{
 					@Override
 					public void setValues(PreparedStatement pStmt, int rowCount) throws SQLException {
 						pStmt.setString(1, batchList.get(rowCount));
-						pStmt.setInt(2, roleID);
+						pStmt.setString(2, role_code);
 					}
 
 					@Override
@@ -315,7 +318,8 @@ public class UserDAOImpl implements UserDAO{
 	public void activity_log(String moduleName, int moduleId, String moduleAction, String username) {
 		try 
 		{
-		  	String sql="insert into activity_log(moduleName,moduleId,moduleAction,userId,logDate) values(?,?,?,?,now())";
+		  	String sql="INSERT INTO activity_log(moduleName, moduleId, moduleAction, userId, logDate) "
+		  			+ "values(?, ?, ?, ?, now())";
 	          this.template.update(sql,moduleName,moduleId,moduleAction,username);	
 		}
 		catch(Exception e) 

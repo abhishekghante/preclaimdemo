@@ -19,7 +19,7 @@ public interface UserDAO {
 	UserDetails getUserDetails(int user_id);
 	String updateUserDetails(UserDetails user_details);
 	List<String> retrievePermission(String role_code);
-	String addPermission(List<String> role_permission, int roleID);
+	String addPermission(List<String> role_permission, String role_code);
 	String accountValidate(String username);
 	String updateProfile(UserDetails user_details);
 	void activity_log(String moduleName,int moduleId,String moduleAction,String username);

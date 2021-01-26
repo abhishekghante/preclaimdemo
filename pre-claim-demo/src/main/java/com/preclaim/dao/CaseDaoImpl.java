@@ -25,7 +25,6 @@ import org.springframework.util.StringUtils;
 import com.preclaim.config.Config;
 import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.CaseDetails;
-import com.preclaim.models.UserDetails;
 
 public class CaseDaoImpl implements CaseDao {
 
@@ -72,17 +71,11 @@ public class CaseDaoImpl implements CaseDao {
 		return "****";
 	}
 
-	
-	
 	@Override
-	public List<CaseDetailList> getCaseDetailList(String caseSubStatus) {
+	public List<CaseDetailList> getPendingCaseList() {
 		try
 		{
-			String sql="";
-			 if(caseSubStatus.equals("PA")) 
-				 sql ="SELECT * FROM case_lists where caseSubStatus ='" + caseSubStatus+"'"; 
-			   else 
-				 sql ="SELECT * FROM case_lists WHERE caseSubStatus='ARM'";
+			String sql ="SELECT * FROM case_lists where caseSubStatus = 'PA'"; 			   
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
 						casedetail.setSrNo(rowCount+1);
@@ -107,6 +100,34 @@ public class CaseDaoImpl implements CaseDao {
 		}
 	}
 	
+	@Override
+	public List<CaseDetailList> getAssignedCaseList() {
+		try
+		{
+			String sql ="SELECT * FROM case_lists where caseSubStatus <> 'PA'"; 			   
+			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
+						CaseDetailList casedetail=new CaseDetailList();
+						casedetail.setSrNo(rowCount+1);
+						casedetail.setCaseId(rs.getInt("caseId"));
+						casedetail.setPolicyNumber(rs.getString("policyNumber"));
+						casedetail.setInsuredName(rs.getString("insuredName"));
+						casedetail.setInvestigationCategory(rs.getString("investigationCategory"));
+						casedetail.setClaimantZone(rs.getString("claimantZone"));
+						casedetail.setSumAssured(rs.getInt("sumAssured"));
+						casedetail.setCaseStatus(rs.getString("caseStatus"));
+						casedetail.setCaseSubstatus(rs.getString("caseSubStatus"));
+						casedetail.setIntimationType(rs.getString("intimationType"));	
+						return casedetail;
+					});
+			return casedetailList;
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+			return null;
+		}
+	}
 	
 	@Override
 	public CaseDetails getCaseDetail(int caseID) {
@@ -145,13 +166,13 @@ public class CaseDaoImpl implements CaseDao {
 		}
 	}
 
-
 	@Override
-	public String updateCaseSubStatus(int caseid, String caseSubStatus) {
+	public String assignToRM(String policyNumber, String caseSubStatus, String username) {
 	try {
 		
-	      String sql="update case_lists set caseSubStatus =? where caseId=? ";
-		  this.template.update(sql,caseSubStatus,caseid);
+	      String sql="UPDATE case_lists SET caseSubStatus = ?, updatedDate = now(), updatedBy = ? "
+	      		+ "where caseSubStatus = 'PA' and policyNumber in (" + policyNumber + ")";
+		  this.template.update(sql, caseSubStatus, username);
 		  
 	   }
 	catch(Exception e) 
@@ -182,74 +203,6 @@ public class CaseDaoImpl implements CaseDao {
 		return "****";
 	}
 	
-	@Override
-	public List<String> getActiveZone(String role_name)
-	{
-		try
-		{
-			String sql = "SELECT DISTINCT zone FROM admin_user where status = 1 and role_name = ?";
-			return template.query(sql, new Object[] {role_name}, 
-					(ResultSet rs, int rowCount) -> {return rs.getString("zone");});
-		}
-		catch(Exception e)
-		{
-			return null;
-		}
-	}
-	
-	@Override
-	public List<String> getActiveState(String role_name, String zone)
-	{
-		try
-		{
-			String sql = "SELECT DISTINCT state FROM admin_user where status = 1 and role_name = ?,"
-					+ "zone = ?";
-			return template.query(sql, new Object[] {role_name, zone}, 
-					(ResultSet rs, int rowCount) -> {return rs.getString("zone");});
-		}
-		catch(Exception e)
-		{
-			return null;
-		}
-	}
-	
-	@Override
-	public List<String> getActiveCity(String role_name, String zone, String state)
-	{
-		try
-		{
-			String sql = "SELECT DISTINCT city FROM admin_user where status = 1 and role_name = ?, "
-					+ "zone = ?, state = ?";
-			return template.query(sql, new Object[] {role_name, zone, state}, 
-					(ResultSet rs, int rowCount) -> {return rs.getString("zone");});
-		}
-		catch(Exception e)
-		{
-			return null;
-		}
-	}
-	
-	@Override
-	public List<UserDetails> getActiveUser(String role_name, String zone, String state, String city)
-	{
-		try
-		{
-			String sql = "SELECT * FROM admin_user where status = 1 and role_name = ?, zone = ?, "
-					+ "state = ?, city = ?";
-			return template.query(sql, new Object[] {role_name, zone, state, city}, 
-					(ResultSet rs, int rowCount) -> 
-						{
-							UserDetails user = new UserDetails();
-							user.setUsername(rs.getString("username"));
-							user.setFull_name(rs.getString("full_name"));
-							return user;
-						});
-		}
-		catch(Exception e)
-		{
-			return null;
-		}
-	}
 	@Transactional
 	public String readCaseXlsx(String filename) {
 		try {

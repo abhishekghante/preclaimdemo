@@ -69,7 +69,7 @@ ArrayList<String> user_permission=(ArrayList<String>)session.getAttribute("user_
 			                    		<input type="checkbox" <%if(role_permission.contains("agencySupervisor")) {%>checked <%} %> name="agencySupervisor[]" id="agencySupervisor" class="allPLCheckAS" value="agencySupervisor"> <label for="agencySupervisor">Agency Supervisor</label>
 			                    	</td>
 			                    	<td>
-			                    		<input type="checkbox" <%if(role_permission.contains("agencySupervisor/view")) {%>checked <%} %> name="agencySupervisor[]" id="agencySupervisor_add" class="indPLCheckAS" value="agencySupervisor/view"> <label for="agencySupervisor_view">view</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("agencySupervisor/view")) {%>checked <%} %> name="agencySupervisor[]" id="agencySupervisor_add" class="indPLCheckAS" value="agencySupervisor/view"> <label for="agencySupervisor_view">View</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("agencySupervisor/assign")) {%>checked <%} %> name="agencySupervisor[]" id="agencySupervisor_delete" class="indPLCheckAS" value="agencySupervisor/assign"> <label for="agencySupervisor_assign">Assign</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("agencySupervisor/reassign")) {%>checked <%} %> name="agencySupervisor[]" id="agencySupervisor_status" class="indPLCheckAS" value="agencySupervisor/reassign"> <label for="intimationType_reassign">Reassign</label>
 			                    	</td>
@@ -201,7 +201,7 @@ ArrayList<String> user_permission=(ArrayList<String>)session.getAttribute("user_
                         </table>
                       </div>
                       <div style="padding-top: 10px;">
-                      	<input type="hidden" name="roleId" id="roleId" value="<%= roleCode%>">
+                      	<input type="hidden" name="role_code" id="role_code" value="<%= roleCode%>">
                       	<button type="button" id="addPermissionBtn" onClick="return addPermission();" class="btn btn-success btn-sm">Submit</button>
 		    			<a class="btn btn-danger btn-sm" href="${pageContext.request.contextPath}/user/role">Back</a>
 		    		  </div>	

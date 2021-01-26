@@ -1,11 +1,19 @@
 package com.preclaim.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.preclaim.dao.IntimationTypeDao;
+import com.preclaim.dao.InvestigationTypeDao;
+import com.preclaim.dao.RegionalManagerDao;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.UserDetails;
 
@@ -13,6 +21,15 @@ import com.preclaim.models.UserDetails;
 @RequestMapping(value = "/regionalManager")
 public class RegionalManagerController {
 
+	@Autowired
+	RegionalManagerDao regionalManagerDao;
+	
+	@Autowired
+	InvestigationTypeDao investigationDao;
+	
+	@Autowired
+	IntimationTypeDao intimationTypeDao;
+	
 	@RequestMapping(value = "/pending", method = RequestMethod.GET)
     public String pending_message(HttpSession session) {
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
@@ -25,6 +42,11 @@ public class RegionalManagerController {
     	details.setMain_menu("Regional Manager");
     	details.setSub_menu1("RM Pending Cases");
     	session.setAttribute("ScreenDetails", details);
+    	
+    	session.setAttribute("pendingCaseList", regionalManagerDao.getPendingCaseList());
+    	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
+    	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
+    	
     	return "common/templatecontent";
     }
   
@@ -40,6 +62,37 @@ public class RegionalManagerController {
     	details.setMain_menu("Regional Manager");
     	details.setSub_menu1("RM Assigned Cases");
     	session.setAttribute("ScreenDetails", details);
+    	
+    	session.setAttribute("assignCaseDetailList", regionalManagerDao.getAssignedCaseList());
+    	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
+    	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
+    	
     	return "common/templatecontent";
+    }
+    
+    @RequestMapping(value = "/getActiveZone",method = RequestMethod.POST)
+    public @ResponseBody List<String> getActiveZone(HttpServletRequest request,HttpSession session) 
+    {
+		return regionalManagerDao.getActiveZone(request.getParameter("role_name"));
+    }
+    
+    @RequestMapping(value = "/getActiveState",method = RequestMethod.POST)
+    public @ResponseBody List<String> getActiveState(HttpServletRequest request,HttpSession session) 
+    {
+		return regionalManagerDao.getActiveState(request.getParameter("role_name"), request.getParameter("zone"));
+    }
+    
+    @RequestMapping(value = "/getActiveCity",method = RequestMethod.POST)
+    public @ResponseBody List<String> getActiveCity(HttpServletRequest request,HttpSession session) 
+    {
+		return regionalManagerDao.getActiveCity(request.getParameter("role_name"), request.getParameter("zone"),
+				request.getParameter("state"));
+    }
+    
+    @RequestMapping(value = "/getActiveUser",method = RequestMethod.POST)
+    public @ResponseBody List<UserDetails> getActiveUser(HttpServletRequest request,HttpSession session) 
+    {
+		return regionalManagerDao.getActiveUser(request.getParameter("role_name"), request.getParameter("zone"),
+				request.getParameter("state"), request.getParameter("city"));
     }
 }

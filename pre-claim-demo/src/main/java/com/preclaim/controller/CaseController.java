@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -24,7 +23,6 @@ import com.preclaim.dao.IntimationTypeDao;
 import com.preclaim.dao.InvestigationTypeDao;
 import com.preclaim.dao.LocationDao;
 import com.preclaim.dao.UserDAO;
-import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.CaseDetails;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.UserDetails;
@@ -53,6 +51,7 @@ public class CaseController {
     	UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if(user == null)
 			return "common/login";
+		
 		session.removeAttribute("ScreenDetails");
     	ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/import_case.jsp");
@@ -62,7 +61,8 @@ public class CaseController {
     	details.setSub_menu2("App Users");
     	details.setSub_menu2_path("/app_user/app_user");
     	session.setAttribute("ScreenDetails", details);
-        return "common/templatecontent";
+        
+    	return "common/templatecontent";
     }
     
     @RequestMapping(value = "/add_message", method = RequestMethod.GET)
@@ -71,6 +71,7 @@ public class CaseController {
 		if(user == null)
 			return "common/login";
     	session.removeAttribute("ScreenDetails");
+    	
     	ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/add_message.jsp");
     	details.setScreen_title("Add Cases");
@@ -79,6 +80,7 @@ public class CaseController {
     	details.setSub_menu2("Manage Cases");
     	details.setSub_menu2_path("../message/pending_message.jsp");
     	session.setAttribute("ScreenDetails", details);    	
+    	
     	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
     	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
     	session.setAttribute("location_list", locationDao.getActiveLocationList());
@@ -91,6 +93,7 @@ public class CaseController {
     	UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if(user == null)
 			return "common/login";
+		
 		session.removeAttribute("ScreenDetails");
     	ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/pending_message.jsp");
@@ -98,9 +101,12 @@ public class CaseController {
     	details.setMain_menu("Case Management");
     	details.setSub_menu1("RCU Pending Cases");
     	session.setAttribute("ScreenDetails", details);
-    	List<CaseDetailList> pendingCaseDetailList= caseDao.getCaseDetailList("PA");
-    	session.setAttribute("pendingCaseDetailList", pendingCaseDetailList);
-        return "common/templatecontent";
+    	
+    	session.setAttribute("pendingCaseList", caseDao.getPendingCaseList());
+    	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
+    	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
+    	
+    	return "common/templatecontent";
     }
   
     @RequestMapping(value = "/active_message", method = RequestMethod.GET)
@@ -109,15 +115,19 @@ public class CaseController {
 		if(user == null)
 			return "common/login";
 		session.removeAttribute("ScreenDetails");
-    	ScreenDetails details=new ScreenDetails();
+    	
+		ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/active_message.jsp");
     	details.setScreen_title("Active Cases Lists");
     	details.setMain_menu("Case Management");
     	details.setSub_menu1("RCU Active Cases");
     	session.setAttribute("ScreenDetails", details);
-    	List<CaseDetailList> activeCaseDetailList= caseDao.getCaseDetailList("Close");
-    	session.setAttribute("activeCaseDetailList", activeCaseDetailList);
-        return "common/templatecontent";
+    	
+    	session.setAttribute("activeCaseList", caseDao.getAssignedCaseList());
+    	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
+    	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
+    	
+    	return "common/templatecontent";
     }
     
     @RequestMapping(value = "/assigned_message", method = RequestMethod.GET)
@@ -125,16 +135,20 @@ public class CaseController {
     	UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if(user == null)
 			return "common/login";
+		
 		session.removeAttribute("ScreenDetails");
     	ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/assigned_message.jsp");
-    	details.setScreen_title("<li class = \"active\">Assigned Cases Lists</li>");
+    	details.setScreen_title("Assigned Cases Lists");
     	details.setMain_menu("Case Management");
     	details.setSub_menu1("RCU Assigned Cases");
-    	List<CaseDetailList> assignCaseDetailList= caseDao.getCaseDetailList("ARM");
-    	session.setAttribute("assignCaseDetailList", assignCaseDetailList);
     	session.setAttribute("ScreenDetails", details);
-        return "common/templatecontent";
+        
+    	session.setAttribute("assignCaseList", caseDao.getAssignedCaseList());
+    	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
+    	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
+    	
+    	return "common/templatecontent";
     }
     
     @RequestMapping(value = "/importData", method = RequestMethod.POST)
@@ -144,6 +158,7 @@ public class CaseController {
 		if(user == null)
 			return "common/login";
 		session.removeAttribute("ScreenDetails");    	
+		
 		ScreenDetails details = new ScreenDetails();
 		details.setScreen_name("../message/import_case.jsp");
     	details.setScreen_title("Import Case");
@@ -183,7 +198,8 @@ public class CaseController {
     	UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if(user == null)
 			return "common/login";
-       	CaseDetails caseDetail=new CaseDetails();
+       	
+		CaseDetails caseDetail=new CaseDetails();
        	caseDetail.setPolicyNumber(request.getParameter("policyNumber"));
        	caseDetail.setInvestigationCategory(request.getParameter("msgCategory"));
        	caseDetail.setInsuredName( request.getParameter("insuredName"));
@@ -201,16 +217,14 @@ public class CaseController {
 		caseDetail.setCreatedBy(user.getUsername()); 
        	String message= caseDao.addcase(caseDetail);
        	userDao.activity_log("CASE HISTORY", 0, caseDetail.getPolicyNumber(), user.getUsername());
-   		return message;
+   		
+       	return message;
    	}
     
     @RequestMapping(value = "/deleteMessage",method = RequestMethod.POST)
     public @ResponseBody String deleteMessage(HttpServletRequest request,HttpSession session) 
     {
-		UserDetails user = (UserDetails) session.getAttribute("User_Login");
-		if(user == null)
-			return "common/login";
-			int caseId=Integer.parseInt(request.getParameter("msgId"));
+		int caseId=Integer.parseInt(request.getParameter("msgId"));
 	    String message=caseDao.deleteCase(caseId);  	
 	    return message;
     }
@@ -221,8 +235,8 @@ public class CaseController {
     	UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if(user == null)
 			return "common/login";
-		session.removeAttribute("ScreenDetails");
-    	
+		
+		session.removeAttribute("ScreenDetails"); 	
 		ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../message/edit_message.jsp");
     	details.setScreen_title("Edit Case");
@@ -231,6 +245,7 @@ public class CaseController {
     	details.setSub_menu2("Manage Cases");
     	details.setSub_menu2_path("../message/pending_message.jsp");
     	session.setAttribute("ScreenDetails", details);    	
+    	
     	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
     	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
     	session.setAttribute("case_detail",caseDao.getCaseDetail(Integer.parseInt(request.getParameter("caseId"))));
@@ -243,7 +258,8 @@ public class CaseController {
     	UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if(user == null)
 			return "common/login";
-       	CaseDetails caseDetail=new CaseDetails();
+       	
+		CaseDetails caseDetail=new CaseDetails();
        	caseDetail.setPolicyNumber(request.getParameter("policyNumber"));
        	caseDetail.setInvestigationCategory(request.getParameter("msgCategory"));
        	caseDetail.setInsuredName( request.getParameter("insuredName"));
@@ -263,29 +279,17 @@ public class CaseController {
    		return message;
     }
     
-    @RequestMapping(value = "/getActiveZone",method = RequestMethod.POST)
-    public @ResponseBody List<String> getActiveZone(HttpServletRequest request,HttpSession session) 
+    @RequestMapping(value = "/assignToRM",method = RequestMethod.POST)
+    public @ResponseBody String assignToRM(HttpServletRequest request,HttpSession session) 
     {
-		return caseDao.getActiveZone(request.getParameter("role_name"));
-    }
-    
-    @RequestMapping(value = "/getActiveState",method = RequestMethod.POST)
-    public @ResponseBody List<String> getActiveState(HttpServletRequest request,HttpSession session) 
-    {
-		return caseDao.getActiveState(request.getParameter("role_name"), request.getParameter("zone"));
-    }
-    
-    @RequestMapping(value = "/getActiveCity",method = RequestMethod.POST)
-    public @ResponseBody List<String> getActiveCity(HttpServletRequest request,HttpSession session) 
-    {
-		return caseDao.getActiveCity(request.getParameter("role_name"), request.getParameter("zone"),
-				request.getParameter("state"));
-    }
-    
-    @RequestMapping(value = "/getActiveUser",method = RequestMethod.POST)
-    public @ResponseBody List<UserDetails> getActiveUser(HttpServletRequest request,HttpSession session) 
-    {
-		return caseDao.getActiveUser(request.getParameter("role_name"), request.getParameter("zone"),
-				request.getParameter("state"), request.getParameter("city"));
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		
+    	String[] paramValues = request.getParameterValues("caseList[]");
+		int caseLen = paramValues.length;
+		String caseList = "";
+		for (int i = 0; i < caseLen; i++)
+			caseList += "'" + paramValues[i] + "',";
+		caseList = caseList.substring(0, caseList.length() - 1);
+		return caseDao.assignToRM(caseList, "ARM", user.getUsername());
     }
 }

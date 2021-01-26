@@ -1,16 +1,18 @@
-<%@page import="javax.print.attribute.standard.OutputDeviceAssigned"%>
-<%@page import="com.preclaim.models.CaseDetailList"%>
-<%@page import="java.util.List" %>
-<%@page import = "java.util.ArrayList" %>
-<%@page import = "com.preclaim.models.Region" %>
+<%@page import = "java.util.List"%>
+<%@page import = "java.util.ArrayList"%>
+<%@page import = "com.preclaim.models.CaseDetailList"%>
+<%@page import = "com.preclaim.models.InvestigationType" %>
 <%@page import = "com.preclaim.models.IntimationType" %>
-<%@page import = "com.preclaim.models.Channel" %>
 <%
 List<String>user_permission=(List<String>)session.getAttribute("user_permission");
-boolean allow_statusChg = user_permission.contains("messages/status");
-boolean allow_delete = user_permission.contains("messages/delete");
-List<CaseDetailList> pendingCaseDetailList = (List<CaseDetailList>)session.getAttribute("pendingCaseDetailList");
-session.removeAttribute("pendingCaseDetailList");
+boolean allow_statusChg = user_permission.contains("regionalManager/status");
+boolean allow_delete = user_permission.contains("regionalManager/delete");
+List<CaseDetailList> pendingCaseDetailList = (List<CaseDetailList>)session.getAttribute("pendingCaseList");
+session.removeAttribute("pendingCaseList");
+List<InvestigationType> investigationList = (List<InvestigationType>) session.getAttribute("investigation_list");
+session.removeAttribute("investigation_list");
+List<IntimationType> intimationTypeList = (List<IntimationType>) session.getAttribute("intimation_list");
+session.removeAttribute("intimation_list");
 %>
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
@@ -119,7 +121,7 @@ session.removeAttribute("pendingCaseDetailList");
             <div class="col-md-12 table-container">
                 <div class="box-body no-padding">
                   <div class="table-responsive">
-                    <table id="pending_message_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
+                    <table id="pending_case_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                       <thead>
                         <tr class="tbl_head_bg">
                           <th class="head1 no-sort"><input type = "checkbox" name = "selectAllCase"></th>
@@ -149,8 +151,6 @@ session.removeAttribute("pendingCaseDetailList");
                       <tbody>
                         <%if(pendingCaseDetailList!=null){
                         	for(CaseDetailList list_case :pendingCaseDetailList){                       
-                          		if(!list_case.getCaseSubstatus().equalsIgnoreCase("ARM"))
-                          			continue;
                           		%>
                           <tr>
                           		<td><input type = "checkbox" name = "selectCase"></td>
@@ -195,21 +195,63 @@ session.removeAttribute("pendingCaseDetailList");
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
+  
+	$("#pending_case_list thead th input[type = 'checkbox']").change(function(){
+		console.log("Entered");
+		var checked = $(this).prop("checked");
+		$("#pending_case_list tbody td input[type = 'checkbox']").each(function(){
+			$(this).prop("checked",checked);
+		});
+		
+	});
+	
   var i = 0;
   //DataTable  
-  var table = $('#pending_message_list').DataTable();
+  var table = $('#pending_case_list').DataTable();
 
-//    $('#pending_message_list tfoot th').each( function () {
-// 	   i = 0;
-//     else if(i == 6)
-//     {
-//       var channelBox = '<select name="channel" id="channel" class="form-control">'
-//                               +'<option value="">All</option>';
-//       channelBox += '</select>';     
-//       $(this).html( channelBox );
-//     }
-//     i++;
-//   });
+  $('#pending_case_list tfoot th').each( function () {
+	    if( i == 1 || i == 2 || i == 3){
+	      $(this).html( '<input type="text" class="form-control" placeholder="" />' );
+	    }
+// 	    else if(i == 4)
+// 	    {
+// 	      var cat_selectbox = '<select name="category" id="category" class="form-control">'
+// 	                              +'<option value="">All</option>';
+<%-- 			<%if(investigationList != null){ --%>
+// 				for(InvestigationType investigation : investigationList)
+// 				{
+<%-- 			%> --%>
+<%-- 			cat_selectbox += "<option value = <%= investigation.getInvestigationType()%>><%= investigation.getInvestigationType()%></option>";	 --%>
+<%-- 	        <%}}%> --%>
+// 			cat_selectbox += '</select>';
+// 	        $(this).html( cat_selectbox );
+// 	    }
+	    else if(i == 4)
+	    {
+	      var cat_selectbox = '<select name="zone" id="zone" class="form-control">'
+	                              +'<option value="">All</option>';
+			cat_selectbox += "<option value = North>North</option>";
+			cat_selectbox += "<option value = West>West</option>";
+			cat_selectbox += "<option value = East>East</option>";
+			cat_selectbox += "<option value = South>South</option>";
+			cat_selectbox += '</select>';
+	        $(this).html( cat_selectbox );
+	    }
+// 	    else if(i == 7)
+// 	    {
+// 	      var cat_selectbox = '<select name="intimation" id="intimation" class="form-control">'
+// 	                              +'<option value="">All</option>';
+<%-- 			<%if(intimationTypeList != null){ --%>
+// 				for(IntimationType intimation : intimationTypeList)
+// 				{
+<%-- 			%> --%>
+<%-- 			cat_selectbox += "<option value = <%= intimation.getIntimationType()%>><%= intimation.getIntimationType()%></option>";	 --%>
+<%-- 			<%}}%> --%>
+// 	      cat_selectbox += '</select>';
+// 	      $(this).html( cat_selectbox );
+// 	    }
+	    i++;
+	  });
 
   // Apply the search
   table.columns().every( function () {
@@ -231,36 +273,62 @@ $(document).ready(function() {
   });
   
 //Dropdown Validation
- $("#assigneeZone").change(function(){
-	 var role_name = "AGNSUP";
-	 var formdata = {"role_name":role_name};
-	 $.ajax({
-		method:"POST",
-		data:formdata,
-		url:"${pageContext.request.contextPath}/message/getActiveZone",
-		success: function(data)
+ var role_name = "AGNSUP";
+ var formdata = {"role_name":role_name};
+ $.ajax({
+	method:"POST",
+	data:formdata,
+	url:"${pageContext.request.contextPath}/regionalManager/getActiveZone",
+	success: function(data)
+	{
+		var options = "<option value = '' selected disabled>Select</option>"; 
+		for(i = 0; i < data.length ; i++ )
 		{
-			console.log(options);
-			var options = "<option value = " + data + " > " + data + " </option>";
-			$(this).append(options);
-		}
-	 });
- 
+			options += "<option value = " + data[i] + " > " + data[i] + " </option>";
+		}	
+		$("#assigneeZone").append(options);
+	}
  });
  
- $("#assigneeState").change(function(){
+ 
+ $("#assigneeZone").change(function(){
 	 var role_name = "AGNSUP";
-	 var zone = $("#asssignZone:option-selected").val();
+	 var zone = $("#assigneeZone").val();
 	 var formdata = {"role_name":role_name, "zone":zone};
 	 $.ajax({
 		method:"POST",
 		data:formdata,
-		url:"${pageContext.request.contextPath}/message/getActiveState",
+		url:"${pageContext.request.contextPath}/regionalManager/getActiveState",
 		success: function(data)
 		{
-			console.log(options);
-			var options = "<option value = " + data + " > " + data + " </option>";
+			var options = "<option value = '' selected disabled>Select</option>"; 
+			for(i = 0; i < data.length ; i++ )
+			{
+				options += "<option value = " + data[i] + " > " + data[i] + " </option>";
+			}
 			$(this).append(options);	
+		}
+	 });
+	 
+  });
+ 
+ $("#assigneeState").change(function(){
+	 var role_name = "AGNSUP";
+	 var zone = $("#assigneeZone option:selected").val();
+	 var state = $("#assigneeState option:selected").val();
+	 var formdata = {"role_name":"AS", "zone":zone, "state":state};
+	 $.ajax({
+		method:"POST",
+		data:formdata,
+		url:"${pageContext.request.contextPath}/regionalManager/getActiveCity",
+		success: function(data)
+		{
+			var options = "<option value = '' selected disabled>Select</option>"; 
+			for(i = 0; i < data.length ; i++ )
+			{
+				options += "<option value = " + data[i] + " > " + data[i] + " </option>";
+			}
+			$(this).append(options);
 		}
 	 });
 	 
@@ -268,33 +336,14 @@ $(document).ready(function() {
  
  $("#assigneeCity").change(function(){
 	 var role_name = "AGNSUP";
-	 var zone = $("#assigneeZone:option-selected").val();
-	 var state = $("#assigneeState:option-selected").val();
-	 var formdata = {"role_name":"AS", "zone":zone, "state":state};
-	 $.ajax({
-		method:"POST",
-		data:formdata,
-		url:"${pageContext.request.contextPath}/message/getActiveCity",
-		success: function(data)
-		{
-			console.log(options);
-			var options = "<option value = " + data + " > " + data + " </option>";
-			$(this).append(options);
-		}
-	 });
-	 
-  });
- 
- $("#assigneeName").change(function(){
-	 var role_name = "AGNSUP";
-	 var zone = $("#assigneeZone:option-selected").val();
-	 var state = $("#assigneeState:option-selected").val();
-	 var city = $("#assigneeCity:option-selected").val();
+	 var zone = $("#assigneeZone option:selected").val();
+	 var state = $("#assigneeState option:selected").val();
+	 var city = $("#assigneeCity option:selected").val();
 	 var formdata = {"role_name":role_name, "zone":zone , "state":state, "city":city};
 	 $.ajax({
 		method:"POST",
 		data:formdata,
-		url:"${pageContext.request.contextPath}/message/getActiveUser",
+		url:"${pageContext.request.contextPath}/regionalManager/getActiveUser",
 		success: function(data)
 		{
 			console.log(data);
@@ -302,5 +351,66 @@ $(document).ready(function() {
 	 });
 	 
   });
+});
+
+$("#assignSupervisor").click(function(){
+	
+	var assigneeZone = $("#assigneeZone").val();
+	var assigneeState = $("#assigneeState").val();
+	var assigneeCity = $("#assigneeCity").val();
+	var assigneeName = $("#assigneeName").val();
+	var errorFlag = 0;
+	$("#assigneeZone").removeClass("has-error-2");
+	$("#assigneeState").removeClass("has-error-2");
+	$("#assigneeCity").removeClass("has-error-2");
+	$("#assigneeName").removeClass("has-error-2");
+	console.log(assigneeName);
+	if(assigneeName == "")
+	{
+		toastr.error("Supervisor Name cannot be blank","Error");
+		$("#assigneeName").addClass("has-error-2");
+		$("#assigneeName").focus();
+		errorFlag = 1;
+	}
+	if(assigneeCity == "")
+	{
+		toastr.error("City cannot be blank","Error");
+		$("#assigneeCity").addClass("has-error-2");
+		$("#assigneeCity").focus();
+		errorFlag = 1;
+	}
+	if(assigneeState == "")
+	{
+		toastr.error("State cannot be blank","Error");
+		$("#assigneeState").addClass("has-error-2");
+		$("#assigneeState").focus();
+		errorFlag = 1;
+	}
+	if(assigneeZone == "")
+	{
+		toastr.error("Zone cannot be blank","Error");
+		$("#assigneeZone").addClass("has-error-2");
+		$("#assigneeZone").focus();
+		errorFlag = 1;
+	}
+	
+	var caseList = [];
+	$("#pending_case_list tbody td input[type = 'checkbox']:checked").each(function(){
+		
+		var row = $(this).closest("tr")[0];
+		caseList.push(row.cells[2].innerHTML);
+	});
+	console.log(caseList);
+	if(caseList == "")
+	{
+		toastr.error("No cases selected", "Error");
+		errorFlag = 1;
+	}
+	
+	if(errorFlag == 1)
+		return;
+	
+	
+	
 });
 </script>

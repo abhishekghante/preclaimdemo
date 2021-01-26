@@ -1,15 +1,19 @@
-<%@page import="com.preclaim.models.CaseDetailList"%>
-<%@page import="java.util.List" %>
+<%@page import = "java.util.List" %>
 <%@page import = "java.util.ArrayList" %>
-<%@page import = "com.preclaim.models.Region" %>
+<%@page import = "com.preclaim.models.CaseDetailList"%>
+<%@page import = "com.preclaim.models.InvestigationType"%>
 <%@page import = "com.preclaim.models.IntimationType" %>
-<%@page import = "com.preclaim.models.Channel" %>
 
 <%
 List<String>user_permission=(List<String>)session.getAttribute("user_permission");
 boolean allow_statusChg = user_permission.contains("messages/status");
 boolean allow_delete = user_permission.contains("messages/delete");
-List<CaseDetailList> assignCaseDetailList=(List<CaseDetailList>)session.getAttribute("assignCaseDetailList");
+List<CaseDetailList> assignCaseDetailList=(List<CaseDetailList>)session.getAttribute("assignCaseList");
+session.removeAttribute("assignCaseList");
+List<InvestigationType> investigationList = (List<InvestigationType>) session.getAttribute("investigation_list");
+session.removeAttribute("investigation_list");
+List<IntimationType> intimationTypeList = (List<IntimationType>) session.getAttribute("intimation_list");
+session.removeAttribute("intimation_list");
 %>
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
@@ -39,7 +43,7 @@ List<CaseDetailList> assignCaseDetailList=(List<CaseDetailList>)session.getAttri
             <div class="col-md-12 table-container">
                 <div class="box-body no-padding">
                   <div class="table-responsive">
-                    <table id="active_message_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
+                    <table id="active_case_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                       <thead>
                         <tr class="tbl_head_bg">
                           <th class="head1 no-sort"><input type = "checkbox" name = "selectAllCase"></th>
@@ -122,26 +126,53 @@ List<CaseDetailList> assignCaseDetailList=(List<CaseDetailList>)session.getAttri
 </div>
 <script type="text/javascript">
 // DataTable
-var table = $('#active_message_list').DataTable();
+var table = $('#active_case_list').DataTable();
 var i = 0;
 $(document).ready(function() {
-  $('#active_message_list tfoot th').each( function () {
-//     else if(i == 5)
-//     {
-//       var cat_selectbox = '<select name="category" id="category" class="form-control">'
-//                               +'<option value="">All</option>';      
-//         cat_selectbox += '</select>';
-//         $(this).html( cat_selectbox );
-//     }
-//     else if(i == 6)
-//     {
-//     	var channelBox = '<select name="channel" id="channel" class="form-control">'                              
-//     						+'<option value="">All</option>';
-// 		channelBox += '</select>';
-//         $(this).html( channelBox );
-//     }
-    i++;
-  });
+  $('#active_case_list tfoot th').each( function () {
+	  if( i == 0 || i == 1 || i == 2 || i == 5)
+	    {
+	      $(this).html( '<input type="text" class="form-control" placeholder="" />' );
+	    }
+	    else if(i == 3)
+	    {
+	      var cat_selectbox = '<select name="category" id="category" class="form-control">'
+	                              +'<option value="">All</option>';
+			<%if(investigationList != null){
+				for(InvestigationType investigation : investigationList)
+				{
+			%>
+			cat_selectbox += "<option value = <%= investigation.getInvestigationType()%>><%= investigation.getInvestigationType()%></option>";	
+	        <%}}%>
+			cat_selectbox += '</select>';
+	        $(this).html( cat_selectbox );
+	    }
+	    else if(i == 4)
+	    {
+	      var cat_selectbox = '<select name="zone" id="zone" class="form-control">'
+	                              +'<option value="">All</option>';
+			cat_selectbox += "<option value = North>North</option>";
+			cat_selectbox += "<option value = West>West</option>";
+			cat_selectbox += "<option value = East>East</option>";
+			cat_selectbox += "<option value = South>South</option>";
+			cat_selectbox += '</select>';
+	        $(this).html( cat_selectbox );
+	    }
+	    else if(i == 6)
+	    {
+	      var cat_selectbox = '<select name="intimation" id="intimation" class="form-control">'
+	                              +'<option value="">All</option>';
+			<%if(intimationTypeList != null){
+				for(IntimationType intimation : intimationTypeList)
+				{
+			%>
+			cat_selectbox += "<option value = <%= intimation.getIntimationType()%>><%= intimation.getIntimationType()%></option>";	
+			<%}}%>
+	      cat_selectbox += '</select>';
+	      $(this).html( cat_selectbox );
+	    }
+	    i++;
+	  });
 
   // Apply the search
   table.columns().every( function () {

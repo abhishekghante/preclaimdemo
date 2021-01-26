@@ -58,6 +58,7 @@ public class UserController {
 	{
 		System.out.println(user.toString());
 		String message = dao.create_user(user);
+		System.out.println(user.toString());
 		session.removeAttribute("ScreenDetails");    	
 		ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../user/user_list.jsp");
@@ -252,7 +253,7 @@ public class UserController {
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if(user == null)
 			return "common/login";
-		int roleID = Integer.parseInt(request.getParameter("roleId"));
+		String role_code = request.getParameter("role_code");
 		Enumeration<String> parameterNames = request.getParameterNames();
 		List<String> role_permission = new ArrayList<String>();
 		while (parameterNames.hasMoreElements()) 
@@ -265,8 +266,8 @@ public class UserController {
 			}
 		}
 		role_permission.remove(role_permission.size() - 1);
-		dao.addPermission(role_permission, roleID);
-		dao.activity_log("PERMISSION",roleID, "ADD", user.getUsername());
+		dao.addPermission(role_permission, role_code);
+		dao.activity_log("PERMISSION",0, "ADD", user.getUsername());
 		return "****";
 	}
 	

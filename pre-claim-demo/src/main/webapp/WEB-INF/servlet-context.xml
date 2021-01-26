@@ -25,7 +25,7 @@
 		<beans:property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>  
 		<beans:property name="url" value="jdbc:mysql://localhost:3306/PreClaimInvestigation"/>    
 		<beans:property name="username" value="root"/>    
-		<beans:property name="password" value="root"/>    
+		<beans:property name="password" value="Spidey#000"/>    
 	</beans:bean>    
 
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -68,10 +68,16 @@
 	<beans:bean id="appuserdao" class="com.preclaim.dao.AppUserDaoImpl" >
  		<beans:property name="template" ref="jt"/>    
 	</beans:bean>
+	
 	<beans:bean id="categorydao" class="com.preclaim.dao.InvestigationTypeDaoImpl" >
  		<beans:property name="template" ref="jt"/>    
 	</beans:bean>
-		<beans:bean id="locationdao" class="com.preclaim.dao.LocationDaoImpl" >
+	
+	<beans:bean id="locationdao" class="com.preclaim.dao.LocationDaoImpl" >
+ 		<beans:property name="template" ref="jt"/>    
+	</beans:bean>
+	
+	<beans:bean id="regionalManagerdao" class="com.preclaim.dao.RegionalManagerDaoImpl" >
  		<beans:property name="template" ref="jt"/>    
 	</beans:bean>	
 </beans:beans>
