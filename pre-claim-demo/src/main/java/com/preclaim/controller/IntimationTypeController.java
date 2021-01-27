@@ -84,7 +84,7 @@ public class IntimationTypeController {
 		int IntimationId = Integer.parseInt(request.getParameter("IntimationId"));
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		String message = intimationTypeDao.deleteIntimationType(IntimationId);
-		userDao.activity_log("GROUP", IntimationId, "DELETE", user.getUsername());
+		userDao.activity_log("IntimationType", String.valueOf(IntimationId), "DELETE", user.getUsername());
 		return message;
 	}
     
@@ -97,7 +97,7 @@ public class IntimationTypeController {
 		intimationType.setIntimationType(IntimationtypeName);
 		intimationType.setCreatedBy(user.getUserID());
 		String message = intimationTypeDao.add_intimationType(intimationType);
-		userDao.activity_log("GROUP", 0, "ADD", user.getUsername());
+		userDao.activity_log("IntimationType", IntimationtypeName, "ADD", user.getUsername());
 		return message;
 	}
 	
@@ -109,7 +109,7 @@ public class IntimationTypeController {
 		System.out.println("IntimationId : "+ IntimationId);
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		String message = intimationTypeDao.updateIntimationType(IntimationId, IntimationType, user.getUserID());
-		userDao.activity_log("GROUP", IntimationId, "UPDATE", user.getUsername());
+		userDao.activity_log("IntimationType", IntimationType, "UPDATE", user.getUsername());
 		return message;
 	}
 	
@@ -120,7 +120,7 @@ public class IntimationTypeController {
 		int status=Integer.parseInt(request.getParameter("status"));
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		String message = intimationTypeDao.updateIntimationTypeStatus(IntimationId, status, user.getUserID());
-		userDao.activity_log("GROUP", IntimationId, status == 1 ? "ACTIVE" : "DEACTIVE", user.getUsername());
+		userDao.activity_log("IntimationType", String.valueOf(IntimationId), status == 1 ? "ACTIVE" : "DEACTIVE", user.getUsername());
 		return message;
 	}
 	

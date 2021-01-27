@@ -61,7 +61,7 @@ public class CaseController {
     	details.setSub_menu2("App Users");
     	details.setSub_menu2_path("/app_user/app_user");
     	session.setAttribute("ScreenDetails", details);
-        
+ 
     	return "common/templatecontent";
     }
     
@@ -180,7 +180,8 @@ public class CaseController {
 	    		System.out.println("Entered");
 				Files.write(path, temp);
 				caseDao.addBulkUpload(filename);
-				details.setSuccess_message1("File uploaded successfully");		    	
+				details.setSuccess_message1("File uploaded successfully");		
+			 	userDao.activity_log("RCUTEAM", "Excel", "BULKUPLOAD", user.getUsername());	
 			} 
 			catch (Exception e) 
 			{
@@ -188,7 +189,7 @@ public class CaseController {
 				details.setError_message1("File Uploading failed");
 			}    	
 		}
-			
+	  
 		return "common/templatecontent";
 	}
     
@@ -216,7 +217,7 @@ public class CaseController {
        	caseDetail.setInsured_address(request.getParameter("insuredAdd"));
 		caseDetail.setCreatedBy(user.getUsername()); 
        	String message= caseDao.addcase(caseDetail);
-       	userDao.activity_log("CASE HISTORY", 0, caseDetail.getPolicyNumber(), user.getUsername());
+       	userDao.activity_log("CASE HISTORY", caseDetail.getPolicyNumber(), "ADD CASE", user.getUsername());
    		
        	return message;
    	}
@@ -276,6 +277,7 @@ public class CaseController {
        	caseDetail.setInsured_address(request.getParameter("insuredAdd"));
 		caseDetail.setCreatedBy(user.getUsername()); 
        	String message= caseDao.updateCaseDetails(caseDetail);
+     	userDao.activity_log("CASE HISTORY", caseDetail.getPolicyNumber(), "EDIT CASE", user.getUsername());
    		return message;
     }
     
@@ -290,6 +292,8 @@ public class CaseController {
 		for (int i = 0; i < caseLen; i++)
 			caseList += "'" + paramValues[i] + "',";
 		caseList = caseList.substring(0, caseList.length() - 1);
+	 	userDao.activity_log("CASE HISTORY","", "ASSIGN CASE", user.getUsername());
 		return caseDao.assignToRM(caseList, "ARM", user.getUsername());
+		
     }
 }

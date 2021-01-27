@@ -100,7 +100,7 @@ public class ChannelController {
 		channel.setChannelName(ChannelName);;
 		channel.setChannelCode(ChannelCode);
 		String message =channelDao.create_channel(channel);		
-		userDao.activity_log("CHANNEL", 0, "ADD", user.getUsername());
+		userDao.activity_log("CHANNEL", ChannelCode, "ADD", user.getUsername());
 		return message;
 	}
 
@@ -112,7 +112,7 @@ public class ChannelController {
 			return "common/login";
 		int channelId = Integer.parseInt(request.getParameter("channelId"));
 		String message = channelDao.deleteChannel(channelId);
-		userDao.activity_log("CHANNEL", channelId, "DELETE", user.getUsername());
+		userDao.activity_log("CHANNEL", String.valueOf(channelId), "DELETE", user.getUsername());
 		return message;
 	}
 	
@@ -126,7 +126,7 @@ public class ChannelController {
 		String channelName = request.getParameter("channelName");
 		int channelId = Integer.parseInt(request.getParameter("channelId"));
 		String message = channelDao.updateChannel(channelName, channelCode, channelId);	
-		userDao.activity_log("CHANNEL", channelId, "UPDATE", user.getUsername());
+		userDao.activity_log("CHANNEL", String.valueOf(channelId), "UPDATE", user.getUsername());
 		return message;
 	}
 	@RequestMapping(value = "/updateChannelStatus",method = RequestMethod.POST)
@@ -138,7 +138,7 @@ public class ChannelController {
 		int channelId =Integer.parseInt(request.getParameter("channelId"));		
 		int status =Integer.parseInt(request.getParameter("status"));
 		String message=channelDao.updateChannelStatus(channelId, status);
-	    userDao.activity_log("CHANNEL", channelId, status == 1 ? "ACTIVE" : "DEACTIVE", user.getUsername());
+	    userDao.activity_log("CHANNEL", String.valueOf(channelId), status == 1 ? "ACTIVE" : "DEACTIVE", user.getUsername());
 		return message;
 	}
 	

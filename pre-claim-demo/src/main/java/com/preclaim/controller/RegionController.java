@@ -94,7 +94,7 @@ public class RegionController{
 		int RegionId=Integer.parseInt(request.getParameter("RegionId"));
 		System.out.println("RegionId :"+RegionId);
 		String message=regionDao.deleteRegion(RegionId);
-		userDao.activity_log("REGION", RegionId, "DELETE", user.getUsername());
+		userDao.activity_log("REGION", String.valueOf(RegionId), "DELETE", user.getUsername());
 		return message;
 	}
 	
@@ -108,7 +108,7 @@ public class RegionController{
 		Region region = new Region();
 		region.setRegionName(RegionName);
 		String message=regionDao.create_region(region);		
-		userDao.activity_log("REGION", 0, "ADD", user.getUsername());
+		userDao.activity_log("REGION", RegionName, "ADD", user.getUsername());
 		return message;
 	}
 	
@@ -122,7 +122,7 @@ public class RegionController{
 		String RegionName = request.getParameter("regionName");
 		System.out.println("RegionId :"+ RegionId);
 		String message=regionDao.updateRegion(RegionId,RegionName);	
-		userDao.activity_log("REGION", RegionId, "UPDATE", user.getUsername());
+		userDao.activity_log("REGION", RegionName, "UPDATE", user.getUsername());
 		return message;
 	}
 	
@@ -135,7 +135,7 @@ public class RegionController{
 		int RegionId=Integer.parseInt(request.getParameter("regionId"));
 		int RegionStatus=Integer.parseInt(request.getParameter("status"));
 	    String message= regionDao.updateRegionStatus(RegionId,RegionStatus); 
-	    userDao.activity_log("REGION", RegionId, RegionStatus == 1 ? "ACTIVE" : "DEACTIVE", user.getUsername());
+	    userDao.activity_log("REGION", String.valueOf(RegionId), RegionStatus == 1 ? "ACTIVE" : "DEACTIVE", user.getUsername());
 		return message;
     }
 }

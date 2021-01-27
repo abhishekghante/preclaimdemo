@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.preclaim.dao.AgencySupervisorDao;
 import com.preclaim.dao.IntimationTypeDao;
 import com.preclaim.dao.InvestigationTypeDao;
+import com.preclaim.dao.UserDAO;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.UserDetails;
 
@@ -29,6 +30,9 @@ public class AgencySupervisorController {
 	
 	@Autowired
 	IntimationTypeDao intimationTypeDao;
+	
+	@Autowired
+	UserDAO userDao;
 	
 	@RequestMapping(value = "/pending", method = RequestMethod.GET)
     public String pending_message(HttpSession session) {
@@ -107,7 +111,8 @@ public class AgencySupervisorController {
 		String caseList = "";
 		for (int i = 0; i < caseLen; i++)
 			caseList += "'" + paramValues[i] + "',";                                
-		caseList = caseList.substring(0, caseList.length() - 1);                   
+		caseList = caseList.substring(0, caseList.length() - 1);     
+		userDao.activity_log("CASE HISTORY","", "ASSIGN CASE", user.getUsername());
 		return supervisorDao.AssignToinvestigator(caseList, "AIV",investigator,user.getUsername());
     }
     

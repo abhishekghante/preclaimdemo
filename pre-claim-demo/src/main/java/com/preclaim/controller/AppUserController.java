@@ -76,7 +76,7 @@ public class AppUserController {
 		int appUserId = Integer.parseInt(request.getParameter("appUserId"));
 		int appUserStatus = Integer.parseInt(request.getParameter("status"));
 	    String message = appuserDao.updateAppUserStatus(appUserId, appUserStatus); 
-	    userDao.activity_log("APP USER", appUserId, appUserStatus == 1 ? "ACTIVE" : "DEACTIVE", 
+	    userDao.activity_log("APP USER", String.valueOf(appUserId), appUserStatus == 1 ? "ACTIVE" : "DEACTIVE", 
 	    		user.getUsername());
 		return message;
     }
@@ -89,7 +89,7 @@ public class AppUserController {
 			return "common/login";
 		int appUserId = Integer.parseInt(request.getParameter("appUserId"));
 		String message = appuserDao.deleteAppUser(appUserId);
-		userDao.activity_log("APPUSER", appUserId, "DELETE", user.getUsername());
+		userDao.activity_log("APPUSER", String.valueOf(appUserId), "DELETE", user.getUsername());
 		return message;
 	}
 	
@@ -100,11 +100,11 @@ public class AppUserController {
 		if(user == null)
 			return "common/login";
 		appuserDao.deleteAllUsers();
-		userDao.activity_log("APPUSER", 0, "DELETEALL", user.getUsername());
+		userDao.activity_log("APPUSER","", "DELETEALL", user.getUsername());
 		session.removeAttribute("ScreenDetails");    	
 		ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../app_user/app_user.jsp");
-    	details.setScreen_title("<li class = \"active\">App User Lists</li>");
+    	details.setScreen_title("App User Lists");
     	details.setMain_menu("App Users Management");
     	details.setSub_menu1("");
     	details.setSuccess_message1("All users deleted successfully");
@@ -122,7 +122,7 @@ public class AppUserController {
 		session.removeAttribute("ScreenDetails");    	
 		ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../app_user/import_user.jsp");
-    	details.setScreen_title("<li class = \"active\">App User Lists</li>");
+    	details.setScreen_title("App User Lists");
     	details.setMain_menu("App Users Management");
     	details.setSub_menu1("");
     	session.setAttribute("ScreenDetails", details);

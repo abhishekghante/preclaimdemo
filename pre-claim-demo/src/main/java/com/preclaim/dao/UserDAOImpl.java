@@ -313,14 +313,14 @@ public class UserDAOImpl implements UserDAO{
 		}
 		return "****";
 	}
-
+	
 	@Override
-	public void activity_log(String moduleName, int moduleId, String moduleAction, String username) {
+	public void activity_log(String moduleName, String moduleCode, String moduleAction, String username) {
 		try 
 		{
-		  	String sql="INSERT INTO activity_log(moduleName, moduleId, moduleAction, userId, logDate) "
+		  	String sql="INSERT INTO activity_log(moduleName, moduleId, moduleAction, user_name, logDate) "
 		  			+ "values(?, ?, ?, ?, now())";
-	          this.template.update(sql,moduleName,moduleId,moduleAction,username);	
+	          this.template.update(sql,moduleName,moduleCode,moduleAction,username);	
 		}
 		catch(Exception e) 
 		{
