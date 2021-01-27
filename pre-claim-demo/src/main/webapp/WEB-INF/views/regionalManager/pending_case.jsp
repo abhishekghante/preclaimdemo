@@ -364,7 +364,6 @@ $("#assignSupervisor").click(function(){
 	$("#assigneeState").removeClass("has-error-2");
 	$("#assigneeCity").removeClass("has-error-2");
 	$("#assigneeName").removeClass("has-error-2");
-	console.log(assigneeName);
 	if(assigneeName == "")
 	{
 		toastr.error("Supervisor Name cannot be blank","Error");
@@ -409,7 +408,6 @@ $("#assignSupervisor").click(function(){
 	
 	if(errorFlag == 1)
 		return;
-	
 	
 	
 });

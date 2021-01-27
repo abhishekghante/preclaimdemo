@@ -45,10 +45,10 @@ public class UserDAOImpl implements UserDAO{
 
 	@Override
 	public String create_user(UserDetails user) {
-		String sql = "INSERT INTO admin_user(full_name, role_name, username, user_email, contact_number, "
-				+ "password,address, state, city, zone, permissions, status, user_image, createdon, login_type, "
+		String sql = "INSERT INTO admin_user(full_name, role_name, username, user_email, mobile_number, "
+				+ "password, state, city, zone, permissions, status, user_image, createdon, login_type, "
 				+ "web_active, last_login)"
-				+ "VALUES(?, ?, ?, ?, ?, ?, '', ?, ?, ?, '', ?, ?, now(), 1, 1, now())";
+				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, '', ?, ?, now(), 1, 1, now())";
 		System.out.println(user.getPassword());
 		try 
 		{

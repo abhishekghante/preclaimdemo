@@ -79,5 +79,9 @@
 	
 	<beans:bean id="regionalManagerdao" class="com.preclaim.dao.RegionalManagerDaoImpl" >
  		<beans:property name="template" ref="jt"/>    
+	</beans:bean>
+	
+	<beans:bean id="agencySupervisordao" class="com.preclaim.dao.AgencySupervisorDaoImpl" >
+ 		<beans:property name="template" ref="jt"/>    
 	</beans:bean>	
 </beans:beans>
