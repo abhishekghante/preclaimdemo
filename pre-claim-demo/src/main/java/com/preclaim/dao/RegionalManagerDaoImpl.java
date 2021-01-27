@@ -168,7 +168,7 @@ public class RegionalManagerDaoImpl implements RegionalManagerDao {
 		   }
 		catch(Exception e) 
 		{
-			return "Error assigning cases. Kindly contact system administrator";	
+			return "Error assigning cases to supervisor. Kindly contact system administrator";	
 	    }
 		return "****";
 

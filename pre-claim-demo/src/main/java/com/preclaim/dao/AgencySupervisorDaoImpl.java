@@ -99,7 +99,7 @@ public class AgencySupervisorDaoImpl implements AgencySupervisorDao {
 	public List<CaseDetailList> getPendingCaseList(String username) {
 		try
 		{
-			String sql ="SELECT * FROM case_lists where caseSubStatus = 'ARM' and "
+			String sql ="SELECT * FROM case_lists where caseSubStatus = 'AAS' and "
 					+ "supervisor = '" + username + "'"; 			   
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
@@ -158,16 +158,16 @@ public class AgencySupervisorDaoImpl implements AgencySupervisorDao {
 	@Override
 	public String AssignToinvestigator(String policyNumber, String caseSubStatus, String investigator, String username) {
 		
-		try {
-			
-		      String sql="UPDATE case_lists SET caseSubStatus = ?, updatedDate = now(),investigator=?,updatedBy = ? "
-		      		+ "where caseSubStatus = 'ARM' and policyNumber in (" + policyNumber + ")";
+		try {			
+		      String sql="UPDATE case_lists SET caseSubStatus = ?, updatedDate = now(), investigator=?, "
+		      		+ "updatedBy = ? "
+		      		+ "where caseSubStatus = 'AAS' and policyNumber in (" + policyNumber + ")";
 			  this.template.update(sql, caseSubStatus,investigator,username);
 			  
 		   }
 		catch(Exception e) 
 		{
-			return "Error updating Agency status. Kindly contact system administrator";	
+			return "Error assigning cases to Investigator. Kindly contact system administrator";	
 	    }
 		return "****";
 

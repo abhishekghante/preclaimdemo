@@ -45,7 +45,6 @@ session.removeAttribute("intimation_list");
                     <table id="active_message_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                       <thead>
                         <tr class="tbl_head_bg">
-                          <th class="head1 no-sort"><input type = "checkbox" name = "selectAllCase"></th>
                           <th class="head1 no-sort">Case ID</th>
                           <th class="head1 no-sort">Policy No</th>
                           <th class="head1 no-sort">Name of Insured</th>
@@ -69,17 +68,15 @@ session.removeAttribute("intimation_list");
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
                           <th class="head1 no-sort"></th>
                         </tr>
                       </tfoot>
                       <tbody>
-                       <%if(assignCaseDetailList!=null){
+                       <%if(assignCaseDetailList != null){
                       		 for(CaseDetailList list_case : assignCaseDetailList){
                       	  %>
                       	  
                       	  <tr>
- 								<td><input type = "checkbox" name = "selectCase"></td>
                   				<td><%=list_case.getSrNo()%></td>
                   				<td><%=list_case.getPolicyNumber()%></td>
                   				<td><%=list_case.getInsuredName()%></td>
@@ -94,7 +91,7 @@ session.removeAttribute("intimation_list");
 	                                </span>
                                 </td>                        
                                 <td>
-                                	<a href="'.base_url().'messages/edit/'.$message->msgId.'" data-toggle="tooltip" title="Edit" 
+                                	<a href="#" data-toggle="tooltip" title="Edit" 
                                         class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i>
                                		</a>
                                 
