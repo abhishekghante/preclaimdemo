@@ -76,7 +76,7 @@ session.removeAttribute("location_list");
                 <label class="col-md-4 control-label" for="state">State <span class="text-danger">*</span></label>
                 <div class="col-md-8">
                   <input type="text" required placeholder="State" id="state" class="form-control" 
-                  	name="state" readonly disabled>
+                  	name="state">
                 </div>
               </div>
               <div class="form-group">
@@ -131,8 +131,7 @@ session.removeAttribute("location_list");
               <div class="form-group">
                 <label class="col-md-4 control-label" for="zone">Zone <span class="text-danger">*</span></label>
                 <div class="col-md-8">
-                  <input type="text" required placeholder="Zone" maxlength="15" id="zone" class="form-control" name="zone"
-                  	readonly disabled>
+                  <input type="text" required placeholder="Zone" maxlength="15" id="zone" class="form-control" name="zone">
                 </div>
               </div>
             </div>
