@@ -11,8 +11,8 @@ public interface RegionalManagerDao {
 	List<String> getActiveState(String role_name, String zone);
 	List<String> getActiveCity(String role_name, String zone, String state);
 	List<UserDetails> getActiveUser(String role_name, String zone, String state, String city);
-	List<CaseDetailList> getAssignedCaseList();
-	List<CaseDetailList> getPendingCaseList();
+	List<CaseDetailList> getAssignedCaseList(String zone);
+	List<CaseDetailList> getPendingCaseList(String zone);
 	public String assignToSupervisor(String policyNumber, String caseSubStatus,String supervisorName ,String username);
 	
 }

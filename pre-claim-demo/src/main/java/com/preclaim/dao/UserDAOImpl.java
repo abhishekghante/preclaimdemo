@@ -318,9 +318,9 @@ public class UserDAOImpl implements UserDAO{
 	public void activity_log(String moduleName, String moduleCode, String moduleAction, String username) {
 		try 
 		{
-		  	String sql="INSERT INTO activity_log(moduleName, moduleId, moduleAction, user_name, logDate) "
+		  	String sql="INSERT INTO activity_log(moduleName, moduleCode, moduleAction, user_name, logDate) "
 		  			+ "values(?, ?, ?, ?, now())";
-	          this.template.update(sql,moduleName,moduleCode,moduleAction,username);	
+	          this.template.update(sql, moduleName, moduleCode, moduleAction, username);	
 		}
 		catch(Exception e) 
 		{

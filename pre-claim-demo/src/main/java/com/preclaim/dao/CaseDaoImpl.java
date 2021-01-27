@@ -72,10 +72,10 @@ public class CaseDaoImpl implements CaseDao {
 	}
 
 	@Override
-	public List<CaseDetailList> getPendingCaseList() {
+	public List<CaseDetailList> getPendingCaseList(String username) {
 		try
 		{
-			String sql ="SELECT * FROM case_lists where caseSubStatus = 'PA'"; 			   
+			String sql ="SELECT * FROM case_lists where caseSubStatus = 'PA' and createdBy = '" + username +"'"; 			   
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
 						casedetail.setSrNo(rowCount+1);
@@ -101,10 +101,10 @@ public class CaseDaoImpl implements CaseDao {
 	}
 	
 	@Override
-	public List<CaseDetailList> getAssignedCaseList() {
+	public List<CaseDetailList> getAssignedCaseList(String username) {
 		try
 		{
-			String sql ="SELECT * FROM case_lists where caseSubStatus <> 'PA'"; 			   
+			String sql ="SELECT * FROM case_lists where caseSubStatus <> 'PA' and createdBy = '" + username + "'"; 			   
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
 						casedetail.setSrNo(rowCount+1);

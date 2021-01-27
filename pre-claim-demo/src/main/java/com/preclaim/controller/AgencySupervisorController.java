@@ -47,7 +47,7 @@ public class AgencySupervisorController {
     	details.setSub_menu1("AS Pending Cases");
     	session.setAttribute("ScreenDetails", details);
     	
-    	session.setAttribute("pendingCaseList", supervisorDao.getPendingCaseList());
+    	session.setAttribute("pendingCaseList", supervisorDao.getPendingCaseList(user.getUsername()));
     	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
     	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
     	
@@ -67,7 +67,7 @@ public class AgencySupervisorController {
     	details.setSub_menu1("AS Assigned Cases");
     	session.setAttribute("ScreenDetails", details);
     	
-    	session.setAttribute("assignCaseDetailList", supervisorDao.getAssignedCaseList());
+    	session.setAttribute("assignCaseDetailList", supervisorDao.getAssignedCaseList(user.getUsername()));
     	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
     	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
     	

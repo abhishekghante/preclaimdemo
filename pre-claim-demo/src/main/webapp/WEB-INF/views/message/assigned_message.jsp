@@ -85,8 +85,12 @@ session.removeAttribute("intimation_list");
                   				<td><%=list_case.getClaimantZone()%></td>
                                 <td><%=list_case.getSumAssured()%></td>
                                  <td><%=list_case.getIntimationType()%></td>
-                                <td></td>
-                                <td><span class="label label-sm label-success">Assign</span></td>                        
+                                <td>Case Details</td>
+                                <td>
+                                	<span class="label label-sm label-success">
+                                		<%= list_case.getCaseSubstatus()%>
+                                	</span>
+                               	</td>                        
                                 <td>
                                 	<a href="'.base_url().'messages/edit/'.$message->msgId.'" data-toggle="tooltip" title="Edit" 
                                         class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i>

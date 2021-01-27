@@ -47,7 +47,7 @@ public class RegionalManagerController {
     	details.setSub_menu1("RM Pending Cases");
     	session.setAttribute("ScreenDetails", details);
     	
-    	session.setAttribute("pendingCaseList", regionalManagerDao.getPendingCaseList());
+    	session.setAttribute("pendingCaseList", regionalManagerDao.getPendingCaseList(user.getZone()));
     	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
     	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
     	
@@ -67,7 +67,7 @@ public class RegionalManagerController {
     	details.setSub_menu1("RM Assigned Cases");
     	session.setAttribute("ScreenDetails", details);
     	
-    	session.setAttribute("assignCaseDetailList", regionalManagerDao.getAssignedCaseList());
+    	session.setAttribute("assignCaseDetailList", regionalManagerDao.getAssignedCaseList(user.getZone()));
     	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
     	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
     	
@@ -100,8 +100,8 @@ public class RegionalManagerController {
 				request.getParameter("state"), request.getParameter("city"));
     }
 
-    @RequestMapping(value = "/investigator",method = RequestMethod.POST)
-    public @ResponseBody String investigator(HttpServletRequest request,HttpSession session) 
+    @RequestMapping(value = "/assignToSupervisor",method = RequestMethod.POST)
+    public @ResponseBody String assignToSupervisor(HttpServletRequest request,HttpSession session) 
     {
     	UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		
@@ -111,7 +111,8 @@ public class RegionalManagerController {
 		String caseList = "";
 		for (int i = 0; i < caseLen; i++)
 			caseList += "'" + paramValues[i] + "',";                               
-		caseList = caseList.substring(0, caseList.length() - 1); 
+		caseList = caseList.substring(0, caseList.length() - 1);
+		System.out.println(superVisorName);
 		userDao.activity_log("CASE HISTORY","", "ASSIGN CASE", user.getUsername());
 		return regionalManagerDao.assignToSupervisor(caseList, "AAS",superVisorName,user.getUsername());
     }

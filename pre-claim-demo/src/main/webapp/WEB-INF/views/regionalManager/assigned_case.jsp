@@ -6,8 +6,8 @@
 
 <%
 List<String>user_permission=(List<String>)session.getAttribute("user_permission");
-boolean allow_statusChg = user_permission.contains("messages/status");
-boolean allow_delete = user_permission.contains("messages/delete");
+boolean allow_statusChg = user_permission.contains("regionalManager/status");
+boolean allow_delete = user_permission.contains("regionalManager/delete");
 List<CaseDetailList> assignCaseDetailList=(List<CaseDetailList>)session.getAttribute("assignCaseDetailList");
 session.removeAttribute("assignCaseDetailList");
 List<InvestigationType> investigationList = (List<InvestigationType>) session.getAttribute("investigation_list");
@@ -85,8 +85,12 @@ session.removeAttribute("intimation_list");
                   				<td><%=list_case.getClaimantZone()%></td>
                   				<td><%=list_case.getSumAssured()%></td>
                   				<td><a href = "#">Case Details</a></td>
-                  				 <td><span class="label label-sm label-success">Assign</span></td>
-                                <td></td>                                                                      
+                  				<td>
+                                	<span class="label label-sm label-success">
+                                		<%= list_case.getCaseSubstatus()%>
+                                	</span>
+                               	</td>
+                                <td><%= list_case.getSupervisor()%></td>                                         
                                 <td>
                                 	<a href="'.base_url().'messages/edit/'.$message->msgId.'" data-toggle="tooltip" title="Edit" 
                                         class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i>

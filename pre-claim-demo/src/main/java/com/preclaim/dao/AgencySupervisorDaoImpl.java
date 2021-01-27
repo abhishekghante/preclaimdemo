@@ -96,10 +96,11 @@ public class AgencySupervisorDaoImpl implements AgencySupervisorDao {
 	}
 	
 	@Override
-	public List<CaseDetailList> getPendingCaseList() {
+	public List<CaseDetailList> getPendingCaseList(String username) {
 		try
 		{
-			String sql ="SELECT * FROM case_lists where caseSubStatus = 'ARM'"; 			   
+			String sql ="SELECT * FROM case_lists where caseSubStatus = 'ARM' and "
+					+ "supervisor = '" + username + "'"; 			   
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
 						casedetail.setSrNo(rowCount+1);
@@ -125,10 +126,11 @@ public class AgencySupervisorDaoImpl implements AgencySupervisorDao {
 	}
 	
 	@Override
-	public List<CaseDetailList> getAssignedCaseList() {
+	public List<CaseDetailList> getAssignedCaseList(String username) {
 		try
 		{
-			String sql ="SELECT * FROM case_lists where caseSubStatus NOT IN ('PA', 'ARM' ,'AAS')"; 			   
+			String sql ="SELECT * FROM case_lists where caseSubStatus NOT IN ('PA', 'ARM' ,'AAS') and"
+					+ " supervisor = '" + username + "'"; 			   
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
 						casedetail.setSrNo(rowCount+1);

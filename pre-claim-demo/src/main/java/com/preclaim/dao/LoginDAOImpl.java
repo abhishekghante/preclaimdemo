@@ -39,6 +39,9 @@ public class LoginDAOImpl implements LoginDAO {
 					login_user.setUser_email(rs.getString("user_email"));
 					login_user.setAccount_type(rs.getString("role_name"));
 					login_user.setUserimage(rs.getString("user_image"));
+					login_user.setZone(rs.getString("zone"));
+					login_user.setState(rs.getString("state"));
+					login_user.setCity(rs.getString("city"));
 					login_user.setUserImageb64(Config.upload_directory + rs.getString("user_image"));
 					return login_user;
 				});

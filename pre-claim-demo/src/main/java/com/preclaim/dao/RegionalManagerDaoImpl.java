@@ -96,10 +96,11 @@ public class RegionalManagerDaoImpl implements RegionalManagerDao {
 	}
 	
 	@Override
-	public List<CaseDetailList> getPendingCaseList() {
+	public List<CaseDetailList> getPendingCaseList(String zone) {
 		try
 		{
-			String sql ="SELECT * FROM case_lists where caseSubStatus = 'ARM'"; 			   
+			String sql ="SELECT * FROM case_lists where caseSubStatus = 'ARM' and "
+					+ "claimantZone = '" + zone + "'"; 			   
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
 						casedetail.setSrNo(rowCount+1);
@@ -125,10 +126,11 @@ public class RegionalManagerDaoImpl implements RegionalManagerDao {
 	}
 	
 	@Override
-	public List<CaseDetailList> getAssignedCaseList() {
+	public List<CaseDetailList> getAssignedCaseList(String zone) {
 		try
 		{
-			String sql ="SELECT * FROM case_lists where caseSubStatus NOT IN ('PA', 'ARM')"; 			   
+			String sql ="SELECT * FROM case_lists where caseSubStatus NOT IN ('PA', 'ARM') and "
+					+ "claimantZone = '" + zone + "'"; 			   
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
 						casedetail.setSrNo(rowCount+1);
@@ -158,14 +160,15 @@ public class RegionalManagerDaoImpl implements RegionalManagerDao {
 	
 		try {
 			
-		      String sql="UPDATE case_lists SET caseSubStatus = ?, updatedDate = now(),supervisor=?,updatedBy = ? "
+		      String sql="UPDATE case_lists SET caseSubStatus = ?, updatedDate = now(), supervisor=?, "
+		      		+ "updatedBy = ? "
 		      		+ "where caseSubStatus = 'ARM' and policyNumber in (" + policyNumber + ")";
-			  this.template.update(sql, caseSubStatus,supervisorName,username);
+			  this.template.update(sql, caseSubStatus, supervisorName, username);
 			  
 		   }
 		catch(Exception e) 
 		{
-			return "Error updating region status. Kindly contact system administrator";	
+			return "Error assigning cases. Kindly contact system administrator";	
 	    }
 		return "****";
 

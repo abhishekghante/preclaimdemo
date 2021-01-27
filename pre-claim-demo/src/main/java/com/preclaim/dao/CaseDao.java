@@ -14,7 +14,7 @@ public interface CaseDao {
 	CaseDetails getCaseDetail(int caseID);
 	String updateCaseDetails(CaseDetails case_details);
 	
-	List<CaseDetailList> getPendingCaseList();
-	List<CaseDetailList> getAssignedCaseList();
+	List<CaseDetailList> getPendingCaseList(String username);
+	List<CaseDetailList> getAssignedCaseList(String username);
 
 }

@@ -102,7 +102,7 @@ public class CaseController {
     	details.setSub_menu1("RCU Pending Cases");
     	session.setAttribute("ScreenDetails", details);
     	
-    	session.setAttribute("pendingCaseList", caseDao.getPendingCaseList());
+    	session.setAttribute("pendingCaseList", caseDao.getPendingCaseList(user.getUsername()));
     	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
     	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
     	
@@ -123,7 +123,7 @@ public class CaseController {
     	details.setSub_menu1("RCU Active Cases");
     	session.setAttribute("ScreenDetails", details);
     	
-    	session.setAttribute("activeCaseList", caseDao.getAssignedCaseList());
+    	session.setAttribute("activeCaseList", caseDao.getAssignedCaseList(user.getUsername()));
     	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
     	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
     	
@@ -144,7 +144,7 @@ public class CaseController {
     	details.setSub_menu1("RCU Assigned Cases");
     	session.setAttribute("ScreenDetails", details);
         
-    	session.setAttribute("assignCaseList", caseDao.getAssignedCaseList());
+    	session.setAttribute("assignCaseList", caseDao.getAssignedCaseList(user.getUsername()));
     	session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
     	session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
     	
