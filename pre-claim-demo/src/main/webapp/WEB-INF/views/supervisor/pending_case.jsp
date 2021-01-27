@@ -369,28 +369,28 @@ $("#assignInvestigator").click(function(){
 	$("#assigneeCity").removeClass("has-error-2");
 	$("#assigneeName").removeClass("has-error-2");
 	console.log(assigneeName);
-	if(assigneeName == "")
+	if(assigneeName == "" || assigneeName == null)
 	{
-		toastr.error("Supervisor Name cannot be blank","Error");
+		toastr.error("Investigator Name cannot be blank","Error");
 		$("#assigneeName").addClass("has-error-2");
 		$("#assigneeName").focus();
 		errorFlag = 1;
 	}
-	if(assigneeCity == "")
+	if(assigneeCity == "" || assigneeCity == null)
 	{
 		toastr.error("City cannot be blank","Error");
 		$("#assigneeCity").addClass("has-error-2");
 		$("#assigneeCity").focus();
 		errorFlag = 1;
 	}
-	if(assigneeState == "")
+	if(assigneeState == "" || assigneeState == null)
 	{
 		toastr.error("State cannot be blank","Error");
 		$("#assigneeState").addClass("has-error-2");
 		$("#assigneeState").focus();
 		errorFlag = 1;
 	}
-	if(assigneeZone == "")
+	if(assigneeZone == "" || assigneeZone == null)
 	{
 		toastr.error("Zone cannot be blank","Error");
 		$("#assigneeZone").addClass("has-error-2");
@@ -411,17 +411,27 @@ $("#assignInvestigator").click(function(){
 	}	
 	if(errorFlag == 1)
 		return;
-	var formdata = {"investigator":assigneeName, "caseList" : caseList}
 	$.ajax({
-		method : "POST",
-		url : "assignToInvestigator",
-		data :"formdata",
-		success:function(data)
-		{
-			toastr.success("Cases successfully assigned to Investigator","Success");
-			location.reload();
-		}
-	});
+	      type: "POST",
+	      url:"assignToInvestigator",
+	      data: {"investigator":assigneeName, "caseList" : caseList},
+	      beforeSend: function() { 
+	          $("#assignInvestigator").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+	          $("#assignInvestigator").prop('disabled', true);
+	      },
+	      success: function( data ) 
+	      {
+	    	  $("#assignInvestigator").html('Assign Case');
+	          $("#assignInvestigator").prop('disabled', false);
+	          if(data == "****")
+	          {
+		          toastr.success( 'Cases successfully assigned to Investigator','Success' );
+		          location.reload();
+	          }
+	          else
+	          	toastr.error( data,'Error' );    
+	      }
+	    });
 	
 });
 </script>

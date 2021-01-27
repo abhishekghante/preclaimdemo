@@ -128,7 +128,7 @@ public class AgencySupervisorDaoImpl implements AgencySupervisorDao {
 	public List<CaseDetailList> getAssignedCaseList() {
 		try
 		{
-			String sql ="SELECT * FROM case_lists where caseSubStatus NOT IN ('PA', 'ARM')"; 			   
+			String sql ="SELECT * FROM case_lists where caseSubStatus NOT IN ('PA', 'ARM' ,'AAS')"; 			   
 			List<CaseDetailList> casedetailList = template.query(sql,(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail=new CaseDetailList();
 						casedetail.setSrNo(rowCount+1);
@@ -153,5 +153,21 @@ public class AgencySupervisorDaoImpl implements AgencySupervisorDao {
 		}
 	}
 
+	@Override
+	public String AssignToinvestigator(String policyNumber, String caseSubStatus, String investigator, String username) {
+		
+		try {
+			
+		      String sql="UPDATE case_lists SET caseSubStatus = ?, updatedDate = now(),investigator=?,updatedBy = ? "
+		      		+ "where caseSubStatus = 'ARM' and policyNumber in (" + policyNumber + ")";
+			  this.template.update(sql, caseSubStatus,investigator,username);
+			  
+		   }
+		catch(Exception e) 
+		{
+			return "Error updating Agency status. Kindly contact system administrator";	
+	    }
+		return "****";
 
+	}
 }

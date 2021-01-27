@@ -43,13 +43,14 @@ public class RegionalManagerDaoImpl implements RegionalManagerDao {
 	{
 		try
 		{
-			String sql = "SELECT DISTINCT state FROM admin_user where status = 1 and role_name = ?,"
+			String sql = "SELECT DISTINCT state FROM admin_user where status = 1 and role_name = ? and "
 					+ "zone = ?";
 			return template.query(sql, new Object[] {role_name, zone}, 
-					(ResultSet rs, int rowCount) -> {return rs.getString("zone");});
+					(ResultSet rs, int rowCount) -> {return rs.getString("state");});
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -59,13 +60,14 @@ public class RegionalManagerDaoImpl implements RegionalManagerDao {
 	{
 		try
 		{
-			String sql = "SELECT DISTINCT city FROM admin_user where status = 1 and role_name = ?, "
-					+ "zone = ?, state = ?";
+			String sql = "SELECT DISTINCT city FROM admin_user where status = 1 and role_name = ? and "
+					+ "zone = ? and state = ?";
 			return template.query(sql, new Object[] {role_name, zone, state}, 
-					(ResultSet rs, int rowCount) -> {return rs.getString("zone");});
+					(ResultSet rs, int rowCount) -> {return rs.getString("city");});
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -75,8 +77,8 @@ public class RegionalManagerDaoImpl implements RegionalManagerDao {
 	{
 		try
 		{
-			String sql = "SELECT * FROM admin_user where status = 1 and role_name = ?, zone = ?, "
-					+ "state = ?, city = ?";
+			String sql = "SELECT * FROM admin_user where status = 1 and role_name = ? and "
+					+ "zone = ? and state = ? and city = ?";
 			return template.query(sql, new Object[] {role_name, zone, state, city}, 
 					(ResultSet rs, int rowCount) -> 
 						{
@@ -88,6 +90,7 @@ public class RegionalManagerDaoImpl implements RegionalManagerDao {
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -148,6 +151,24 @@ public class RegionalManagerDaoImpl implements RegionalManagerDao {
 			ex.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public String assignToSupervisor(String policyNumber, String caseSubStatus, String supervisorName, String username) {
+	
+		try {
+			
+		      String sql="UPDATE case_lists SET caseSubStatus = ?, updatedDate = now(),supervisor=?,updatedBy = ? "
+		      		+ "where caseSubStatus = 'ARM' and policyNumber in (" + policyNumber + ")";
+			  this.template.update(sql, caseSubStatus,supervisorName,username);
+			  
+		   }
+		catch(Exception e) 
+		{
+			return "Error updating region status. Kindly contact system administrator";	
+	    }
+		return "****";
+
 	}
 
 

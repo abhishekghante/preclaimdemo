@@ -95,4 +95,21 @@ public class RegionalManagerController {
 		return regionalManagerDao.getActiveUser(request.getParameter("role_name"), request.getParameter("zone"),
 				request.getParameter("state"), request.getParameter("city"));
     }
+
+    @RequestMapping(value = "/investigator",method = RequestMethod.POST)
+    public @ResponseBody String investigator(HttpServletRequest request,HttpSession session) 
+    {
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		
+    	String[] paramValues = request.getParameterValues("caseList[]");
+    	String superVisorName=request.getParameter("assigneeName");
+		int caseLen = paramValues.length;
+		String caseList = "";
+		for (int i = 0; i < caseLen; i++)
+			caseList += "'" + paramValues[i] + "',";                                // caselist ="'001','002',.......'0010',"
+		caseList = caseList.substring(0, caseList.length() - 1);                   
+		return regionalManagerDao.assignToSupervisor(caseList, "AAS",superVisorName,user.getUsername());
+    }
+
+
 }

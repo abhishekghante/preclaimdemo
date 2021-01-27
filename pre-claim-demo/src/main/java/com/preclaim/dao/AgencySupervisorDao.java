@@ -1,7 +1,6 @@
 package com.preclaim.dao;
 
 import java.util.List;
-
 import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.UserDetails;
 
@@ -13,5 +12,6 @@ public interface AgencySupervisorDao {
 	List<UserDetails> getActiveUser(String role_name, String zone, String state, String city);
 	List<CaseDetailList> getAssignedCaseList();
 	List<CaseDetailList> getPendingCaseList();
+	public String AssignToinvestigator(String caseList,String caseSubStatus,String investigator,String username);
 	
 }

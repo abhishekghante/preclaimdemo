@@ -95,4 +95,22 @@ public class AgencySupervisorController {
 		return supervisorDao.getActiveUser(request.getParameter("role_name"), request.getParameter("zone"),
 				request.getParameter("state"), request.getParameter("city"));
     }
+    	
+    @RequestMapping(value = "/assignToInvestigator",method = RequestMethod.POST)
+    public @ResponseBody String assignToInvestigator(HttpServletRequest request,HttpSession session) 
+    {
+    	UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		
+    	String[] paramValues = request.getParameterValues("caseList[]");
+    	String investigator=request.getParameter("investigator");
+		int caseLen = paramValues.length;
+		String caseList = "";
+		for (int i = 0; i < caseLen; i++)
+			caseList += "'" + paramValues[i] + "',";                                
+		caseList = caseList.substring(0, caseList.length() - 1);                   
+		return supervisorDao.AssignToinvestigator(caseList, "AIV",investigator,user.getUsername());
+    }
+    
+    
+    
 }

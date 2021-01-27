@@ -47,8 +47,9 @@ session.removeAttribute("intimation_list");
 									<span class="text-danger">*</span>
 								</label>
 								<div class="col-md-8">
-								<select name = "assigneeZone" id="assigneeZone" class = "form-control">
-								</select>
+									<select name = "assigneeZone" id="assigneeZone" class = "form-control">
+										<option value = '' selected disabled>Select</option>
+									</select>
 <!-- 									<input type="text" required id="supervisorZone" name="supervisorZone"  -->
 <!-- 										class="form-control" placeholder="Supervisor Zone" -->
 <!-- 										value =""> -->
@@ -61,8 +62,9 @@ session.removeAttribute("intimation_list");
 								<span class="text-danger">*</span>
 								</label>
 								<div class="col-md-8">
-								<select name = "assigneeState" id="assigneeState" class = "form-control">
-								</select>
+									<select name = "assigneeState" id="assigneeState" class = "form-control">
+										<option value = '' selected disabled>Select</option>
+									</select>
 
 <!-- 									<input type="text" required id="supervisorState" name="supervisorState"  -->
 <!-- 										class="form-control" placeholder="Supervisor State" -->
@@ -76,8 +78,9 @@ session.removeAttribute("intimation_list");
 									<span class="text-danger">*</span>
 								</label>
 								<div class="col-md-8">
-								<select name = "assigneeCity" id="assigneeCity" class = "form-control">
-								</select>
+									<select name = "assigneeCity" id="assigneeCity" class = "form-control">
+										<option value = '' selected disabled>Select</option>
+									</select>
 <!-- 									<input type="text" required id="supervisorCity" name="supervisorCity"  -->
 <!-- 										class="form-control" placeholder="Supervisor City" -->
 <!-- 										value =""> -->
@@ -92,8 +95,9 @@ session.removeAttribute("intimation_list");
 								<span class="text-danger">*</span>
 								</label>
 								<div class="col-md-8">
-								<select name = "assigneeName" id="assigneeName" class = "form-control">
-								</select>
+									<select name = "assigneeName" id="assigneeName" class = "form-control">
+										<option value = '' selected disabled>Select</option>
+									</select>
 <!-- 									<input type="text" required id="supervisorName" name="supervisorName"  -->
 <!-- 										class="form-control" placeholder="Supervisor Name" -->
 <!-- 										value =""> -->
@@ -281,7 +285,7 @@ $(document).ready(function() {
 	url:"${pageContext.request.contextPath}/regionalManager/getActiveZone",
 	success: function(data)
 	{
-		var options = "<option value = '' selected disabled>Select</option>"; 
+		var options = ""; 
 		for(i = 0; i < data.length ; i++ )
 		{
 			options += "<option value = " + data[i] + " > " + data[i] + " </option>";
@@ -301,12 +305,12 @@ $(document).ready(function() {
 		url:"${pageContext.request.contextPath}/regionalManager/getActiveState",
 		success: function(data)
 		{
-			var options = "<option value = '' selected disabled>Select</option>"; 
+			var options = ""; 
 			for(i = 0; i < data.length ; i++ )
 			{
 				options += "<option value = " + data[i] + " > " + data[i] + " </option>";
 			}
-			$(this).append(options);	
+			$("#assigneeState").append(options);	
 		}
 	 });
 	 
@@ -316,19 +320,19 @@ $(document).ready(function() {
 	 var role_name = "AGNSUP";
 	 var zone = $("#assigneeZone option:selected").val();
 	 var state = $("#assigneeState option:selected").val();
-	 var formdata = {"role_name":"AS", "zone":zone, "state":state};
+	 var formdata = {"role_name":role_name, "zone":zone, "state":state};
 	 $.ajax({
 		method:"POST",
 		data:formdata,
 		url:"${pageContext.request.contextPath}/regionalManager/getActiveCity",
 		success: function(data)
 		{
-			var options = "<option value = '' selected disabled>Select</option>"; 
+			var options = ""; 
 			for(i = 0; i < data.length ; i++ )
 			{
 				options += "<option value = " + data[i] + " > " + data[i] + " </option>";
 			}
-			$(this).append(options);
+			$("#assigneeCity").append(options);
 		}
 	 });
 	 
@@ -346,7 +350,12 @@ $(document).ready(function() {
 		url:"${pageContext.request.contextPath}/regionalManager/getActiveUser",
 		success: function(data)
 		{
-			console.log(data);
+			var options = ""; 
+			for(i = 0; i < data.length ; i++ )
+			{
+				options += "<option value = " + data[i].username + " > " + data[i].full_name + " </option>";
+			}
+			$("#assigneeName").append(options);
 		}
 	 });
 	 
@@ -364,28 +373,29 @@ $("#assignSupervisor").click(function(){
 	$("#assigneeState").removeClass("has-error-2");
 	$("#assigneeCity").removeClass("has-error-2");
 	$("#assigneeName").removeClass("has-error-2");
-	if(assigneeName == "")
+	console.log(assigneeName);
+	if(assigneeName == ""|| assigneeName == null )
 	{
 		toastr.error("Supervisor Name cannot be blank","Error");
 		$("#assigneeName").addClass("has-error-2");
 		$("#assigneeName").focus();
 		errorFlag = 1;
 	}
-	if(assigneeCity == "")
+	if(assigneeCity == "" || assigneeCity == null)
 	{
 		toastr.error("City cannot be blank","Error");
 		$("#assigneeCity").addClass("has-error-2");
 		$("#assigneeCity").focus();
 		errorFlag = 1;
 	}
-	if(assigneeState == "")
+	if(assigneeState == "" || assigneeState == null)
 	{
 		toastr.error("State cannot be blank","Error");
 		$("#assigneeState").addClass("has-error-2");
 		$("#assigneeState").focus();
 		errorFlag = 1;
 	}
-	if(assigneeZone == "")
+	if(assigneeZone == "" || assigneeZone == null)
 	{
 		toastr.error("Zone cannot be blank","Error");
 		$("#assigneeZone").addClass("has-error-2");
@@ -408,6 +418,29 @@ $("#assignSupervisor").click(function(){
 	
 	if(errorFlag == 1)
 		return;
+	
+	$.ajax({
+	      type: "POST",
+	      url:"assignToSupervisor",
+	      data: {"caseList":caseList,"assigneeName":assigneeName},
+	      beforeSend: function() { 
+	          $("#assignSupervisor").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+	          $("#assignSupervisor").prop('disabled', true);
+	      },
+	      success: function( data ) 
+	      {
+	    	  $("#assignSupervisor").html('Assign Case');
+	          $("#assignSupervisor").prop('disabled', false);
+	          if(data == "****")
+	          {
+		          toastr.success( 'Case Assigned successfully.','Success' );
+		          location.reload();
+	          }
+	          else
+	          	toastr.error( data,'Error' );    
+	      }
+	    });
+	
 	
 	
 });
