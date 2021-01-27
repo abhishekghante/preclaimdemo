@@ -798,76 +798,6 @@ function change_passValidate() {
         }
     });
 }
-//CREATE/EDIT ACCOUNT
-
-function updateAccountValidate() {
-    var full_name    = $.trim($('#edit_account_form #full_name').val());
-    var username     = $.trim($('#edit_account_form #username').val());
-    var user_email   = $.trim($('#edit_account_form #user_email').val());
-    var password     = $.trim($('#edit_account_form #password').val());
-    var account_img  = $.trim($('#edit_account_form #account_image').val());
-    var account_type = $.trim($('#edit_account_form #account_type').val());
-    var user_id      = $.trim($('#edit_account_form #user_id').val());
-    var status       = $.trim($('#edit_account_form #status').val());
-    $('#full_name').removeClass('has-error-2');
-    $('#username').removeClass('has-error-2');
-    $('#password').removeClass('has-error-2');
-    $('#user_email').removeClass('has-error-2');
-    $('#status').removeClass('has-error-2');
-    $('#account_type').removeClass('has-error-2');
-    if( full_name == "" )
-    {
-        $('#full_name').addClass('has-error-2');
-        $('#full_name').focus();
-        return false;
-    }
-    if( username == "" )
-    {
-        $('#username').addClass('has-error-2');
-        $('#username').focus();
-        return false;
-    }
-    if( password == "" )
-    {
-        $('#password').addClass('has-error-2');
-        $('#password').focus();
-        return false;
-    }
-    if( account_type == "" )
-    {
-        $('#account_type').addClass('has-error-2');
-        $('#account_type').focus();
-        return false;
-    }
-    if( status == "" )
-    {    
-        $('#status').addClass('has-error-2');
-        $('#status').focus();
-        return false;
-    }
-    $("#editaccountsubmit").html('<img src = "../../resources/img/input-spinner.gif"> Loading...');            
-    $("#editaccountsubmit").prop('disabled', true);
-    $.ajax({
-        type    : 'POST',
-        url     : '../updateUserDetails',
-        data    : {'full_name':full_name,'username':username,'user_email':user_email,
-        "password":password,"account_type":account_type,"user_id":user_id,"account_img":account_img,"status":status},
-        success : function( msg ) {
-            $("#editaccountsubmit").html('Update');
-            $("#editaccountsubmit").prop('disabled', false);
-            if( msg == "****" ) {
-            	toastr.success("User updated successfully",'success');
-                window.location.href = "../user_list";
-            } else {
-                toastr.error(msg,'Error');
-                //$("#alert_msg").html('<div class="alert alert-danger">'+msg+'</div>');
-                //$("#alert_msg").show().delay(5000).fadeOut();
-            }
-        }
-    });
-}
-
-
 
 $(document).ready(function() {
 
@@ -954,4 +884,3 @@ function displayUploadImg(input, PlaceholderID) {
 	    }
 	  }
 	}
-

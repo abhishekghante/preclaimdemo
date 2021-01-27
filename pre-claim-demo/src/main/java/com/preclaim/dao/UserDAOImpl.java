@@ -173,6 +173,10 @@ public class UserDAOImpl implements UserDAO{
 						details.setAccount_type(rs.getString("role_name"));
 						details.setUsername(rs.getString("username"));
 						details.setUserID(rs.getInt("user_id"));
+						details.setState(rs.getString("state"));
+						details.setCity(rs.getString("city"));
+						details.setZone(rs.getString("zone"));
+						details.setContactNumber(rs.getString("mobile_number"));
 						return details;
 					}
 					);

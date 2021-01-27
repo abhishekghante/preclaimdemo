@@ -62,7 +62,7 @@ session.removeAttribute("location_list");
                     <option value="-1" selected disabled>Select</option>
                     <%if(investigationList != null){
                     	for(InvestigationType investigation: investigationList){%>
-                    	<option value = "<%=investigation.getInvestigationId()%>"><%=investigation.getInvestigationType() %></option>
+                    	<option value = "<%=investigation.getInvestigationType()%>"><%=investigation.getInvestigationType() %></option>
                     <%}} %>
                   </select>
                 </div>
@@ -111,7 +111,7 @@ session.removeAttribute("location_list");
                     <option value="-1" selected disabled>Select</option>
                     <%if(intimationTypeList != null){
                     	for(IntimationType intimation: intimationTypeList){%>
-                    	<option value = "<%=intimation.getIntimationId()%>"><%=intimation.getIntimationType() %></option>
+                    	<option value = "<%=intimation.getIntimationType()%>"><%=intimation.getIntimationType() %></option>
                     <%}} %>
                   </select>
                 </div>

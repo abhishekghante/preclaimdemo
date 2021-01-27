@@ -42,16 +42,14 @@ session.removeAttribute("intimation_list");
             <div class="col-md-12 table-container">
                 <div class="box-body no-padding">
                   <div class="table-responsive">
-                    <table id="active_message_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
+                    <table id="active_case_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                       <thead>
                         <tr class="tbl_head_bg">
                           <th class="head1 no-sort">Case ID</th>
                           <th class="head1 no-sort">Policy No</th>
                           <th class="head1 no-sort">Name of Insured</th>
-                          <th class="head1 no-sort">Type of Investigation</th>
                           <th class="head1 no-sort">Zone</th>
                           <th class="head1 no-sort">Sum Assured</th>
-                          <th class="head1 no-sort">Type of Intimation</th>
                           <th class="head1 no-sort">View history</th>
                           <th class="head1 no-sort">Status</th>
                           <th class="head1 no-sort">Action</th>
@@ -59,8 +57,6 @@ session.removeAttribute("intimation_list");
                       </thead>
                       <tfoot>
                         <tr class="tbl_head_bg">
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
@@ -77,14 +73,12 @@ session.removeAttribute("intimation_list");
                       	  %>
                       	  
                       	  <tr>
-                  				<td><%=list_case.getSrNo()%></td>
+                  				<td><%=list_case.getCaseId()%></td>
                   				<td><%=list_case.getPolicyNumber()%></td>
                   				<td><%=list_case.getInsuredName()%></td>
-                  				<td><%=list_case.getInvestigationCategory()%></td>
                   				<td><%=list_case.getClaimantZone()%></td>
                                 <td><%=list_case.getSumAssured()%></td>
-                                <td></td>
-                                <td></td>
+                                <td>Case Details</td>
                                 <td>
 	                                <span class="label label-sm label-success">
 	                                	<%=list_case.getCaseSubstatus() %>
@@ -136,24 +130,12 @@ var table = $('#active_message_list').DataTable();
 var i = 0;
 $(document).ready(function() {
 	$('#active_case_list tfoot th').each( function () {
-		  if( i == 0 || i == 1 || i == 2 || i == 5)
+		  if(i == 1 || i == 2 || i == 4 || i == 6)
 		    {
 		      $(this).html( '<input type="text" class="form-control" placeholder="" />' );
 		    }
+		    
 		    else if(i == 3)
-		    {
-		      var cat_selectbox = '<select name="category" id="category" class="form-control">'
-		                              +'<option value="">All</option>';
-				<%if(investigationList != null){
-					for(InvestigationType investigation : investigationList)
-					{
-				%>
-				cat_selectbox += "<option value = <%= investigation.getInvestigationType()%>><%= investigation.getInvestigationType()%></option>";	
-		        <%}}%>
-				cat_selectbox += '</select>';
-		        $(this).html( cat_selectbox );
-		    }
-		    else if(i == 4)
 		    {
 		      var cat_selectbox = '<select name="zone" id="zone" class="form-control">'
 		                              +'<option value="">All</option>';
@@ -163,19 +145,6 @@ $(document).ready(function() {
 				cat_selectbox += "<option value = South>South</option>";
 				cat_selectbox += '</select>';
 		        $(this).html( cat_selectbox );
-		    }
-		    else if(i == 6)
-		    {
-		      var cat_selectbox = '<select name="intimation" id="intimation" class="form-control">'
-		                              +'<option value="">All</option>';
-				<%if(intimationTypeList != null){
-					for(IntimationType intimation : intimationTypeList)
-					{
-				%>
-				cat_selectbox += "<option value = <%= intimation.getIntimationType()%>><%= intimation.getIntimationType()%></option>";	
-				<%}}%>
-		      cat_selectbox += '</select>';
-		      $(this).html( cat_selectbox );
 		    }
 		    i++;
 		  });

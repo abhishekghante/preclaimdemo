@@ -206,6 +206,8 @@ public class UserController {
     	session.setAttribute("role_list", role);
     	UserDetails user_details = dao.getUserDetails(UserID);
     	session.setAttribute("user_details",user_details);
+    	session.setAttribute("location_list", locationDao.getActiveLocationList());
+    	
     	return "common/templatecontent";
 	}
 	
@@ -223,7 +225,10 @@ public class UserController {
 		user_details.setStatus(Integer.parseInt(request.getParameter("status")));
 		user_details.setUser_email(request.getParameter("user_email"));
 		user_details.setUsername(request.getParameter("username"));
-		user_details.setUserimage(request.getParameter("account_img"));		
+		user_details.setUserimage(request.getParameter("account_img"));	
+		user_details.setCity(request.getParameter("city"));
+		user_details.setState(request.getParameter("state"));
+		user_details.setZone(request.getParameter("zone"));
 		System.out.println(user_details.toString());
 		dao.activity_log("USER",user_details.getUsername(), "UPDATE", user_details.getUsername());
 		return dao.updateUserDetails(user_details);

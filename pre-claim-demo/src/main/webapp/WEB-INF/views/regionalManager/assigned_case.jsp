@@ -46,7 +46,6 @@ session.removeAttribute("intimation_list");
                     <table id="active_case_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                       <thead>
                         <tr class="tbl_head_bg">
-                          <th class="head1 no-sort"><input type = "checkbox" name = "selectAllCase"></th>
                           <th class="head1 no-sort">Case ID</th>
                           <th class="head1 no-sort">Policy No</th>
                           <th class="head1 no-sort">Name of Insured</th>
@@ -54,21 +53,18 @@ session.removeAttribute("intimation_list");
                           <th class="head1 no-sort">Sum Assured</th>
                           <th class="head1 no-sort">View history</th>
                           <th class="head1 no-sort">Status</th>
-                          <th class="head1 no-sort">Assigned To</th>
                           <th class="head1 no-sort">Action</th>
                         </tr>
                       </thead>
                       <tfoot>
                         <tr class="tbl_head_bg">
                           <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
-                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
-                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
-                          <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"><input type="text" class="form-control"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
-                          <th class="head1 no-sort"><input type="text" class="form-control"></th>
+                          <th class="head2 no-sort"></th>
+                          <th class="head2 no-sort"></th>
+                          <th class="head2 no-sort"></th>
+                          <th class="head2 no-sort"></th>
                           <th class="head1 no-sort"></th>
                         </tr>
                       </tfoot>
@@ -78,8 +74,7 @@ session.removeAttribute("intimation_list");
                       	  %>
                       	  
                       	  <tr>
- 								<td><input type = "checkbox" name = "selectCase"></td>
-                  				<td><%=list_case.getSrNo()%></td>
+ 								<td><%=list_case.getSrNo()%></td>
                   				<td><%=list_case.getPolicyNumber()%></td>
                   				<td><%=list_case.getInsuredName()%></td>
                   				<td><%=list_case.getClaimantZone()%></td>
@@ -90,9 +85,8 @@ session.removeAttribute("intimation_list");
                                 		<%= list_case.getCaseSubstatus()%>
                                 	</span>
                                	</td>
-                                <td><%= list_case.getSupervisor()%></td>                                         
                                 <td>
-                                	<a href="'.base_url().'messages/edit/'.$message->msgId.'" data-toggle="tooltip" title="Edit" 
+                                	<a href="#" data-toggle="tooltip" title="Edit" 
                                         class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i>
                                		</a>
                                	    <a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateMessageStatus('.$message->msgId.',1,1);" 
@@ -111,10 +105,7 @@ session.removeAttribute("intimation_list");
                       	<%
                       		 }
                       		 }
-                      	%>    
-                      
-                      
-                      
+                      	%>                          
                       </tbody>
                     </table>
                   </div>
@@ -133,24 +124,11 @@ var table = $('#active_case_list').DataTable();
 var i = 0;
 $(document).ready(function() {
   $('#active_case_list tfoot th').each( function () {
-	  if( i == 0 || i == 1 || i == 2 || i == 5)
+	  if( i == 1 || i == 2 || i == 6)
 	    {
 	      $(this).html( '<input type="text" class="form-control" placeholder="" />' );
 	    }
 	    else if(i == 3)
-	    {
-	      var cat_selectbox = '<select name="category" id="category" class="form-control">'
-	                              +'<option value="">All</option>';
-			<%if(investigationList != null){
-				for(InvestigationType investigation : investigationList)
-				{
-			%>
-			cat_selectbox += "<option value = <%= investigation.getInvestigationType()%>><%= investigation.getInvestigationType()%></option>";	
-	        <%}}%>
-			cat_selectbox += '</select>';
-	        $(this).html( cat_selectbox );
-	    }
-	    else if(i == 4)
 	    {
 	      var cat_selectbox = '<select name="zone" id="zone" class="form-control">'
 	                              +'<option value="">All</option>';
@@ -160,19 +138,6 @@ $(document).ready(function() {
 			cat_selectbox += "<option value = South>South</option>";
 			cat_selectbox += '</select>';
 	        $(this).html( cat_selectbox );
-	    }
-	    else if(i == 6)
-	    {
-	      var cat_selectbox = '<select name="intimation" id="intimation" class="form-control">'
-	                              +'<option value="">All</option>';
-			<%if(intimationTypeList != null){
-				for(IntimationType intimation : intimationTypeList)
-				{
-			%>
-			cat_selectbox += "<option value = <%= intimation.getIntimationType()%>><%= intimation.getIntimationType()%></option>";	
-			<%}}%>
-	      cat_selectbox += '</select>';
-	      $(this).html( cat_selectbox );
 	    }
 	    i++;
 	  });
