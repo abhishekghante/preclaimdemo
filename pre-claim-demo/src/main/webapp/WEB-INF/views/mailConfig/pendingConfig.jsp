@@ -136,7 +136,7 @@ boolean allow_delete = user_permission.contains("mailConfig/delete");
 										   		data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
 										   		<i class="glyphicon glyphicon-edit"></i>
 									   		</a> 
-											<a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateConfigStatus(<%=list_config.getMailConfigId() %>,1,<%=allow_statusChg%>);"
+											<a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateConfigStatus(<%=list_config.getMailConfigId() %>,2,<%=allow_statusChg%>);"
 											    class="btn btn-success btn-xs"><i class="glyphicon glyphicon-ok-circle"></i></a> 
 											<a href="javascript:;" data-toggle="tooltip" title="Delete" onClick="return deleteConfig('<%=list_config.getMailConfigId()%>',<%=allow_delete %>);"
 										        class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i></a>
@@ -172,13 +172,13 @@ $(document).ready(function() {
 		}
 		else if (i == 5)
 		{
-			var select_box = "<select><option value = 'TLS'>TLS</option>" +
+			var select_box = "<select class = 'form-control'><option value = 'TLS'>TLS</option>" +
 							 "<option value = 'SSL'>SSL</option></select>";
 			$(this).html(select_box);
 		}
 		else if(i == 6)
 		{
-			var select_box = "<select><option value = '1'>Active</option>" +
+			var select_box = "<select class = 'form-control'><option value = '1'>Active</option>" +
 			 "<option value = '2'>Inactive</option>" +
 			 "</select>";
 			$(this).html(select_box);

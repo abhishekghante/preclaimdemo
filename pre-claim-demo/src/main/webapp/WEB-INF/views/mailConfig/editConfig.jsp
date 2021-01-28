@@ -66,7 +66,7 @@ session.removeAttribute("editMailConfig");
                 <label class="col-md-4 control-label" for="outgoingPort">Outgoing SMTP Port <span class="text-danger">*</span></label>
                 <div class="col-md-8">
                   <input type="number" placeholder="Outgoing Port" id="outgoingPort" class="form-control" 
-                  	name="outgoingPort" value = "<%=mailConfig.getOutgoingServer()%>">
+                  	name="outgoingPort" value = "<%=mailConfig.getOutgoingPort()%>">
                 </div>
               </div>
             </div>
@@ -80,7 +80,7 @@ session.removeAttribute("editMailConfig");
                   	<option value = "TLS" 
                   		<% if(mailConfig.getEncryptionType().equals("TLS")){%> selected <%} %>>TLS</option>
                   	<option value = "SSL"
-                  		<% if(mailConfig.getEncryptionType().equals("TLS")){%> selected <%} %>>SSL</option>
+                  		<% if(mailConfig.getEncryptionType().equals("SSL")){%> selected <%} %>>SSL</option>
                   </select>
                 </div>
               </div>
@@ -108,7 +108,7 @@ function validateConfig()
 	var outgoingserver = $( '#edit_config_form #outgoingserver').val();
 	var outgoingport = $( '#edit_config_form #outgoingPort').val();
 	var encryptionType = $( '#edit_config_form #encryptionType').val();
-	var mailConfigId = = $( '#edit_config_form #mailConfigId').val();
+	var mailConfigId =  $( '#edit_config_form #mailConfigId').val();
 	$("#username").removeClass("has-error-2");
 	$("#password").removeClass("has-error-2");
 	$("#outgoingServer").removeClass("has-error-2");
@@ -171,7 +171,7 @@ function validateConfig()
 			$("#editconfigsubmit").prop('disabled', true);
 			if (data == "****") 
 			{
-				toastr.success('Region Updated successfully.', 'Success');
+				toastr.success('Configuration Updated successfully.', 'Success');
 				location.href ="${pageContext.request.contextPath}/mailConfig/pending";
 			} 
 			else 

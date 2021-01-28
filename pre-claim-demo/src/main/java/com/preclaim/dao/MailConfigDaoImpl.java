@@ -88,7 +88,7 @@ public class MailConfigDaoImpl implements MailConfigDao {
 		try
 		{
 			String sql = "UPDATE mail_config SET username = ?, password = ?, outgoingServer = ?, "
-					+ "outgoingPort = ?, encryptionType = ?, updatedBy = ?, updatedOn = now() where"
+					+ "outgoingPort = ?, encryptionType = ?, updatedBy = ?, updated_on = now() where"
 					+ "mailConfigId = ?";
 			template.update(sql, mailConfig.getUsername(), mailConfig.getPassword(), 
 					mailConfig.getOutgoingServer(), mailConfig.getOutgoingPort(), mailConfig.getEncryptionType(),
@@ -106,8 +106,15 @@ public class MailConfigDaoImpl implements MailConfigDao {
 	public String updateStatus(int mailConfigId, int status, String username) {
 		try
 		{
-			String sql = "UPDATE mail_config SET status = ?, updatedBy = ?, updatedOn = now() where"
-					+ "mailConfigId = ?";
+			if(status == 1)
+			{
+				String sql = "SELECT count(*) FROM mail_config where status = 1";
+				int activeCount = template.queryForObject(sql, Integer.class);
+				if(activeCount > 0)
+					return "Only one mail configuration can be active at a time";
+			}
+			String sql = "UPDATE mail_config SET status = ?, updatedBy = ?, updated_on = now() where"
+					+ " mailConfigId = ?";
 			template.update(sql,status, username, mailConfigId);
 			return "****";
 		}

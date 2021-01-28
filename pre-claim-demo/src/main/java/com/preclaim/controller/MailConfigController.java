@@ -49,7 +49,7 @@ public class MailConfigController{
 			return "common/login";
 		session.removeAttribute("ScreenDetails");
 		ScreenDetails details = new ScreenDetails();
-		details.setScreen_name("../mailConfig/addConfig.jsp");
+		details.setScreen_name("../mailConfig/editConfig.jsp");
 		details.setScreen_title("Add Mail Config");
 		details.setMain_menu("Mail Config");
 		details.setSub_menu1("Add Mail Config");
@@ -87,7 +87,7 @@ public class MailConfigController{
 		details.setScreen_name("../mailConfig/activeConfig.jsp");
 		details.setScreen_title("Active mailConfig");
 		details.setMain_menu("Mail Config");
-		details.setSub_menu1("Active mailConfigs");
+		details.setSub_menu1("Active Mail Config");
 		session.setAttribute("ScreenDetails", details);
 		session.setAttribute("activeConfig", mailConfigDao.getMailConfigList(1));
 		return "common/templatecontent";

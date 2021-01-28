@@ -62,6 +62,7 @@ boolean allow_delete = user_permission.contains("mailConfig/delete");
 										<th class="head2 no-sort"></th>
 										<th class="head2 no-sort"></th>
 										<th class="head2 no-sort"></th>
+										<th class="head2 no-sort"></th>
 									</tr>
 								</tfoot>
 								<tbody>
@@ -77,20 +78,26 @@ boolean allow_delete = user_permission.contains("mailConfig/delete");
 										<td><%= list_config.getOutgoingServer() %></td>
 										<td><%= list_config.getOutgoingPort() %></td>
 										<td><%= list_config.getEncryptionType() %></td>
-										<td><span class="label label-sm label-danger">Pending</span></td>
+										<td>
+										<% if(list_config.getStatus() == 1) {%>
+										<span class="label label-sm label-success">Active</span>
+										<%}else{ %>
+										<span class="label label-sm label-danger">Inactive</span>
+										<%} %>
+										</td>
 										<td>
 										   <a href="${pageContext.request.contextPath}/mailConfig/edit?mailConfigId=<%=list_config.getMailConfigId() %>" 										   										   
 										   		data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
 										   		<i class="glyphicon glyphicon-edit"></i>
 									   		</a>
 									   		<% if(list_config.getStatus() == 1) {%>
-											<a href="javascript:;" data-toggle="tooltip" title="Inactive" onClick="return updateConfigStatus(<%=list_config.getMailConfigId() %>,2,<%=allow_statusChg%>);"
-											    class="btn btn-success btn-xs"><i class="glyphicon glyphicon-ok-circle"></i></a> 
+											<a href="#" data-toggle="tooltip" title="Inactive" onClick="return updateConfigStatus(<%=list_config.getMailConfigId() %>,2,<%=allow_statusChg%>);"
+											    class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-ban-circle"></i></a> 
 											<%}else{ %>
-											<a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateConfigStatus(<%=list_config.getMailConfigId() %>,1,<%=allow_statusChg%>);"
+											<a href="#" data-toggle="tooltip" title="Active" onClick="return updateConfigStatus(<%=list_config.getMailConfigId() %>,1,<%=allow_statusChg%>);"
 											    class="btn btn-success btn-xs"><i class="glyphicon glyphicon-ok-circle"></i></a> 
 											<%} %>
-											<a href="javascript:;" data-toggle="tooltip" title="Delete" onClick="return deleteConfig('<%=list_config.getMailConfigId()%>',<%=allow_delete %>);"
+											<a href="#" data-toggle="tooltip" title="Delete" onClick="return deleteConfig('<%=list_config.getMailConfigId()%>',<%=allow_delete %>);"
 										        class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i></a>
 										</td>
 									</tr>
@@ -123,15 +130,19 @@ $(document).ready(function() {
 		}
 		else if(i == 5)
 		{
-			var select_box = "<select><option value = 'TLS'>TLS</option>" +
-							 "<option value = 'SSL'>SSL</option>" +
-							 "</select>";
+			var select_box = "<select class = 'form-control'>" + 
+				"<option value = ''>All</option>" +
+				"<option value = 'TLS'>TLS</option>" +
+				"<option value = 'SSL'>SSL</option>" +
+			 	"</select>";
 			$(this).html(select_box);
 		}
 		else if(i == 6)
 		{
-			var select_box = "<select><option value = '1'>Active</option>" +
-			 "<option value = '2'>Inactive</option>" +
+			var select_box = "<select class = 'form-control'>" +
+				"<option value = ''>All</option>" +
+				"<option value = 'Active'>Active</option>" +
+			 	"<option value = 'Inactive'>Inactive</option>" +
 			 "</select>";
 			$(this).html(select_box);
 		}
