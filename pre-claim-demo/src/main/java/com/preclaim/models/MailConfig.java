@@ -3,9 +3,10 @@ package com.preclaim.models;
 public class MailConfig {
 
 	private String host;
-	private String port;
+	private int port;
 	private String username;
 	private String password;
+	private String encryptionType;
 	private String receipent;
 	private String subject;
 	private String messageBody;
@@ -13,9 +14,10 @@ public class MailConfig {
 	public MailConfig()
 	{
 		host = "";
-		port = "";
+		port = 0;
 		username = "";
 		password = "";
+		encryptionType = "";
 		receipent = "";
 		subject = "";
 		messageBody = "";
@@ -26,10 +28,10 @@ public class MailConfig {
 	public void setHost(String host) {
 		this.host = host;
 	}
-	public String getPort() {
+	public int getPort() {
 		return port;
 	}
-	public void setPort(String port) {
+	public void setPort(int port) {
 		this.port = port;
 	}
 	public String getUsername() {
@@ -43,6 +45,12 @@ public class MailConfig {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getEncryptionType() {
+		return encryptionType;
+	}
+	public void setEncryptionType(String encryptionType) {
+		this.encryptionType = encryptionType;
 	}
 	public String getReceipent() {
 		return receipent;
@@ -59,8 +67,14 @@ public class MailConfig {
 	public String getMessageBody() {
 		return messageBody;
 	}
-	public void setMesssageBody(String messageBody) {
+	public void setMessageBody(String messageBody) {
 		this.messageBody = messageBody;
+	}
+	@Override
+	public String toString() {
+		return "MailConfig [host=" + host + ", port=" + port + ", username=" + username + ", password=" + password
+				+ ", encryptionType=" + encryptionType + ", receipent=" + receipent + ", subject=" + subject
+				+ ", messageBody=" + messageBody + "]";
 	}
 	
 }

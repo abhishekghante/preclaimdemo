@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.preclaim.config.Config;
 import com.preclaim.dao.LoginDAO;
+import com.preclaim.dao.MailConfigDao;
 import com.preclaim.dao.UserDAO;
 import com.preclaim.models.Login;
 import com.preclaim.models.MailConfig;
@@ -36,6 +37,9 @@ public class LoginController {
 	
 	@Autowired
 	UserDAO userDao;
+	
+	@Autowired
+	MailConfigDao mailConfigDao;
 	
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String login() {
@@ -124,20 +128,11 @@ public class LoginController {
     	if(user.getUser_email().equals(""))
     		return "Email ID not present. Kindly contact system administrator to reset the password";
     	
-    	MailConfig mail = new MailConfig();
-    	mail.setHost("smtp.gmail.com");
-    	mail.setPort("587");
-    	mail.setUsername("mygcptut@gmail.com");
-    	mail.setPassword("123dixon");
+    	MailConfig mail = mailConfigDao.getActiveConfig();
     	mail.setReceipent(user.getUser_email());
     	mail.setSubject("Forgot Password - " + user.getUsername());
         user.setPassword(RandomStringUtils.random(6, true, true)); 
-    	mail.setMesssageBody("Your resetted password is " + user.getPassword());
-    	
-    	mail.setHost("mail.xangarsinfra.com");
-    	mail.setPort("587");
-    	mail.setUsername("xangars.dixons@xangarsinfra.com");
-    	mail.setPassword("D!xon$@123!");
+    	mail.setMessageBody("Your resetted password is " + user.getPassword());
     	
     	String message = dao.sendSMTPMail(mail);
     	

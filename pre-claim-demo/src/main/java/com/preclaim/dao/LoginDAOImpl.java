@@ -109,11 +109,15 @@ public class LoginDAOImpl implements LoginDAO {
 	{
 		Properties properties = System.getProperties();
         properties.put("mail.smtp.auth", "true");
-        //properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.host", mail.getHost());
         properties.put("mail.smtp.port", mail.getPort());
-        properties.put("mail.smtp.socketFactory.port", mail.getPort());
-        properties.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        if(mail.getEncryptionType().equals("SSL"))
+        {
+        	properties.put("mail.smtp.socketFactory.port", mail.getPort());
+        	properties.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        }
+        else if(mail.getEncryptionType().equals("TLS"))
+        	properties.put("mail.smtp.starttls.enable", "true");
         
      // Get the default Session object.
         Session session = Session.getInstance(properties, new Authenticator() {
@@ -156,7 +160,7 @@ public class LoginDAOImpl implements LoginDAO {
         properties.put("mail.imap.host", mail.getHost());
         properties.put("mail.imap.port", mail.getPort());
         
-     // Get the default Session object.
+        // Get the default Session object.
         Session session = Session.getInstance(properties, new Authenticator() {
         	@Override
         	protected PasswordAuthentication getPasswordAuthentication() {

@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.preclaim.models.MailConfig;
 import com.preclaim.models.MailConfigList;
 
 public class MailConfigDaoImpl implements MailConfigDao {
@@ -151,7 +152,30 @@ public class MailConfigDaoImpl implements MailConfigDao {
 	}
 	
 	@Override
-	public MailConfigList getMailConfigById(int mailConfigId) {
+	public MailConfig getActiveConfig() {
+		try
+		{
+			String sql = "SELECT * FROM mail_config where status = 1";
+			return template.query(sql, (ResultSet rs, int rowNum) -> {
+				
+				MailConfig mailConfig = new MailConfig();
+				mailConfig.setUsername(rs.getString("username"));
+				mailConfig.setPassword(rs.getString("password"));
+				mailConfig.setHost(rs.getString("outgoingServer"));
+				mailConfig.setPort(rs.getInt("outgoingPort"));
+				mailConfig.setEncryptionType(rs.getString("encryptionType"));
+				return mailConfig;
+			} ).get(0);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@Override
+	public MailConfigList getMailConfigListById(int mailConfigId) {
 		try
 		{
 			String sql = "SELECT * FROM mail_config where mailConfigId = " + mailConfigId;
