@@ -247,6 +247,82 @@ function updateRegionStatus( regionId, status, checkAuthority ) {
         });
     });
 }
+//DELETE Mail Config
+function deleteConfig( mailConfigId , checkAuthority) {
+	if(!checkAuthority)
+	{
+		toastr.error("Access Denied", "Error");
+		return false;
+	}
+    $( '#small_modal' ).modal();
+    $( '#sm_modal_title' ).html( 'Are you Sure?' );
+    $( '#sm_modal_body' ).html( 'Do you really want to delete this record?' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal' + mailConfigId + '" class="btn green">Yes</button>' );
+    $( '#continuemodal' + mailConfigId ).click( function() {
+        $.ajax({
+            type : 'POST',
+            url  : 'delete',
+            data : { 'mailConfigId' : mailConfigId },
+            beforeSend: function() { 
+                $("#continuemodal" + mailConfigId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal" + mailConfigId).prop('disabled', true);
+            },
+            success : function( msg ) 
+            {
+                $("#continuemodal" + mailConfigId).html('Yes');
+                $("#continuemodal" + mailConfigId).prop('disabled', false);
+                $('#small_modal').modal('hide');
+                if(msg="****")
+	            {
+	               toastr.success("Configuration deleted successfully",'Success');
+	               location.reload();              
+	            }
+	            else
+	                toastr.error(msg,'Error');
+            }
+        });
+    });
+}
+function updateConfigStatus( mailConfigId, status, checkAuthority ) {
+	if(!checkAuthority)
+	{
+		toastr.error("Access Denied", "Error");
+		return false;
+	}
+    if(status == 1){
+        $( '#sm_modal_body' ).html( 'Do you really want to activate?' );
+    }else{
+        $( '#sm_modal_body' ).html( 'Do you really want to deactivate?' );
+    }
+    $( '#small_modal' ).modal();
+    $( '#sm_modal_title' ).html( 'Are you Sure?' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal' + mailConfigId + '" class="btn green">Yes</button>' );
+    $( '#continuemodal' + mailConfigId ).click( function() {
+        $.ajax({
+            type : 'POST',
+            url  : 'updateStatus',
+            data : { 'mailConfigId' : mailConfigId, 'status' : status },
+            beforeSend: function() { 
+                $("#continuemodal" + mailConfigId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal" + mailConfigId).prop('disabled', true);
+            },
+            success : function( msg ) 
+            {
+            	$("#continuemodal" + mailConfigId).html('Yes');
+                $("#continuemodal" + mailConfigId).prop('disabled', false);
+                $('#small_modal').modal('hide');
+                
+	            if (msg="****")
+	            {
+	            	toastr.success("Configuration status updated successfully",'success');
+	                location.reload();
+	            }
+	            else
+	            	toastr.error(msg,Error)
+            }                      
+        });
+    });
+}
 //DELETE Location
 function deleteLocation( locationId , checkAuthority) {
 	if(!checkAuthority)

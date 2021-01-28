@@ -141,6 +141,17 @@ ArrayList<String> user_permission=(ArrayList<String>)session.getAttribute("user_
 			                    </tr>
 			                    <tr>
 			                    	<td>
+			                    		<input type="checkbox" <%if(role_permission.contains("mailConfig")) {%>checked <%} %> name="mailConfig[]" id="mailConfig" class="allPLCheckMConfig" value="mailConfig"> <label for="mailConfig">Mail Config</label>
+			                    	</td>
+			                    	<td>
+			                    		<input type="checkbox" <%if(role_permission.contains("mailConfig/index")) {%>checked <%} %> name="mailConfig[]" id="mailConfig_index" class="indPLCheckMConfig" value="mailConfig/index"> <label for="mailConfig_index">View</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("mailConfig/add")) {%>checked <%} %> name="mailConfig[]" id="mailConfig_add" class="indPLCheckMConfig" value="mailConfig/add"> <label for="mailConfig_add">Add</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("mailConfig/delete")) {%>checked <%} %> name="mailConfig[]" id="mailConfig_delete" class="indPLCheckMConfig" value="mailConfig/delete"> <label for="mailConfig_delete">Delete</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("mailConfig/status")) {%>checked <%} %> name="mailConfig[]" id="mailConfig_status" class="indPLCheckMConfig" value="mailConfig/status"> <label for="mailConfig_status">Approve Status</label>
+			                    	</td>
+			                    </tr>
+			                    <tr>
+			                    	<td>
 			                    		<input type="checkbox" <%if(role_permission.contains("banner")) {%>checked <%} %> name="banner[]" id="banner" class="allPLCheck6" value="banner"> <label for="banner">Banner</label>
 			                    	</td>
 			                    	<td>
@@ -254,6 +265,13 @@ ArrayList<String> user_permission=(ArrayList<String>)session.getAttribute("user_
 			$( '.indPLCheck5' ).prop( "checked", true );
 		} else {
 			$( '.indPLCheck5' ).prop( 'checked', false );
+		}
+	});
+	$( '.allPLCheckMConfig' ).on( 'click', function() {
+		if( $( this ).is( ':checked' ) ) {
+			$( '.indPLCheckMConfig' ).prop( "checked", true );
+		} else {
+			$( '.indPLCheckMConfig' ).prop( 'checked', false );
 		}
 	});
 	$( '.allPLCheck6' ).on( 'click', function() {

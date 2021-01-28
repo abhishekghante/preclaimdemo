@@ -83,5 +83,10 @@
 	
 	<beans:bean id="agencySupervisordao" class="com.preclaim.dao.AgencySupervisorDaoImpl" >
  		<beans:property name="template" ref="jt"/>    
-	</beans:bean>	
+	</beans:bean>
+	
+	<beans:bean id="mailConfigdao" class="com.preclaim.dao.MailConfigDaoImpl" >
+ 		<beans:property name="template" ref="jt"/>    
+	</beans:bean>
+		
 </beans:beans>

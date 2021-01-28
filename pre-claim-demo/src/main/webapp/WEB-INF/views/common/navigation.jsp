@@ -236,6 +236,38 @@ ArrayList<String> user_permission = (ArrayList<String>)session.getAttribute("use
               </ul>
             </li>
             <%} %>
+            <%if(user_permission.contains("mailConfig")){ %>
+            <li class="nav-item <%if(details.getMain_menu().equals("Mail Config")){%>active open<%}%>">
+              <a href="javascript:;" class="nav-link nav-toggle">
+                  <i class="fa fa-inbox" style = "color:white"></i>
+                  <span class="title">Mail Config</span>
+                  <span class="arrow "></span>
+              </a>
+              <ul class="sub-menu">
+                <%if(user_permission.contains("mailConfig/add")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Add Mail Config")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/mailConfig/add" class="nav-link nav-toggle">
+                    <i class="icon-plus"></i> Add Mail Config
+                  </a>
+                </li>
+                 <%} %>
+                 <%if(user_permission.contains("mailConfig/index")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Pending Mail Config")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/mailConfig/pending" class="nav-link nav-toggle">
+                    <i class="icon-clock"></i> Pending Mail Config
+                  </a>
+                </li>
+                <%} %>
+				<%if(user_permission.contains("mailConfig/index")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Active Mail Config")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/mailConfig/active" class="nav-link nav-toggle">
+                    <i class="icon-check"></i> Active Mail Config
+                  </a>
+                </li>
+                <%} %>
+              </ul>
+            </li>
+            <%} %>
             <%if(user_permission.contains("channels")){ %>
             <li class="nav-item <%if(details.getMain_menu().equals("Channels")){%>active open<%}%>">
               <a href="javascript:;" class="nav-link nav-toggle">

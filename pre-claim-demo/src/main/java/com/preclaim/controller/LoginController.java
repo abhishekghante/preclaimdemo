@@ -1,20 +1,15 @@
 package com.preclaim.controller;
 
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import javax.mail.*;
-import javax.mail.internet.*;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.preclaim.config.Config;
 import com.preclaim.dao.LoginDAO;
 import com.preclaim.dao.UserDAO;
 import com.preclaim.models.Login;
+import com.preclaim.models.MailConfig;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.UserDetails;
-import com.preclaim.config.Config;
 
 @Controller
 public class LoginController {
@@ -128,49 +124,27 @@ public class LoginController {
     	if(user.getUser_email().equals(""))
     		return "Email ID not present. Kindly contact system administrator to reset the password";
     	
-    	String to = user.getUser_email();
-        String from = "mygcptut@gmail.com";
-        String frompassword = "123dixon";
-        Properties properties = System.getProperties();
-        //properties.setProperty("mail.smtp.host", host);
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587");
-        
-        // Get the default Session object.
-        Session session = Session.getInstance(properties, new Authenticator() {
-        	@Override
-        	protected PasswordAuthentication getPasswordAuthentication() {
-        		return new PasswordAuthentication(from, frompassword);
-        	}
-        });
-
-        try {
-           MimeMessage message = new MimeMessage(session);
-           message.setFrom(new InternetAddress(from));
-           message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
-           message.setSubject("Forgot Password - " + username);
-
-           String password = RandomStringUtils.random(6, true, true);
-           user.setPassword(password);
-           BodyPart messageBodyPart = new MimeBodyPart();
-           messageBodyPart.setText("Your resetted password is " + password);
-           
-           Multipart multipart = new MimeMultipart();
-           multipart.addBodyPart(messageBodyPart);
-           // Send the complete message parts
-           message.setContent(multipart);
-
-           // Send message
-           Transport.send(message);
-           dao.updatePassword(username, user.getPassword());
-           return "****";
-        } 
-        catch (MessagingException mex) {
-        	mex.printStackTrace();
-           return "Error resetting password. Kindly contact system administrator";
-        }
+    	MailConfig mail = new MailConfig();
+    	mail.setHost("smtp.gmail.com");
+    	mail.setPort("587");
+    	mail.setUsername("mygcptut@gmail.com");
+    	mail.setPassword("123dixon");
+    	mail.setReceipent(user.getUser_email());
+    	mail.setSubject("Forgot Password - " + user.getUsername());
+        user.setPassword(RandomStringUtils.random(6, true, true)); 
+    	mail.setMesssageBody("Your resetted password is " + user.getPassword());
+    	
+    	mail.setHost("mail.xangarsinfra.com");
+    	mail.setPort("587");
+    	mail.setUsername("xangars.dixons@xangarsinfra.com");
+    	mail.setPassword("D!xon$@123!");
+    	
+    	String message = dao.sendSMTPMail(mail);
+    	
+    	if(!message.equals("****"))
+    		return message;
+    	message = dao.updatePassword(username, user.getPassword()); 
+    	return message;
      }
     
 }
