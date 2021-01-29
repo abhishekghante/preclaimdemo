@@ -56,7 +56,7 @@ public class MailConfigController{
     	details.setSub_menu2("Manage Mail Config");
     	details.setSub_menu2_path("/mailConfig/pendingConfig");
 		session.setAttribute("ScreenDetails", details);
-		session.setAttribute("editMailConfig", mailConfigDao.getMailConfigById(mailConfigId));
+		session.setAttribute("editMailConfig", mailConfigDao.getMailConfigListById(mailConfigId));
 		return "common/templatecontent";
 	}
 	@RequestMapping(value = "/pending",method = RequestMethod.GET)
