@@ -11,60 +11,6 @@ boolean allow_delete = user_permission.contains("mailConfig/delete");
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
-<!-- <div class="row"> -->
-<!-- 	<div class="col-md-12 col-sm-12"> -->
-<!-- 		<div class="portlet box"> -->
-<!-- 			<div class="portlet-title"> -->
-<!-- 				<div class="caption"> -->
-<!-- 					<i class="icon-users font-green-sharp"></i> -->
-<!-- 					<span class="caption-subject font-green-sharp sbold"> -->
-<%-- 						<%= region == null ? "Add " : "Update " %> --%>
-<!-- 						Region -->
-<!-- 					</span> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 		<div class="portlet light bordered"> -->
-<!-- 			<div class="portlet-body"> -->
-<!-- 				<div id="message_account"></div> -->
-<!-- 				<form novalidate id="add_region_form" role="form" method="post" -->
-<!-- 					class="form-horizontal"> -->
-<!-- 					<div class="row"> -->
-<!-- 						<div class="col-md-6"> -->
-<!-- 							<div class="form-group"> -->
-<!-- 								<label class="col-md-4 control-label" for="regionName">Region -->
-<!-- 									Name <span class="text-danger">*</span> -->
-<!-- 								</label> -->
-<!-- 								<div class="col-md-8"> -->
-<!-- 									<input type="text" required id="regionName" name="regionName"  -->
-<!-- 										class="form-control" placeholder="Region Name" -->
-<%-- 										value ="<%= region == null ? "" : region.getRegionName().trim() %>"> --%>
-<!-- 								</div> -->
-<!-- 							</div> -->
-<!-- 							<div class="form-group"> -->
-<!-- 								<div class="col-md-offset-4 col-md-8"> -->
-<%-- 								<% if(region != null){ %> --%>
-<!-- 									<input type="hidden" id="regionId" name="regionId" -->
-<%-- 										value = "<%= region.getRegionId()%>"> --%>
-<!-- 									<button class="btn btn-info" id="editregionsubmit" -->
-<!-- 										onClick="return updateRegion();" type="button">Update</button> -->
-<%-- 									<a href="${pageContext.request.contextPath}/region/pending_region" --%>
-<!-- 										class="btn btn-danger">Back</a> -->
-<%-- 									<% }else{ %>  --%>
-<!-- 									<button class="btn btn-info" id="addregionsubmit" -->
-<!-- 										onClick="return addRegion();" type="button">Add -->
-<!-- 										Region</button> -->
-<!-- 									<button class="btn btn-danger" type="reset" value="">Clear</button> -->
-<%-- 									<% } %>  --%>
-<!-- 								</div> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 				</form> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
-<!-- </div> -->
 <div class="row">
 	<div class="col-xs-12 col-sm-12">
 		<div class="portlet box">
@@ -170,16 +116,21 @@ $(document).ready(function() {
 		{										
 			$(this).html('<input type="text" class="form-control" placeholder="" />');										
 		}
-		else if (i == 5)
+		else if(i == 5)
 		{
-			var select_box = "<select class = 'form-control'><option value = 'TLS'>TLS</option>" +
-							 "<option value = 'SSL'>SSL</option></select>";
+			var select_box = "<select class = 'form-control'>" + 
+				"<option value = ''>All</option>" +
+				"<option value = 'TLS'>TLS</option>" +
+				"<option value = 'SSL'>SSL</option>" +
+			 	"</select>";
 			$(this).html(select_box);
 		}
 		else if(i == 6)
 		{
-			var select_box = "<select class = 'form-control'><option value = '1'>Active</option>" +
-			 "<option value = '2'>Inactive</option>" +
+			var select_box = "<select class = 'form-control'>" +
+				"<option value = ''>All</option>" +
+				"<option value = 'Active'>Active</option>" +
+			 	"<option value = 'Inactive'>Inactive</option>" +
 			 "</select>";
 			$(this).html(select_box);
 		}
@@ -209,82 +160,4 @@ $(document).ready(function() {
 	});
 				
 });
-// function addRegion() {
-<%-- 	<%if(!user_permission.contains("regions/add")){%> --%>
-// 		toastr.error("Access Denied","Error");
-// 		return false;
-<%-- 	<%}%> --%>
-// 	var regionName = $('#add_region_form #regionName').val();
-// 	if (regionName == '') {
-// 		toastr.error('Region Name Cannot be empty', 'Error');
-// 		return false;
-// 	}
-// 	var formdata = {'regionName' : regionName};
-// 	$.ajax({		
-// 		type : "POST",
-// 		url : '${pageContext.request.contextPath}/region/addRegion',
-// 		data : formdata,
-// 		beforeSend : function() {
-// 			$("#addregionsubmit")
-// 					.html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
-// 			$("#addregionsubmit").prop('disabled', true);
-// 		},
-// 		success : function(data) {
-// 			if (data == "****") {
-// 				$("#addregionsubmit").html('Add Region');
-// 				$("#addregionsubmit").prop('disabled', false);
-// 				toastr.success('Region Added successfully.',
-// 						'Success');
-// 				$('#add_region_form #regionName').val('');
-// 				location.reload();
-// 			} else {
-// 				toastr.error(data, 'Error');
-// 				$("#addregionsubmit").html('Add Region');
-// 				$("#addregionsubmit").prop('disabled', false);
-// 			}
-// 		}
-// 	});
-// }
-
-// function updateRegion() {
-<%-- 	<%if(!user_permission.contains("regions/add")){%> --%>
-// 		toastr.error("Access Denied","Error");
-// 		return false;
-<%-- 	<%}%> --%>
-// 	var table2 = $('#pending_region_list').DataTable();
-// 	var regionName = $('#add_region_form #regionName').val();
-// 	var regionId = $('#add_region_form #regionId').val();
-// 	if (regionName == '') {
-// 		toastr.error('Region Name Cannot be empty', 'Error');
-// 		return false;
-// 	}
-// 	var formdata = {'regionName' : regionName, 'regionId' : regionId};
-// 	$.ajax({
-// 		type : "POST",
-// 		url : '${pageContext.request.contextPath}/region/updateRegion',
-// 		data : formdata,
-// 		beforeSend : function() {
-// 			$("#editregionsubmit")
-// 					.html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
-// 			$("#editregionsubmit").prop('disabled', true);
-// 		},
-// 		success : function(data) {
-// 			$("#editregionsubmit").html('Update');
-// 			$("#editregionsubmit").prop('disabled', true);
-// 			if (data == "****") 
-// 			{
-// 				$("#editregionsubmit").html('Update');
-// 				$("#editregionsubmit").prop('disabled', false);
-// 				toastr.success('Region Updated successfully.', 'Success');
-// 				location.href ="${pageContext.request.contextPath}/region/pending_region";
-// 			} 
-// 			else 
-// 			{
-// 				toastr.error(data, 'Error');
-// 				$("#editregionsubmit").html('Update');
-// 				$("#editregionsubmit").prop('disabled', false);
-// 			}
-// 		}
-// 	});
-// }
 </script>
