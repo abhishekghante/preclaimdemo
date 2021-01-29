@@ -129,6 +129,8 @@ public class LoginController {
     		return "Email ID not present. Kindly contact system administrator to reset the password";
     	
     	MailConfig mail = mailConfigDao.getActiveConfig();
+    	if(mail == null)
+    		return "Mail ID not setup. Kindly contact system administrator";
     	mail.setReceipent(user.getUser_email());
     	mail.setSubject("Forgot Password - " + user.getUsername());
         user.setPassword(RandomStringUtils.random(6, true, true)); 
