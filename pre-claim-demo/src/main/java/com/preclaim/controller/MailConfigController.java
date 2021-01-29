@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,8 +43,8 @@ public class MailConfigController{
 		return "common/templatecontent";
 	}
 	
-	@RequestMapping(value = "/edit",method = RequestMethod.GET)
-	public String edit(@RequestParam("mailConfigId") int mailConfigId, HttpSession session) {
+	@RequestMapping(value = "/edit/{mailConfigId}",method = RequestMethod.GET)
+	public String edit(@PathVariable("mailConfigId") int mailConfigId, HttpSession session) {
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if(user == null)
 			return "common/login";
@@ -56,7 +57,7 @@ public class MailConfigController{
     	details.setSub_menu2("Manage Mail Config");
     	details.setSub_menu2_path("/mailConfig/pendingConfig");
 		session.setAttribute("ScreenDetails", details);
-		session.setAttribute("editMailConfig", mailConfigDao.getMailConfigById(mailConfigId));
+		session.setAttribute("editMailConfig", mailConfigDao.getMailConfigListById(mailConfigId));
 		return "common/templatecontent";
 	}
 	@RequestMapping(value = "/pending",method = RequestMethod.GET)

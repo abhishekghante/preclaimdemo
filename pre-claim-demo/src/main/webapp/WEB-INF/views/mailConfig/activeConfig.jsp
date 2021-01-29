@@ -86,7 +86,7 @@ boolean allow_delete = user_permission.contains("mailConfig/delete");
 										<%} %>
 										</td>
 										<td>
-										   <a href="${pageContext.request.contextPath}/mailConfig/edit?mailConfigId=<%=list_config.getMailConfigId() %>" 										   										   
+										   <a href="${pageContext.request.contextPath}/mailConfig/edit/<%=list_config.getMailConfigId() %>" 										   										   
 										   		data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
 										   		<i class="glyphicon glyphicon-edit"></i>
 									   		</a>

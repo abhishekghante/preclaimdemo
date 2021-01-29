@@ -90,7 +90,7 @@ session.removeAttribute("editMailConfig");
         <!-- /.box-body -->
         <div class="box-footer">
           <div class="col-md-offset-2 col-md-10">
-          	<input type = "hidden" name = "mailConfigId" id = "mailConfigId">
+          	<input type = "hidden" name = "mailConfigId" id = "mailConfigId" value = "<%= mailConfig.getMailConfigId()%>">
             <button class="btn btn-info" id="editconfigsubmit" onClick="return validateConfig();" 
             	type="button">Edit Mail Config</button>
             <button class="btn btn-danger" type="reset">Clear</button>
@@ -105,8 +105,8 @@ function validateConfig()
 {
 	var username = $( '#edit_config_form #username').val(); 
 	var password = $( '#edit_config_form #password').val();
-	var outgoingserver = $( '#edit_config_form #outgoingserver').val();
-	var outgoingport = $( '#edit_config_form #outgoingPort').val();
+	var outgoingServer = $( '#edit_config_form #outgoingServer').val();
+	var outgoingPort = $( '#edit_config_form #outgoingPort').val();
 	var encryptionType = $( '#edit_config_form #encryptionType').val();
 	var mailConfigId =  $( '#edit_config_form #mailConfigId').val();
 	$("#username").removeClass("has-error-2");
@@ -162,8 +162,7 @@ function validateConfig()
 		url : '${pageContext.request.contextPath}/mailConfig/update',
 		data : formdata,
 		beforeSend : function() {
-			$("#editconfigsubmit")
-					.html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+			$("#editconfigsubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
 			$("#editconfigsubmit").prop('disabled', true);
 		},
 		success : function(data) {

@@ -89,7 +89,7 @@ public class MailConfigDaoImpl implements MailConfigDao {
 		try
 		{
 			String sql = "UPDATE mail_config SET username = ?, password = ?, outgoingServer = ?, "
-					+ "outgoingPort = ?, encryptionType = ?, updatedBy = ?, updated_on = now() where"
+					+ "outgoingPort = ?, encryptionType = ?, updatedBy = ?, updated_on = now() where "
 					+ "mailConfigId = ?";
 			template.update(sql, mailConfig.getUsername(), mailConfig.getPassword(), 
 					mailConfig.getOutgoingServer(), mailConfig.getOutgoingPort(), mailConfig.getEncryptionType(),
