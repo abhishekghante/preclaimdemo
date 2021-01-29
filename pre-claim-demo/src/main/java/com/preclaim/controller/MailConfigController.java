@@ -107,29 +107,21 @@ public class MailConfigController{
 	}
 	
 	@RequestMapping(value = "/addMailConfig",method = RequestMethod.POST)
-	public String addmailConfig(@ModelAttribute("mailconfig") MailConfigList mailConfig, HttpSession session) 
+	public @ResponseBody String addmailConfig(HttpServletRequest request,HttpSession session) 
 	{	
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if(user == null)
 			return "common/login";
+		MailConfigList mailConfig = new MailConfigList();
+		mailConfig.setUsername(request.getParameter("username"));
+		mailConfig.setPassword(request.getParameter("password"));
+		mailConfig.setOutgoingServer(request.getParameter("outgoingServer"));
+		mailConfig.setOutgoingPort(Integer.parseInt(request.getParameter("outgoingPort")));
+		mailConfig.setEncryptionType(request.getParameter("encryptionType"));
 		mailConfig.setCreatedBy(user.getUsername());
 		String message = mailConfigDao.add(mailConfig);		
 		userDao.activity_log("MAIL", "", "ADD", user.getUsername());
-		
-		session.removeAttribute("ScreenDetails");
-		ScreenDetails details=new ScreenDetails();
-		details.setScreen_name("../mailConfig/pendingConfig.jsp");
-		details.setScreen_title("Pending Mail Config");
-		details.setMain_menu("Mail Config");
-		details.setSub_menu1("Pending Mail Config");
-		if(message.equals("****"))
-			details.setSuccess_message1("Configuration added successfully");
-		else
-			details.setError_message1(message);
-		session.setAttribute("ScreenDetails", details);
-		session.setAttribute("pendingConfig", mailConfigDao.getMailConfigList(0));
-		
-		return "common/templatecontent";
+		return message;
 	}
 	
 	@RequestMapping(value = "/update",method = RequestMethod.POST)

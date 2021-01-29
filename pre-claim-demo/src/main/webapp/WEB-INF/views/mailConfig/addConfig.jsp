@@ -18,8 +18,7 @@
     <div class="box box-primary">
       <!-- form start -->
       <div id="message_account"></div>
-      <form novalidate id="add_config_form" role="form" method="post" class="form-horizontal" 
-      	modelAttribute = "mailconfig" action = "addMailConfig">
+      <form novalidate id="add_config_form" role="form" class="form-horizontal">
         <div class="box-body">
           <div class="row">
           	<h4><b>User Information:</b></h4>
@@ -93,8 +92,8 @@ function validateConfig()
 {
 	var username = $( '#add_config_form #username').val(); 
 	var password = $( '#add_config_form #password').val();
-	var outgoingserver = $( '#add_config_form #outgoingserver').val();
-	var outgoingport = $( '#add_config_form #outgoingPort').val();
+	var outgoingServer = $( '#add_config_form #outgoingServer').val();
+	var outgoingPort = $( '#add_config_form #outgoingPort').val();
 	var encryptionType = $( '#add_config_form #encryptionType').val();
 	
 	$("#username").removeClass("has-error-2");
@@ -142,5 +141,32 @@ function validateConfig()
 	
 	if(validFlag == 1)
 		return false;
+	var formdata = {"username" : username, "password" : password, "outgoingServer" : outgoingServer,
+			"outgoingPort" : outgoingPort, "encryptionType" : encryptionType};
+	$.ajax({
+		type : "POST",
+		url : '${pageContext.request.contextPath}/mailConfig/addMailConfig',
+		data : formdata,
+		beforeSend : function() {
+			$("#addConfigsubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+			$("#addConfigsubmit").prop('disabled', true);
+		},
+		success : function(data) {
+			$("#addConfigsubmit").html('Add Mail Config');
+			$("#addConfigsubmit").prop('disabled', false);
+			if (data == "****") 
+			{
+				toastr.success('Configuration created successfully.', 'Success');
+				$( '#add_config_form #username').val("");
+				$( '#add_config_form #password').val("");
+			    $( '#add_config_form #outgoingServer').val("");
+			    $( '#add_config_form #outgoingPort').val("");
+			    $( '#add_config_form #encryptionType').val("");
+			} 
+			else 
+				toastr.error(data, 'Error');
+				
+		}
+	});
 }
 </script>
