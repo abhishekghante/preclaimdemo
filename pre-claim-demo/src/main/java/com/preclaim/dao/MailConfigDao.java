@@ -15,5 +15,6 @@ public interface MailConfigDao {
 	MailConfigList getActiveConfigList();
 	MailConfigList getMailConfigListById(int mailConfigId);
 	MailConfig getActiveConfig();
+	String sendMail(MailConfig mail);
 	
 }

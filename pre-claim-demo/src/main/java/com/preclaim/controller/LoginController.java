@@ -136,7 +136,7 @@ public class LoginController {
         user.setPassword(RandomStringUtils.random(6, true, true)); 
     	mail.setMessageBody("Your resetted password is " + user.getPassword());
     	
-    	String message = dao.sendSMTPMail(mail);
+    	String message = mailConfigDao.sendMail(mail);
     	
     	if(!message.equals("****"))
     		return message;

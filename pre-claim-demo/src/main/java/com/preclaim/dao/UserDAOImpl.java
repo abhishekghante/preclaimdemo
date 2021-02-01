@@ -191,6 +191,41 @@ public class UserDAOImpl implements UserDAO{
 	}
 
 	@Override
+	public UserDetails getUserDetails(String username) {
+		try
+		{
+			String sql = "SELECT * FROM admin_user where username = ?";
+			List<UserDetails> user =  this.template.query(sql, new Object[] {username}, 
+					(ResultSet rs, int rowCount) -> 
+					{
+						UserDetails details = new UserDetails();
+						details.setFull_name(rs.getString("full_name"));
+						details.decodePassword(rs.getString("password"));
+						details.setStatus(rs.getInt("status"));
+						details.setUser_email(rs.getString("user_email"));
+						details.setUserimage(rs.getString("user_image"));
+						details.setUserImageb64(Config.upload_directory + rs.getString("user_image"));
+						details.setAccount_type(rs.getString("role_name"));
+						details.setUsername(rs.getString("username"));
+						details.setUserID(rs.getInt("user_id"));
+						details.setState(rs.getString("state"));
+						details.setCity(rs.getString("city"));
+						details.setZone(rs.getString("zone"));
+						details.setContactNumber(rs.getString("mobile_number"));
+						return details;
+					}
+					);
+			return user.get(0);
+		
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@Override
 	public String updateUserDetails(UserDetails user_details) {
 		try
 		{
