@@ -61,24 +61,6 @@ ScreenDetails details = (ScreenDetails) session.getAttribute("ScreenDetails");
         <% 
         } %>
         </div>
-        <div class="row">
-        <%
-        if(!details.getError_message1().equals("")) { %>
-            <div class="col-xs-12 col-sm-12 margin_t10">
-                <div class="alert alert-danger">
-                    <%=details.getError_message2()%>
-                </div>
-            </div>
-        <%}
-        if(!details.getError_message1().equals("")) { %>
-            <div class="col-xs-12 col-sm-12 margin_t10">
-                <div class="alert alert-success">
-                    <%=details.getSuccess_message2()%>
-                </div>
-            </div>
-        <% 
-        } %>
-        </div>
         <jsp:include page="<%=details.getScreen_name() %>"/>
     </div> 
     <!-- END CONTENT BODY -->

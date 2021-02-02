@@ -121,6 +121,17 @@ public class IntimationTypeDaoImpl implements IntimationTypeDao {
 				}
 				);
 	}
+
+	@Override
+	public List<String> getActiveIntimationTypeStringList() {
+		String sql = "SELECT * FROM intimation_type where status = 1";
+		return template.query(sql,
+				(ResultSet rs, int rowNum) ->
+				{				
+					return rs.getString("intimationTypeName");
+				}
+				);
+	}
 	
 
 }

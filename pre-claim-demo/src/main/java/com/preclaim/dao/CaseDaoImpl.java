@@ -2,13 +2,17 @@ package com.preclaim.dao;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -23,8 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.preclaim.config.Config;
+import com.preclaim.config.CustomMethods;
 import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.CaseDetails;
+import com.preclaim.models.Location;
 
 public class CaseDaoImpl implements CaseDao {
 
@@ -34,17 +40,26 @@ public class CaseDaoImpl implements CaseDao {
 	@Autowired
 	JdbcTemplate template;
 	
+	@Autowired
+	InvestigationTypeDao investigationDao;
+	
+	@Autowired
+	IntimationTypeDao intimationTypeDao;
+	
+	@Autowired
+	LocationDao locationDao;
+	
 	public void setTemplate(JdbcTemplate template) {
 		this.template = template;
 	}
 
 	@Override
-	public String addBulkUpload(String filename) {
+	public String addBulkUpload(String filename, String username) {
 		
 		String extension = StringUtils.getFilenameExtension(filename).toLowerCase();
 		String error ="";
 		if(extension.equals("xlsx"))
-			error = readCaseXlsx(filename);
+			error = readCaseXlsx(filename, username);
 		return error;
 	}
 	
@@ -204,8 +219,11 @@ public class CaseDaoImpl implements CaseDao {
 	}
 	
 	@Transactional
-	public String readCaseXlsx(String filename) {
+	public String readCaseXlsx(String filename, String username) {
 		try {
+			File error_file = new File(Config.upload_directory + "error_log.xlsx");
+			if(error_file.exists())
+				error_file.delete();
 			File file = new File(Config.upload_directory + filename);
 			//File not found error won't occur
 			List<CaseDetails> caseList = new ArrayList<CaseDetails>();
@@ -214,90 +232,184 @@ public class CaseDaoImpl implements CaseDao {
 			XSSFSheet sheet = wb.getSheetAt(0);
 			Iterator<Row> itr = sheet.iterator();    //iterating over excel file  		
 			itr.hasNext();
-			itr.next();
-//			String error_message = sanityCheck(itr.next());
-//			if(!error_message.equals("****"))
-//			{
-//				wb.close();
-//				return error_message;
-//			}
+			String error_message = sanityCheck(itr.next());
+			if(!error_message.equals("****"))
+			{
+				wb.close();
+				return error_message;
+			}
+			List<String> investigation_list = investigationDao.getActiveInvestigationStringList();
+			List<String> intimation_list = intimationTypeDao.getActiveIntimationTypeStringList();
+			List<Location> location_list = locationDao.getActiveLocationList();
+			Map<CaseDetails, String> error_case = new HashMap<CaseDetails, String>();
 			while (itr.hasNext())                 
 			{  
-				//Skipping Header String
+				error_message = "";
+				String intimationType = "";	
 				Row row = itr.next();
 				Iterator<Cell> cellIterator = row.cellIterator();   //iterating over each column  
 				CaseDetails caseDetails = new CaseDetails();
 				Cell cell;
 				if(cellIterator.hasNext())
 				{
-					cell = cellIterator.next();  					
-					caseDetails.setPolicyNumber(readCellStringValue(cell));
+					cell = cellIterator.next();
+					caseDetails.setPolicyNumber(readCellStringValue(cell).toUpperCase());
+					if(!caseDetails.getPolicyNumber().startsWith("C") || 
+							caseDetails.getPolicyNumber().startsWith("U"))
+						error_message += "Invalid Policy Number, ";
 				}
 				if(cellIterator.hasNext())
 				{
 					cell = cellIterator.next();
 					caseDetails.setInvestigationCategory(readCellStringValue(cell));
-				}
-				if(cellIterator.hasNext())
-				{
-					cell = cellIterator.next();  					
-					caseDetails.setInsuredName(readCellStringValue(cell));
-				}
-				if(cellIterator.hasNext())
-				{
-					cell = cellIterator.next();  					
-					caseDetails.setInsuredDOD(readCellStringValue(cell));
-				}
-				if(cellIterator.hasNext())
-				{
-					cell = cellIterator.next();  					
-					caseDetails.setInsuredDOB(readCellStringValue(cell));
-				}
-				if(cellIterator.hasNext())
-				{
-					cell = cellIterator.next();
-					caseDetails.setSumAssured(readCellIntValue(cell));
+					if(!investigation_list.contains(caseDetails.getInvestigationCategory()))
+						error_message += "Invalid Investigation Type, ";
 				}
 				if(cellIterator.hasNext())
 				{
 					cell = cellIterator.next();
 					caseDetails.setIntimationType(readCellStringValue(cell));
+					if(!intimation_list.contains(caseDetails.getIntimationType()))
+						error_message += "Invalid Intimation Type";
+					intimationType = caseDetails.getIntimationType().toUpperCase();
 				}
 				if(cellIterator.hasNext())
 				{
-					cell = cellIterator.next();  					
+					cell = cellIterator.next();
+					caseDetails.setInsuredName(readCellStringValue(cell));
+					if(caseDetails.getInsuredName().equals(""))
+					{
+						
+						if(!(intimationType.equals("PIV") || intimationType.equals("PIRV") || 
+								intimationType.equals("LIVE")))
+							error_message += "Insured Name is mandatory, ";
+					}
+				}
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();
+					try
+					{	
+						caseDetails.setInsuredDOD(readCellDateValue(cell));
+					}
+					catch(Exception ex)
+					{
+						if(!(intimationType.equals("PIV") || intimationType.equals("PIRV") || 
+								intimationType.equals("LIVE")))
+							error_message += "Insured DOD is mandatory, ";
+					}
+				}
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();
+					try
+					{	
+						caseDetails.setInsuredDOB(readCellDateValue(cell));
+					}
+					catch(Exception e)
+					{
+						if(!(intimationType.equals("PIV") || intimationType.equals("PIRV") || 
+								intimationType.equals("LIVE")))
+							error_message += "Insured DOB is mandatory";
+					}
+				}
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();
+					try 
+					{
+						caseDetails.setSumAssured(readCellIntValue(cell));
+					}
+					catch(Exception e)
+					{
+						error_message += "Invalid Sum Assured";
+						caseDetails.setSumAssured(0);
+					}
+				}
+				if(cellIterator.hasNext())
+				{
+					cell = cellIterator.next();
 					caseDetails.setClaimantCity(readCellStringValue(cell));
+					for(Location list: location_list)
+					{
+						if(caseDetails.getClaimantCity().equalsIgnoreCase(list.getCity()))
+						{
+							caseDetails.setClaimantState(list.getState());
+							caseDetails.setClaimantZone(list.getZone());
+							break;
+						}
+					}
+					if(caseDetails.getClaimantState().equals(""))
+						error_message = "City not present in database";
 				}
 				if(cellIterator.hasNext())
 				{
 					cell = cellIterator.next();  					
-					caseDetails.setNominee_name(readCellStringValue(cell));;
+					caseDetails.setNominee_name(readCellStringValue(cell));
+					if(caseDetails.getNominee_name().equals(""))
+					{
+						
+						if(!(intimationType.equals("PIV") || intimationType.equals("PIRV") || 
+								intimationType.equals("LIVE")))
+							error_message += "Nominee Name is mandatory, ";
+					}
 				}				
 				if(cellIterator.hasNext())
 				{
-					cell = cellIterator.next();  					
-					caseDetails.setNomineeContactNumber(readCellStringValue(cell));
+					cell = cellIterator.next();
+					try
+					{
+						caseDetails.setNomineeContactNumber(String.valueOf(readCellIntValue(cell)));
+					}
+					catch(Exception e) {}
 				}
 				if(cellIterator.hasNext())
 				{
-					cell = cellIterator.next();  					
+					cell = cellIterator.next();
 					caseDetails.setNominee_address(readCellStringValue(cell));
+					if(caseDetails.getNominee_address().equals(""))
+					{
+						
+						if(!(intimationType.equals("PIV") || intimationType.equals("PIRV") || 
+								intimationType.equals("LIVE")))
+							error_message += "Nominee Address is mandatory, ";
+					}
 				}
 				if(cellIterator.hasNext())
 				{
-					cell = cellIterator.next();  					
+					cell = cellIterator.next();
 					caseDetails.setInsured_address(readCellStringValue(cell));
+					if(caseDetails.getInsured_address().equals(""))
+					{
+						
+						if(!intimationType.equals("CDP"))
+							error_message += "Insured Address is mandatory, ";
+					}
 				}
-				caseList.add(caseDetails);
+				if(error_message.equals(""))
+				{
+					caseDetails.setCaseStatus("Open");
+					caseDetails.setCaseSubstatus("PA");
+					caseList.add(caseDetails);
+				}
+				else
+				{
+					error_message = error_message.trim().substring(0, error_message.length());
+					error_case.put(caseDetails, error_message);
+				}
 			}
 			wb.close();
+			//Error File
+			writeErrorCase(error_case);
+			
 			String sql = "INSERT INTO case_lists(policyNumber, investigationCategory, insuredName, insuredDOD, insuredDOB, "
 					+ "sumAssured, intimationType, claimantCity, claimantZone, claimantState, caseStatus, caseSubStatus, "
 					+ "nominee_name, nomineeContactNumber, nominee_address, insured_address, "
 					+ "supervisor, supervisor2managerRemarks, supervisor2investigatorRemarks, regionalManager2supervisorRemarks, "
 					+ "investigator, investigator2supervisorRemarks, underwriter, underwriter2regionalManagerRemarks, "
 					+ "talicManager, talicManager2underwriteRemarks, createdBy, createdDate, updatedDate, updatedBy) "
-					+ "VALUES(?, ?, ?, ?, ?, 1, 1, ?, ?, ?, now(), '0000-00-00 00:00:00', 0)";
+					+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '', '', '', '', '', '', '', '', '', '', ?, now(), "
+					+ "'0000-00-00 00:00:00', 0)";
 			
 			template.batchUpdate(sql,caseList,5,
 	                new ParameterizedPreparedStatementSetter<CaseDetails>() {
@@ -319,6 +431,7 @@ public class CaseDaoImpl implements CaseDao {
 	                    	ps.setString(14, caseDetails.getNomineeContactNumber());
 	                    	ps.setString(15,  caseDetails.getNominee_address());
 	                    	ps.setString(16, caseDetails.getInsured_address());
+	                    	ps.setString(17, username);
 	                    }
 	                });
 			return "****";
@@ -335,9 +448,9 @@ public class CaseDaoImpl implements CaseDao {
 		switch (cell.getCellType())               
 		{  
 			case STRING:  
-				return cell.getStringCellValue();  
+				return cell.getStringCellValue().trim();  
 			case NUMERIC:    //field that represents number cell type  
-				return String.valueOf(cell.getNumericCellValue());
+				return String.valueOf(cell.getNumericCellValue()).trim();
 			default:
 				return "";
 		}
@@ -345,15 +458,8 @@ public class CaseDaoImpl implements CaseDao {
 	
 	public String readCellDateValue(Cell cell)
 	{
-		try
-		{
-			Date date = (Date) cell.getDateCellValue();
-			return date.toString();
-		}
-		catch(Exception ex)
-		{
-			return "";
-		}
+			Date date = Date.valueOf(cell.getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			return date.toString();		
 	}
 	
 	public int readCellIntValue(Cell cell)
@@ -373,10 +479,12 @@ public class CaseDaoImpl implements CaseDao {
 	{
 		Iterator<Cell> cellIterator = row.cellIterator();   //iterating over each column 
 		Cell cell;
-		if(cellIterator.hasNext())
+		ArrayList<String> headerList = CustomMethods.importCaseHeader();
+		while(cellIterator.hasNext())
 		{
 			cell = cellIterator.next();
-			//if(readCellStringValue(cell).equals(""))
+			if(!headerList.contains(readCellStringValue(cell).trim()))
+				return "Invalid File Format";
 		}
 		return "****";
 	}
@@ -397,6 +505,84 @@ public class CaseDaoImpl implements CaseDao {
 		 }
 	
 		return "****";
+	}
+	
+	private void writeErrorCase(Map<CaseDetails,String> error_case)
+	{
+		//File error_file = new File(Config.upload_directory + "error_log.xlsx");
+		try 
+		{
+			XSSFWorkbook error_wb = new XSSFWorkbook();
+			XSSFSheet error_sheet = error_wb.createSheet("Error Log");
+			int rowNum = 1;
+			Row newRow = error_sheet.createRow(rowNum);
+			ArrayList<String> headerList = CustomMethods.importCaseHeader();
+			int colNum = 0;
+			for(String header: headerList)
+			{
+				Cell cell = newRow.createCell(colNum);
+				cell.setCellValue(header);
+				colNum++;
+			}
+			Cell cell = newRow.createCell(colNum);
+			colNum++;
+			cell.setCellValue("Remarks");
+			rowNum++;
+			newRow = error_sheet.createRow(rowNum);
+			for(Map.Entry<CaseDetails, String> entry: error_case.entrySet())
+			{
+				colNum = 0;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getPolicyNumber());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getInvestigationCategory());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getIntimationType());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getInsuredName());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getInsuredDOD());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getInsuredDOB());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getSumAssured());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getClaimantCity());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getNominee_name());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getNomineeContactNumber());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getNominee_address());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getInsured_address());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getValue());
+				rowNum++;
+				newRow = error_sheet.createRow(rowNum);
+			}
+			FileOutputStream outputStream = new FileOutputStream(Config.upload_directory + "error_log.xlsx");
+			error_wb.write(outputStream);
+			error_wb.close();
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return;
 	}
 	
 }

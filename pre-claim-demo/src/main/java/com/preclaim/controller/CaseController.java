@@ -179,9 +179,12 @@ public class CaseController {
 	    		Path path = Paths.get(Config.upload_directory + filename);
 	    		System.out.println("Entered");
 				Files.write(path, temp);
-				caseDao.addBulkUpload(filename);
-				details.setSuccess_message1("File uploaded successfully");		
-			 	userDao.activity_log("RCUTEAM", "Excel", "BULKUPLOAD", user.getUsername());	
+				String message = caseDao.addBulkUpload(filename, user.getUsername());
+				if(message.equals("****"))
+					details.setSuccess_message1("File uploaded successfully");		
+				else
+					details.setError_message1(message);
+				userDao.activity_log("RCUTEAM", "Excel", "BULKUPLOAD", user.getUsername());	
 			} 
 			catch (Exception e) 
 			{

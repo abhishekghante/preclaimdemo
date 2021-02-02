@@ -11,7 +11,9 @@
         </div>
         <div class="actions">
             <div class="btn-group">
-              <a href="${pageContext.request.contextPath}/app_user/app_user" data-toggle="tooltip" title="Back" class="btn green-haze btn-outline btn-xs pull-right" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="Back">
+              <a href="${pageContext.request.contextPath}/app_user/app_user" data-toggle="tooltip" 
+              	title="Back" class="btn green-haze btn-outline btn-xs pull-right" 
+              	style="margin-right: 5px;" data-original-title="Back">
                 <i class="fa fa-reply"></i>
               </a>
             </div>
@@ -40,15 +42,18 @@
       <div class="box-body">
         <div class="row">
           <div class="col-md-12">
-          <form id="import_user_form" class="form-horizontal" method = "POST" action = "importData" enctype="multipart/form-data">
+          <form id="import_user_form" class="form-horizontal" method = "POST" action = "importData" 
+          	enctype="multipart/form-data" onsubmit = "importData()">
               <div class="form-group">
                 <label class="col-md-4 padding-left-5 col-xs-4 control-label">Import Data</label>
                 <div class="col-md-6 padding-left-0 col-xs-6">
-                  <input type="file" name="userfile" id="userfile" class="form-control">
+                  <input type="file" name="userfile" id="userfile" class="form-control" required>
                   <note>Kindly upload .xls/.xlsx file only</note>
                 </div>
                 <div class="col-md-2 padding-left-0 col-xs-2">
-                  <input type="submit" value="Import" class="btn btn-info btn-sm" name="importfile" />
+                  <button type="submit" class="btn btn-info btn-sm" name="importfile" id = "importfile">
+                  	Import
+                  </button>
                 </div>
                 <div class="col-md-12 text-center">
                   <div><a style="display: inline-block;" href="../resources/uploads/Import Case.xlsx">Click to download sample "Excel" file</a></div>
@@ -61,3 +66,12 @@
     </div>
   </div>
 </div>
+<script>
+function importData()
+{
+	$("#importfile").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+	$("#importfile").prop("disabled","true");
+	return true;
+}
+
+</script>

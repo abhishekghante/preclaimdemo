@@ -7,7 +7,7 @@ import com.preclaim.models.CaseDetails;
 
 public interface CaseDao {
 	
-	String addBulkUpload(String filename);
+	String addBulkUpload(String filename, String username);
 	String addcase(CaseDetails casedetail);
 	String deleteCase(int caseId);
 	String assignToRM(String policyNumber, String username, String caseSubStatus);

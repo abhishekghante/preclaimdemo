@@ -114,5 +114,13 @@ public class InvestigationTypeDaoImpl implements InvestigationTypeDao {
 		}
 		return "****";
 	}
+
+	@Override
+	public List<String> getActiveInvestigationStringList() {
+		String query = "SELECT * FROM investigation_type WHERE status = 1";
+		return template.query(query, (ResultSet rs, int rowNum) -> {
+			return rs.getString("investigationType");
+		});
+	}
 	
 }

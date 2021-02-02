@@ -12,5 +12,6 @@ public interface IntimationTypeDao {
 	String deleteIntimationType(int intimationId);
 	String updateIntimationType(int intimationId, String intimationType, int userID);
 	String updateIntimationTypeStatus(int intimationId,int status, int userID);
-	public List<IntimationType> getActiveIntimationType();
+	List<IntimationType> getActiveIntimationType();
+	List<String> getActiveIntimationTypeStringList();
 }
