@@ -196,7 +196,8 @@ session.removeAttribute("location_list");
                 	<input type="file" name="casePDF" id="casePDF" accept="application/pdf" />
               	</div>
               </div>
-               -->       
+               -->
+               <!--  
               <div id="uploadImageDiv">
                 <div class="form-group">
                   <label class="col-md-4 control-label">Upload Image(En)</label>
@@ -280,6 +281,7 @@ session.removeAttribute("location_list");
               </div>
               </div>
               </div>
+               -->
               <!--  Footer -->
               <div class="box-footer">
                 <div class="row">
