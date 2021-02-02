@@ -1,3 +1,7 @@
+<%@page import="com.preclaim.models.ScreenDetails" %>
+<%
+ScreenDetails details = (ScreenDetails) session.getAttribute("ScreenDetails");
+%>
 <style type="text/css">
 #imgAccount { display:none;}
 </style>
@@ -67,6 +71,12 @@
   </div>
 </div>
 <script>
+$(document).ready(function(){
+	
+	<%if(!details.getSuccess_message1().equals("")){%>
+		location.href = "${pageContext.request.contextPath}/message/downloadErrorReport";
+	<%}%>
+});
 function importData()
 {
 	$("#importfile").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');

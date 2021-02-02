@@ -1,12 +1,17 @@
 package com.preclaim.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -298,5 +303,41 @@ public class CaseController {
 	 	userDao.activity_log("CASE HISTORY","", "ASSIGN CASE", user.getUsername());
 		return caseDao.assignToRM(caseList, "ARM", user.getUsername());
 		
+    }
+    
+    @RequestMapping(value = "/downloadErrorReport",method = RequestMethod.GET)
+    public void downloadErrorReport(HttpServletRequest request, HttpServletResponse response) 
+    {
+    	ServletContext context = request.getSession().getServletContext();
+    	String filename = Config.upload_directory + "error_log.xlsx";
+    	File downloadFile = new File(filename);
+    	if(!(downloadFile.isFile() && downloadFile.exists()))
+    		return;
+        try
+        {
+	    	FileInputStream inputStream = new FileInputStream(downloadFile);
+	
+	        response.setContentType(context.getMimeType(filename));
+	        response.setContentLength((int) downloadFile.length());
+	        response.setHeader("Content-Disposition", 
+	        		String.format("attachment; filename=\"%s\"", downloadFile.getName()));
+	        OutputStream outStream = response.getOutputStream();
+	
+	        byte[] buffer = new byte[4096];
+	        int bytesRead = -1;
+	
+	        // write bytes read from the input stream into the output stream
+	        while ((bytesRead = inputStream.read(buffer)) != -1) {
+	            outStream.write(buffer, 0, bytesRead);
+	        }
+	
+	        inputStream.close();
+	        outStream.close();
+	        downloadFile.delete();
+        }
+        catch(Exception e)
+        {
+        	return;
+        }
     }
 }

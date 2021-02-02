@@ -514,7 +514,7 @@ public class CaseDaoImpl implements CaseDao {
 		{
 			XSSFWorkbook error_wb = new XSSFWorkbook();
 			XSSFSheet error_sheet = error_wb.createSheet("Error Log");
-			int rowNum = 1;
+			int rowNum = 0;
 			Row newRow = error_sheet.createRow(rowNum);
 			ArrayList<String> headerList = CustomMethods.importCaseHeader();
 			int colNum = 0;
