@@ -277,7 +277,14 @@ $(document).ready(function() {
 		var options = ""; 
 		for(i = 0; i < data.length ; i++ )
 		{
-			options += "<option value = " + data[i] + " > " + data[i] + " </option>";
+			if(data.length == 1)
+			{
+				options += "<option value = '" + data[i] + "' selected > " + data[i] + " </option>";
+			}
+			else
+			{
+				options += "<option value = '" + data[i] + "' > " + data[i] + " </option>";
+			}
 		}	
 		$("#assigneeZone").append(options);
 	}
@@ -299,9 +306,17 @@ $(document).ready(function() {
 			var options = ""; 
 			for(i = 0; i < data.length ; i++ )
 			{
-				options += "<option value = " + data[i] + " > " + data[i] + " </option>";
+				if(data.length == 1)
+				{
+					options += "<option value = '" + data[i] + "' selected > " + data[i] + " </option>";
+				}
+				else
+				{
+					options += "<option value = '" + data[i] + "' > " + data[i] + " </option>";
+				}
 			}
-			$("#assigneeState").append(options);	
+			$("#assigneeState").append(options);
+			$("#assigneeState").trigger("change");
 		}
 	 });
 	 
@@ -323,9 +338,17 @@ $(document).ready(function() {
 			var options = ""; 	
 			for(i = 0; i < data.length ; i++ )
 			{
-				options += "<option value = " + data[i] + " > " + data[i] + " </option>";
+				if(data.length == 1)
+				{
+					options += "<option value = '" + data[i] + "' selected > " + data[i] + " </option>";
+				}
+				else
+				{
+					options += "<option value = '" + data[i] + "' > " + data[i] + " </option>";
+				}
 			}
 			$("#assigneeCity").append(options);
+			$("#assigneeCity").trigger("change");
 		}
 	 });
 	 
@@ -348,7 +371,14 @@ $(document).ready(function() {
 			var options = ""; 	
 			for(i = 0; i < data.length ; i++ )
 			{
-				options += "<option value = " + data[i].username + " > " + data[i].full_name + " </option>";
+				if(data.length == 1)
+				{
+					options += "<option selected value = " + data[i].username + " > " + data[i].full_name + " </option>";	
+				}
+				else
+				{
+					options += "<option value = " + data[i].username + " > " + data[i].full_name + " </option>";
+				}
 			}
 			$("#assigneeName").append(options);
 		}

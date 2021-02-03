@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.preclaim.dao.IntimationTypeDao;
 import com.preclaim.dao.InvestigationTypeDao;
+import com.preclaim.dao.LoginDAO;
+import com.preclaim.dao.MailConfigDao;
 import com.preclaim.dao.RegionalManagerDao;
 import com.preclaim.dao.UserDAO;
+import com.preclaim.models.MailConfig;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.UserDetails;
 
@@ -33,6 +36,12 @@ public class RegionalManagerController {
 	
 	@Autowired
 	UserDAO userDao;
+	
+	@Autowired
+	LoginDAO loginDao;
+	
+	@Autowired
+	MailConfigDao mailConfigDao;
 	
 	@RequestMapping(value = "/pending", method = RequestMethod.GET)
     public String pending_message(HttpSession session) {
@@ -100,21 +109,43 @@ public class RegionalManagerController {
 				request.getParameter("state"), request.getParameter("city"));
     }
 
-    @RequestMapping(value = "/assignToSupervisor",method = RequestMethod.POST)
+    @SuppressWarnings("null")
+	@RequestMapping(value = "/assignToSupervisor",method = RequestMethod.POST)
     public @ResponseBody String assignToSupervisor(HttpServletRequest request,HttpSession session) 
     {
     	UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		
     	String[] paramValues = request.getParameterValues("caseList[]");
-    	String superVisorName=request.getParameter("assigneeName");
+    	String supervisorName=request.getParameter("assigneeName");
 		int caseLen = paramValues.length;
 		String caseList = "";
 		for (int i = 0; i < caseLen; i++)
 			caseList += "'" + paramValues[i] + "',";                               
 		caseList = caseList.substring(0, caseList.length() - 1);
-		System.out.println(superVisorName);
+		System.out.println(supervisorName);
 		userDao.activity_log("CASE HISTORY","", "ASSIGN CASE", user.getUsername());
-		return regionalManagerDao.assignToSupervisor(caseList, "AAS",superVisorName,user.getUsername());
+		String message = regionalManagerDao.assignToSupervisor(caseList, "AAS",supervisorName,user.getUsername());
+		
+		//Mail Config
+		UserDetails assignee = loginDao.checkUser(supervisorName);
+		MailConfig mail = mailConfigDao.getActiveConfig();
+    	if(mail != null && !assignee.getUser_email().equals(""))
+    	{	
+	    	mail.setReceipent(assignee.getUser_email());
+	    	mail.setSubject("Investigation Cases");
+	        String messageBody = "Dear <Assignee>,\n New Cases has been added in claims portal. "
+	        		+ "Kindly action it immediately\n\n\n"
+	        		+ "Thanks & Regards,\n"
+	        		+ "<CompanyName>\n"
+	        		+ "<CompanyAddress>\n";
+	        messageBody.replaceAll("<Assignee>", assignee.getFull_name());
+	        messageBody.replaceAll("<CompanyName>", "Xangars Solutions Pvt Ltd");
+	        messageBody.replaceAll("<CompanyAddress>", "");
+	    	mail.setMessageBody(messageBody);
+	    	mailConfigDao.sendMail(mail);
+    	}
+    	
+		return message;
     }
 
 
